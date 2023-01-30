@@ -1,0 +1,64 @@
+@import './variables';
+@import './mixins';
+
+.default-dashboard-container {
+    @include flex();
+    padding: $container-padding;
+    min-height: 100vh;
+
+    &__sidebar-holder {
+        position: sticky;
+        z-index: 200;
+    }
+
+    &__main-content-holder {
+        padding-left: 120px;
+        width: 100%;
+        min-height: 100%;
+    }
+
+    &__components-holder {
+        padding-top: 40px;
+    }
+}
+
+.default-shadow {
+    box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.09);
+}
+
+// FLEX
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-align-center {
+    align-items: center;
+}
+
+.flex-align-start {
+    align-items: flex-start;
+}
+
+.flex-align-end {
+    align-items: flex-end;
+}
+
+.flex-justify-center {
+    justify-content: center;
+}
+
+.flex-justify-between {
+    justify-content: space-between;
+}
+
+.flex-justify-around {
+    justify-content: space-around;
+}
+
+.flex-justify-evenly {
+    justify-content: space-evenly
+}

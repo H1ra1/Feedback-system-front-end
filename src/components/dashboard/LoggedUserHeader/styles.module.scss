@@ -1,0 +1,39 @@
+@import '../../../styles/colors.module';
+
+.logged-user {
+    &__holder {
+        position: relative;
+        cursor: pointer;
+        column-gap: 10px;
+        .logged-user-photo-holder {
+            width: 48px;
+            height: 48px;
+            border: 1px solid $highlight-color;
+            border-radius: 50%;
+            background-color: $grey-less;
+        }
+
+        .logged-user-info {
+            p {
+                font-size: 1.2rem;
+                color: $base-dark;
+            }
+
+            span {
+                font-weight: 300;
+                color: $base-dark;
+            }
+        }
+
+        svg {
+            color: $base-dark;
+            transition: all .2s ease-in-out;
+        }
+
+        &:hover {
+            svg {
+                color: $highlight-color;
+            }
+        }
+    }
+}

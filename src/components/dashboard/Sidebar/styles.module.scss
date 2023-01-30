@@ -1,0 +1,58 @@
+@import '../../../styles/colors.module';
+
+.main-sidebar {
+    width: 90px;
+    height: 90%;
+    background-color: $base-light;
+    border-radius: 5px;
+    padding: 20px 12px;
+
+    &__logo {
+        img {
+            width: 46px;
+            height: 46px;
+        }
+
+        span {
+            display: block;
+            height: 1px;
+            width: 100%;
+            background-color: $grey-less;
+            margin: 20px 0;
+        }
+    }
+
+    &__items {
+        row-gap: 20px;
+        .sidebar-item {
+            padding: 5px;
+            line-height: 0;
+            border-radius: 2.5px;
+            display: block;
+            transition: all .2s ease-in-out;
+
+            svg {
+                width: 36px;
+                height: 36px;
+                color: $base-dark;
+                transition: all .2s ease-in-out;
+            }
+
+            &--active {
+                background-color: $highlight-color;
+
+                svg {
+                    color: $base-light;
+                }
+            }
+
+            &:hover {
+                background-color: $highlight-color;
+
+                svg {
+                    color: $base-light;
+                }
+            }
+        }
+    }
+}

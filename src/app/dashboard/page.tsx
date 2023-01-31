@@ -1,4 +1,3 @@
-import utilsStyles from '../../styles/utils.module.scss';
 import Sidebar from '../../components/dashboard/Sidebar';
 
 function Dashboard() {

@@ -1,6 +1,6 @@
 import { Roboto } from '@next/font/google';
 import '../../styles/reset.scss';
-import utilsStyles from '../../styles/utils.module.scss';
+import '../../styles/utils.global.scss';
 import Sidebar from '../../components/dashboard/Sidebar';
 import Header from '../../components/dashboard/Header';
 
@@ -17,14 +17,14 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={ROBOTO.className}>
-                <div className={utilsStyles['default-dashboard-container']}>
-                    <aside className={utilsStyles['default-dashboard-container__sidebar-holder']}>
+                <div className='default-dashboard-container'>
+                    <aside className='default-dashboard-container__sidebar-holder'>
                         <Sidebar />
                     </aside>
                     
-                    <main className={utilsStyles['default-dashboard-container__main-content-holder']}>
+                    <main className='default-dashboard-container__main-content-holder'>
                         <Header />
-                        <div className={`${utilsStyles['default-dashboard-container__components-holder']}`}>
+                        <div className='default-dashboard-container__components-holder'>
                             {children}
                         </div>
                     </main>

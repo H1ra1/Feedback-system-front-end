@@ -2,7 +2,8 @@
 
 .main-sidebar {
     width: 90px;
-    height: 90%;
+    max-height: 90%;
+    min-height: 80vh;
     background-color: $base-light;
     border-radius: 5px;
     padding: 20px 12px;

@@ -5,8 +5,8 @@ import Sidebar from '../../components/dashboard/Sidebar';
 import Header from '../../components/dashboard/Header';
 
 const ROBOTO = Roboto({
-    weight: ['400'],
-    subsets: ['latin']
+    weight: [ '100', '300', '400', '500', '700', '900' ],
+    subsets: [ 'latin' ]
 });
 
 export default function RootLayout({

@@ -7,7 +7,7 @@
     min-height: 100vh;
 
     &__sidebar-holder {
-        position: sticky;
+        position: fixed;
         z-index: 200;
     }
 
@@ -61,4 +61,16 @@
 
 .flex-justify-evenly {
     justify-content: space-evenly
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-grow-1 {
+    flex-grow: 1;
+}
+
+.flex-gap-20 {
+    gap: 20px;
 }

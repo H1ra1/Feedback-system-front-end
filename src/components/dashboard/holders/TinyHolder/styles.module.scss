@@ -1,0 +1,47 @@
+@import '../../../../styles/colors.module';
+@import '../../../../styles/mixins';
+
+.tiny-holder {
+    padding: 20px;
+    max-width: 422px;
+    min-width: 280px;
+    height: 180px;
+    background-color: $base-light;
+    flex: 1;
+
+    &__body_content {
+        .tiny-holder-icon-holder {
+            width: 69px;
+            height: 69px;
+            border-radius: 59px;
+            background-color: $base-dark;
+            border: 1px solid $highlight-color;
+        }
+
+        .tiny-holder-titles-holder {
+            margin-left: auto;
+            span {
+                @include font( 0.9, 300, $base-dark-less );
+                display: block;
+                text-align: right
+            }
+
+            p {
+                @include font( 1.4, 400, $base-dark );
+                text-align: right;
+            }
+        }
+    }
+
+    &__footer_content {
+        border-top: 1px solid $grey-less;
+        min-height: 45px;
+        max-height: 45px;
+        overflow: hidden;
+
+        p {
+            @include font( 0.8, 300, $base-dark-less );
+            margin-top: 5px;
+        }
+    }
+}

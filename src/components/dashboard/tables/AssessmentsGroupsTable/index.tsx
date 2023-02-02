@@ -123,7 +123,7 @@ function AssessmentsGroupsTable() {
                     <td>data</td>
                     <td>
                         <div className='flex flex-align-center flex-justify-center flex-gap-10'>
-                            <ButtonActionTiny icon={<MdAnalytics />} bgColor={colors.highlightColor} />
+                            <ButtonActionTiny icon={<MdAnalytics />} bgColor={colors.highlightColor} tooltip="Teste tooltip" />
                             <ButtonActionTiny icon={<MdModeEdit />} bgColor={colors.info} />
                             <ButtonActionTiny icon={<MdDeleteForever />} bgColor={colors.danger} />
                         </div>

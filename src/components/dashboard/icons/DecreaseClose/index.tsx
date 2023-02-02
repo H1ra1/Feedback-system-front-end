@@ -1,13 +1,17 @@
-import React from 'react';
-import styles from './styles.module.scss';
+import React from "react";
+import styles from "./styles.module.scss";
 
-function DecreaseClose() {
-  return (
-    <div className={`${styles['decrease-close-icon']}`}>
-        <span></span>
-        <span></span>
-    </div>
-  )
+interface DecreaseCloseProps {
+    color?: string;
+}
+
+function DecreaseClose( props: DecreaseCloseProps ) {
+    return (
+        <div className={`${styles["decrease-close-icon"]}`}>
+            <span style={{ backgroundColor: props.color }}></span>
+            <span style={{ backgroundColor: props.color }}></span>
+        </div>
+    );
 }
 
 export default DecreaseClose;

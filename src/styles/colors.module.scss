@@ -14,3 +14,11 @@ $success: #4BFB72;
 $danger: #FB4B4B;
 $alert: #FFAF36;
 $info: #36CFFF;
+
+:export {
+    highlightColor: $highlight-color;
+    success: $success;
+    danger: $danger;
+    alert: $alert;
+    info: $info;
+}

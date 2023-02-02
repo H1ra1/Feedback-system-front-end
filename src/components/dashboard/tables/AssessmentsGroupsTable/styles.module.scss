@@ -1,0 +1,61 @@
+@import '../../../../styles/colors.module';
+@import '../../../../styles/mixins';
+
+.assessment-groups-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    &__head {
+        tr {
+            border-bottom: 1px solid $grey-less;
+            height: 50px;
+
+            th {
+                .assessment-groups-table-head-item-holder {
+                    p {
+                        @include font( 1, 600, $base-dark );       
+                    }
+
+                    .assessment-groups-table-order-holder {
+                        svg {
+                            transition: all .2s ease-in-out;
+                            &:nth-child( 2 ) {
+                                margin-top: -10px;
+                            }
+                        }
+                    }
+                }
+
+                &.--order {
+                    cursor: pointer;
+
+                    &:hover {
+                        .assessment-groups-table-head-item-holder  {
+                            .assessment-groups-table-order-holder {
+                                svg {
+                                    color: $highlight-color;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &__body {
+        tr {
+            border-bottom: 1px solid $grey-less;
+            height: 60px;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            td {
+                @include font( 0.9, 400, $base-dark );
+                text-align: center;
+            }
+        }
+    }
+}

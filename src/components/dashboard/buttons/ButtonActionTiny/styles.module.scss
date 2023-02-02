@@ -1,0 +1,33 @@
+@import '../../../../styles/colors.module';
+@import '../../../../styles/mixins';
+
+.button-action-tiny {
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
+    background-color: $success;
+    outline: none;
+    border: 1px solid transparent;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+
+    svg {
+        color: $base-light;
+        width: 22px;
+        height: 22px;
+        transition: all .2s ease-in-out;
+    }
+
+    &:hover {
+        box-shadow: 0px 0px 4px 2px rgb(0 0 0 / 20%);
+    }
+
+    &:focus {
+        border-color: $base-light;
+    }
+
+    &:active {
+        box-shadow: 0px 0px 4px 1px rgb(0 0 0 / 9%);
+    }
+}

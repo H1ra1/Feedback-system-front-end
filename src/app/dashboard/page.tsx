@@ -16,6 +16,17 @@ function Dashboard() {
                 <SimpleHolder sizeClasses='col-xl col-xl-9' icon={<MdAllInbox />} mainTitle='Grupos de avaliações' subTitle='Últimos grupos cadastrados'/>
                 <SimpleHolder sizeClasses='col-xl col-xl-3' icon={<MdAllInbox />} mainTitle='Rank' subTitle='Usuários mais bem avaliados'/>
             </section>
+
+            <section className='flex m-t-20 flex-gap-20'>
+                <SimpleHolder sizeClasses='col-xl col-xl-6' />
+                <SimpleHolder sizeClasses='col-xl col-xl-6' />
+            </section>
+
+            <section className='flex m-t-20 flex-gap-20'>
+                <SimpleHolder sizeClasses='col-xl col-xl-5' />
+                <SimpleHolder sizeClasses='col-xl col-xl-4' />
+                <SimpleHolder sizeClasses='col-xl col-xl-3' />
+            </section>
         </div>
     );
 }

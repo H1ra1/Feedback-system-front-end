@@ -1,0 +1,32 @@
+@import '../../../../styles/colors.module';
+@import '../../../../styles/mixins';
+
+.simple-holder {
+    min-width: 300px;
+    height: 450px;
+    background-color: $base-light;
+    border-radius: 5px;
+    padding: 20px;
+
+    &__header {
+        .title-holder {
+            .aux-title {
+                @include font( 0.9, 300, $base-dark-less );
+            }
+    
+            .main-title-holder {
+                margin-bottom: 5px;
+                column-gap: 5px;
+                svg {
+                    width: 22px;
+                    height: 22px;
+                    color: $highlight-color;
+                }
+                
+                .main-title {
+                    @include font( 1.4, 400, $base-dark );
+                }
+            }
+        }
+    }
+}

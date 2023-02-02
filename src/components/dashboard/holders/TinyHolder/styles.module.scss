@@ -16,6 +16,12 @@
             border-radius: 59px;
             background-color: $base-dark;
             border: 1px solid $highlight-color;
+
+            svg {
+                color: $base-light;
+                width: 32px;
+                height: 32px;
+            }
         }
 
         .tiny-holder-titles-holder {

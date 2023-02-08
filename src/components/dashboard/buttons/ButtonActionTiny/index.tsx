@@ -19,16 +19,16 @@ function ButtonActionTiny( props: ButtonActionTinyProps ) {
     return (
         <>
             <button 
-            className={`${styles['button-action-tiny']} flex flex-justify-center flex-align-center default-shadow`}
-            type={ props.type || 'button' }
-            onClick={props.onClick }
-            style={{ backgroundColor: props.bgColor }}
-            id={BUTTON_ID}
+                className={`${styles['button-action-tiny']} flex flex-justify-center flex-align-center default-shadow`}
+                type={ props.type || 'button' }
+                onClick={ props.onClick }
+                style={{ backgroundColor: props.bgColor }}
+                id={BUTTON_ID}
             >
                 {props.icon}
             </button>
 
-            { props.tooltip && <Tooltip anchorId={BUTTON_ID} content='Teste'/> }
+            { props.tooltip && <Tooltip anchorId={BUTTON_ID} content={props.tooltip}/> }
             
         </>
     )

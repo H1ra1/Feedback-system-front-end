@@ -39,6 +39,7 @@ function TabsHolder( props: TabsHolderProps ) {
             <div className={`${styles['tabs-holder__header_tabs']} flex`}>
                 { props.tabs && props.tabs.map( ( tab ) => (
                     <div 
+                        key={tab.tab_id}
                         className={`${styles['tab-header-item']} ${ activeTab == tab.tab_id && styles['tab-header-item--active'] } flex flex-align-center`}
                         onClick={ () => tabsHandle( tab.tab_id ) }
                     >
@@ -49,7 +50,7 @@ function TabsHolder( props: TabsHolderProps ) {
 
             <div className={`${styles['tabs-holder__tabs_items_holder']}`}>
                 { props.tabs_items && props.tabs_items.map( ( tab_item ) => (
-                    <div className={`${styles['tab-item']} ${ activeTab == tab_item.tab_id && styles['tab-item--active'] }`}>
+                    <div className={`${styles['tab-item']} ${ activeTab == tab_item.tab_id && styles['tab-item--active'] }`} key={tab_item.tab_id}>
                         <p className={`${styles['tab-item__title']}`}>{tab_item.tab_title}</p>
                         <span className={`${styles['tab-item__subtitle']}`}>{tab_item.tab_subtitle}</span>
 

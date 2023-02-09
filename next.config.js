@@ -4,7 +4,7 @@ const nextConfig = {
     appDir: true,
   },
   sassOptions: {
-    prependData: '@import "@/styles/colors.module"; @import "@/styles/mixins";',
+    prependData: '@import "@/styles/colors"; @import "@/styles/mixins";',
   }
 }
 

@@ -1,0 +1,26 @@
+.users-analysis {
+    &__content_holder {
+        max-height: 60vh;
+        overflow-y: auto;
+
+        .users-analysis-select-user-infos {
+            &__user_name {
+                @include font( 1.4, 600, $highlight-color );
+            }
+
+            &__user_average_note {
+                padding: 10px 25px;
+                background-color: $base-dark;
+                border-radius: 5px;
+
+                p {
+                    @include font( 1.4, 400, $base-light );
+                } 
+            }
+        }
+
+        .users-analysis-chart-holder {
+            margin-bottom: 20px;
+        }
+    }
+}

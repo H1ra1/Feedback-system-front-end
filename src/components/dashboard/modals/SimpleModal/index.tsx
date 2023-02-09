@@ -5,8 +5,14 @@ import styles from './styles.module.scss';
 import { MdAirlineSeatLegroomReduced } from 'react-icons/md';
 import DecreaseClose from '../../icons/DecreaseClose';
 
-function SimpleModal() {
-    const [ showModal, setShowModal ] = useState< boolean >( false );
+interface SimpleModalProps {
+    children?: React.ReactNode
+}
+
+function SimpleModal( props: SimpleModalProps ) {
+    const [ showModal, setShowModal ] = useState< boolean >( true );
+
+    document.body.style.overflow = 'hidden';
 
     return (
         <>
@@ -18,6 +24,10 @@ function SimpleModal() {
                     <div className={`${styles['simple-modal-box__title_holder']} flex flex-align-center flex-gap-10`}>
                         <MdAirlineSeatLegroomReduced />
                         <p>Título do modal</p>
+                    </div>
+                    
+                    <div className={`${styles['simple-modal-box__content_holder']}`}>
+                        { props.children }
                     </div>
                 </div>
             </div>

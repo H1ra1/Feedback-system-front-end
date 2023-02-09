@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import { IoMdArrowDropup, IoMdArrowDropdown } from 'react-icons/io';
 import styles from './styles.module.scss';
 import CheckboxSimple from '../../inputs/CheckboxSimple';
@@ -16,6 +16,7 @@ interface TableBodyRows {
 interface TinySimpleTableProps {
     head: TableHeaderItem[]
     body: TableBodyRows[]
+    body_row_click_handler?: Function
 }
 
 function TinySimpleTable( props: TinySimpleTableProps ) {
@@ -39,35 +40,44 @@ function TinySimpleTable( props: TinySimpleTableProps ) {
             </div>
             
             <div className={`${styles['tiny-simple-table__body']} custom-purple-scrollbar`}>
-                { props.body && props.body.map( ( row, row_index ) => (
-                    <>
-                        { row.row_type == 'select' && (
-                            <label className={`${styles['tiny-simple-table-row']} flex flex-align-center flex-justify-between`} htmlFor={`tiny-simple-table-select-row-${row_index}`} key={row_index}>
+                { props.body && props.body.map( ( row, row_index ) => {
+                    if( row.row_type == 'select')
+                        return (
+                            <label 
+                                className={`${styles['tiny-simple-table-row']} flex flex-align-center flex-justify-between`} 
+                                htmlFor={`tiny-simple-table-select-row-${row_index}`} 
+                                key={row_index}
+                                onChange={ ( e ) =>  props.body_row_click_handler && props.body_row_click_handler( e , row_index ) }
+                            >
+                                
                                 { row.items.map( ( item, indice ) => (
                                     indice == 0 ?
-                                        <div className={`${styles['tiny-simple-table-col']} flex flex-align-center flex-gap-5`}>
+                                        <div className={`${styles['tiny-simple-table-col']} flex flex-align-center flex-gap-5`} key={indice}>
                                             <CheckboxSimple id={`tiny-simple-table-select-row-${row_index}`} name='tiny-simple-table-select-row' type='radio' />
                                             {item}
                                         </div>
                                     :
-                                        <div className={`${styles['tiny-simple-table-col']} flex flex-align-center`}>
+                                        <div className={`${styles['tiny-simple-table-col']} flex flex-align-center`} key={indice}>
                                             {item}
                                         </div>
                                 ) ) }
-                            </label>
-                        ) }
 
-                        { row.row_type == 'simple' && (
-                            <div className={`${styles['tiny-simple-table-row']} flex flex-align-center flex-justify-between`} key={row_index}>
-                                { row.items.map( ( item ) => (
-                                    <div className={`${styles['tiny-simple-table-col']} flex flex-align-center`}>
+                            </label>
+                        )
+
+                    if( row.row_type == 'simple' )
+                        return (
+                            <div 
+                                className={`${styles['tiny-simple-table-row']} flex flex-align-center flex-justify-between`} 
+                                key={row_index}>
+                                { row.items.map( ( item, row_indice ) => (
+                                    <div className={`${styles['tiny-simple-table-col']} flex flex-align-center`} key={row_indice}>
                                         {item}
                                     </div>
                                 ) ) }
                             </div>
-                        ) }
-                    </>
-                ) ) }
+                        )
+                } ) }
             </div>
         </div>
     )

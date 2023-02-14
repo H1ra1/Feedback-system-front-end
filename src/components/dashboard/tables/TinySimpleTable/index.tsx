@@ -9,6 +9,7 @@ interface TableHeaderItem {
 
 interface TableBodyRows {
     row_id?: string
+    row_pre_id?: string
     row_type?: string
     items: string[] | JSX.Element[]
 }
@@ -16,6 +17,7 @@ interface TableBodyRows {
 interface TinySimpleTableProps {
     head: TableHeaderItem[]
     body: TableBodyRows[]
+    table_name?: string
     body_row_click_handler?: Function
 }
 
@@ -41,11 +43,14 @@ function TinySimpleTable( props: TinySimpleTableProps ) {
             
             <div className={`${styles['tiny-simple-table__body']} custom-purple-scrollbar`}>
                 { props.body && props.body.map( ( row, row_index ) => {
+                    const ROW_DEFAULT_ID = row.row_pre_id ? `${row.row_pre_id}-tiny-simple-table-select-row-${row_index}` : `tiny-simple-table-select-row-${row_index}`;
+                    const ROW_ID = row.row_id ? row.row_id : ROW_DEFAULT_ID;
+
                     if( row.row_type == 'select')
                         return (
                             <label 
                                 className={`${styles['tiny-simple-table-row']} flex flex-align-center flex-justify-between`} 
-                                htmlFor={`tiny-simple-table-select-row-${row_index}`} 
+                                htmlFor={`${ROW_ID}}`} 
                                 key={row_index}
                                 onChange={ ( e ) =>  props.body_row_click_handler && props.body_row_click_handler( e , row_index ) }
                             >
@@ -53,7 +58,7 @@ function TinySimpleTable( props: TinySimpleTableProps ) {
                                 { row.items.map( ( item, indice ) => (
                                     indice == 0 ?
                                         <div className={`${styles['tiny-simple-table-col']} flex flex-align-center flex-gap-5`} key={indice}>
-                                            <CheckboxSimple id={`tiny-simple-table-select-row-${row_index}`} name='tiny-simple-table-select-row' type='radio' />
+                                            <CheckboxSimple id={`${ROW_ID}}`} name={props.table_name ? props.table_name : 'tiny-simple-table-select-row'} type='radio' />
                                             {item}
                                         </div>
                                     :

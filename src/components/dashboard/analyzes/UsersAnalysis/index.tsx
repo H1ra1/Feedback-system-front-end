@@ -33,6 +33,7 @@ function UsersAnalysis() {
     const USERS_TABLE_BODY = [
         {
             row_type: 'select',
+            row_pre_id: 'user', 
             items: [
                 ( <p>Gabriel Câmara</p> ),
                 ( <p>2,5</p> )
@@ -40,6 +41,7 @@ function UsersAnalysis() {
         },
         {
             row_type: 'select',
+            row_pre_id: 'user',
             items: [
                 ( <p>Leonargo Agnes</p> ),
                 ( <p>2,5</p> )
@@ -47,6 +49,7 @@ function UsersAnalysis() {
         },
         {
             row_type: 'select',
+            row_pre_id: 'user',
             items: [
                 ( <p>Paulo Cunha</p> ),
                 ( <p>2,5</p> )
@@ -54,12 +57,14 @@ function UsersAnalysis() {
         },
         {
             row_type: 'select',
+            row_pre_id: 'user',
             items: [
                 ( <p>Lucas Sharau</p> ),
                 ( <p>2,5</p> )
             ]
         },{
             row_type: 'select',
+            row_pre_id: 'user',
             items: [
                 ( <p>Luan Nardi</p> ),
                 ( <p>2,5</p> )
@@ -67,6 +72,7 @@ function UsersAnalysis() {
         },
         {
             row_type: 'select',
+            row_pre_id: 'user',
             items: [
                 ( <p>Ruan Nunes</p> ),
                 ( <p>2,5</p> )
@@ -110,7 +116,12 @@ function UsersAnalysis() {
     return (
         <div className={`${styles['users-analysis']} flex flex-gap-20`}>
             <div className={`${styles['users-analysis__side_holder']} col-xl col-xl-3`}>
-                <TinySimpleTable head={USERS_TABLE_HEAD} body={USERS_TABLE_BODY} body_row_click_handler={ usersListClickHandler } />
+                <TinySimpleTable 
+                    head={USERS_TABLE_HEAD} 
+                    body={USERS_TABLE_BODY} 
+                    body_row_click_handler={ usersListClickHandler } 
+                    table_name='users-analysis-user-filter'
+                />
             </div>
 
             <div className={`${styles['users-analysis__content_holder']} col-xl col-xl-9 custom-purple-scrollbar`}>

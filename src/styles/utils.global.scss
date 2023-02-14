@@ -49,6 +49,15 @@
   }
 }
 
+// Fonts
+.f-22 {
+  @include font( 1.4, 600, $base-dark );
+}
+
+.f-c-highlight {
+  color: $highlight-color;
+}
+
 // Flex
 .flex {
   display: flex;

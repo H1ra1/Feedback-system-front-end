@@ -18,7 +18,7 @@ import {
 } from 'recharts';
 
 function UsersAnalysis() {
-    const [ userSeleted, setUserSelected ] = useState< string >( 'None' );
+    const [ userSeleted, setUserSelected ] = useState< string >( 'Selecione um usuário' );
     const [ questionsChartsData, setQuestionsChartsData ] = useState< any >( [] );
 
     const USERS_TABLE_HEAD = [
@@ -128,39 +128,43 @@ function UsersAnalysis() {
                 <div className={`${styles['users-analysis-select-user-infos']} flex flex-align-center flex-justify-between`}>
                     <h3 className={`${styles['users-analysis-select-user-infos__user_name']}`}>{ userSeleted }</h3>
                     <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
-                        <p>Nota média: 4,89</p>
+                        <p>Nota média: ~</p>
                     </div>
                 </div>
 
                 <div className={`${styles['users-analysis-chart-holder']} flex flex-column flex-justify-center flex-align-center flex-gap-20`}>
-                    <ResponsiveContainer width={500} aspect={4/2}>
-                        <RadarChart data={questionsChartsData}>
-                            <PolarGrid />
-                            
-                            <PolarAngleAxis dataKey="question" />
+                    { questionsChartsData.length > 0 && (
+                        <>
+                            <ResponsiveContainer width={500} aspect={4/2}>
+                                <RadarChart data={questionsChartsData}>
+                                    <PolarGrid />
+                                    
+                                    <PolarAngleAxis dataKey="question" />
 
-                            <PolarRadiusAxis angle={30} domain={[0, 5]} />
+                                    <PolarRadiusAxis angle={30} domain={[0, 5]} />
 
-                            <Radar 
-                                name='Gabriel Càmara' 
-                                dataKey='points' 
-                                stroke={colors.highlightColor} 
-                                fill={colors.highlightColor} 
-                                fillOpacity={0.6}
-                            />
+                                    <Radar 
+                                        name='Gabriel Càmara' 
+                                        dataKey='points' 
+                                        stroke={colors.highlightColor} 
+                                        fill={colors.highlightColor} 
+                                        fillOpacity={0.6}
+                                    />
 
-                            <Tooltip />
-                        </RadarChart>
-                    </ResponsiveContainer>
+                                    <Tooltip />
+                                </RadarChart>
+                            </ResponsiveContainer>
 
-                    <ResponsiveContainer width={350} aspect={4/2}>
-                        <BarChart data={questionsChartsData}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <Bar dataKey='points' fill={colors.highlightColor}>
-                            </Bar>
-                            <Tooltip />
-                        </BarChart>
-                    </ResponsiveContainer>
+                            <ResponsiveContainer width={350} aspect={4/2}>
+                                <BarChart data={questionsChartsData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <Bar dataKey='points' fill={colors.highlightColor}>
+                                    </Bar>
+                                    <Tooltip />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </>
+                    ) }
                 </div>
             </div>
         </div>

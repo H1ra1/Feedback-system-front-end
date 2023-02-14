@@ -1,12 +1,36 @@
-import React from 'react';
+'use client'
+
+import React, { useState } from 'react';
 import { IoMdArrowDropup, IoMdArrowDropdown } from 'react-icons/io';
 import { MdAnalytics, MdModeEdit, MdDeleteForever } from 'react-icons/md';
 import ButtonActionTiny from '@/components/dashboard/buttons/ButtonActionTiny';
 import styles from './styles.module.scss';
 import colors from '@/styles/colors.module.scss';
 import SimpleModal from '../../modals/SimpleModal';
+import UserToUserAnalysis from '../../analyzes/UserToUserAnalysis';
+
+interface ModalAnalyticsSettings {
+    title?: string
+    icon?: JSX.Element
+    type: 'user_to_user' | 'area'
+    question_group_id: number
+}
 
 function AssessmentsGroupsTable() {
+    const [ OPEN_MODAL, setOPEN_MODAL ] = useState< boolean >( false );
+    const [ MODAL_TO_OPEN, setMODAL_TO_OPEN ] = useState< ModalAnalyticsSettings | null >();
+
+    function openAnalyticsModal() {
+        setMODAL_TO_OPEN( {
+            title: `Grupo: Puxar nome do grupo`,
+            icon: <MdAnalytics />,
+            type: 'user_to_user',
+            question_group_id: 1
+        } )
+
+        setOPEN_MODAL( true );
+    }
+
     return (
         <>
             <table className={`${styles['assessment-groups-table']}`}>
@@ -125,7 +149,12 @@ function AssessmentsGroupsTable() {
                         <td>data</td>
                         <td>
                             <div className='flex flex-align-center flex-justify-center flex-gap-10'>
-                                <ButtonActionTiny icon={<MdAnalytics />} bgColor={colors.highlightColor} tooltip="Teste tooltip" />
+                                <ButtonActionTiny 
+                                    icon={<MdAnalytics />} 
+                                    bgColor={colors.highlightColor} 
+                                    tooltip="Teste tooltip"
+                                    onClick={ () => openAnalyticsModal() }
+                                />
                                 <ButtonActionTiny icon={<MdModeEdit />} bgColor={colors.info} />
                                 <ButtonActionTiny icon={<MdDeleteForever />} bgColor={colors.danger} />
                             </div>
@@ -205,9 +234,18 @@ function AssessmentsGroupsTable() {
                     </tr>
                 </tbody>
             </table>
-            <SimpleModal />
+
+            <SimpleModal 
+                open_modal={OPEN_MODAL} 
+                callback={ ( open ) => setOPEN_MODAL( open ) }
+                title={ MODAL_TO_OPEN?.title }
+                icon={ MODAL_TO_OPEN?.icon }
+            >
+                { ( MODAL_TO_OPEN != null && MODAL_TO_OPEN.type == 'user_to_user' ) && <UserToUserAnalysis /> }
+                
+            </SimpleModal>
         </>
-    )
+    );
 }
 
 export default AssessmentsGroupsTable;

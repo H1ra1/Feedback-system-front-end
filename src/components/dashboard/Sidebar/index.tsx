@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { MdDashboard } from 'react-icons/md';
+import { MdDashboard, MdGroupWork, MdViewInAr } from 'react-icons/md';
 import styles from './styles.module.scss';
 
 function Sidebar() {
@@ -13,8 +13,8 @@ function Sidebar() {
 
             <div className={`${styles['main-sidebar__items']} flex flex-column flex-align-center`}>
                 <Link href="/dashboard" className={`${styles['sidebar-item']} ${styles['sidebar-item--active']}`}><MdDashboard /></Link>
-                <Link href="/dashboard" className={`${styles['sidebar-item']}`}><MdDashboard /></Link>
-                <Link href="/dashboard" className={`${styles['sidebar-item']}`}><MdDashboard /></Link>
+                <Link href="/dashboard" className={`${styles['sidebar-item']}`}><MdGroupWork /></Link>
+                <Link href="/dashboard" className={`${styles['sidebar-item']}`}><MdViewInAr /></Link>
             </div>
         </div>
     );

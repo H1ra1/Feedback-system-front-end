@@ -58,7 +58,11 @@ function TinySimpleTable( props: TinySimpleTableProps ) {
                                 { row.items.map( ( item, indice ) => (
                                     indice == 0 ?
                                         <div className={`${styles['tiny-simple-table-col']} flex flex-align-center flex-gap-5`} key={indice}>
-                                            <CheckboxSimple id={`${ROW_ID}}`} name={props.table_name ? props.table_name : 'tiny-simple-table-select-row'} type='radio' />
+                                            <CheckboxSimple 
+                                                id={`${ROW_ID}}`} 
+                                                name={props.table_name ? props.table_name : 'tiny-simple-table-select-row'} 
+                                                type='radio' 
+                                            />
                                             {item}
                                         </div>
                                     :

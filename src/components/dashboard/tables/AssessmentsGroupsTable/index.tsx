@@ -140,7 +140,7 @@ function AssessmentsGroupsTable() {
                 <tbody className={`${styles['assessment-groups-table__body']}`}>
                     <tr>
                         <td>1</td>
-                        <td>User Name</td>
+                        <td>Group Name</td>
                         <td>360</td>
                         <td>status</td>
                         <td>Progresso</td>

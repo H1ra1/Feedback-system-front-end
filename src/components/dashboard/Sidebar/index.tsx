@@ -7,7 +7,6 @@ function Sidebar() {
     return (
         <div className={`${styles["main-sidebar"]} default-shadow flex flex-column flex-align-center`}>
             <div className={styles['main-sidebar__logo']}>
-                <img src="" alt="" />
                 <span></span>
             </div>
 

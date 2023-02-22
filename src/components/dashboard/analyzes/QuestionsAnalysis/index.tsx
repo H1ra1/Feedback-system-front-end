@@ -24,13 +24,13 @@ function QuestionsAnalysis() {
         {
             row_type: 'select',
             items: [
-                ( <p>Análise e soluções de problemas</p> )
+                ( <p key={0}>Análise e soluções de problemas</p> )
             ]
         },
         {
             row_type: 'select',
             items: [
-                ( <p>Busca de Excelência</p> )
+                ( <p key={0}>Busca de Excelência</p> )
             ]
         }
     ];

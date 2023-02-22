@@ -35,50 +35,10 @@ function UsersAnalysis() {
             row_type: 'select',
             row_pre_id: 'user', 
             items: [
-                ( <p>Gabriel Câmara</p> ),
-                ( <p>2,5</p> )
-            ]
-        },
-        {
-            row_type: 'select',
-            row_pre_id: 'user',
-            items: [
-                ( <p>Leonargo Agnes</p> ),
-                ( <p>2,5</p> )
-            ]
-        },
-        {
-            row_type: 'select',
-            row_pre_id: 'user',
-            items: [
-                ( <p>Paulo Cunha</p> ),
-                ( <p>2,5</p> )
-            ]
-        },
-        {
-            row_type: 'select',
-            row_pre_id: 'user',
-            items: [
-                ( <p>Lucas Sharau</p> ),
-                ( <p>2,5</p> )
-            ]
-        },{
-            row_type: 'select',
-            row_pre_id: 'user',
-            items: [
-                ( <p>Luan Nardi</p> ),
-                ( <p>2,5</p> )
-            ]
-        },
-        {
-            row_type: 'select',
-            row_pre_id: 'user',
-            items: [
-                ( <p>Ruan Nunes</p> ),
-                ( <p>2,5</p> )
+                ( <p key={0}>Gabriel Câmara</p> ),
+                ( <p key={1}>2,5</p> )
             ]
         }
-        
     ];
 
     function usersListClickHandler( e: MouseEvent, user_index: number ) {

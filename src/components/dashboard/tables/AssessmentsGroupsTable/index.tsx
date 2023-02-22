@@ -16,16 +16,30 @@ interface ModalAnalyticsSettings {
     question_group_id: number
 }
 
-function AssessmentsGroupsTable() {
+interface Group {
+    id: number
+    name: string
+    progress: number
+    research_type: string
+    status: string
+    period_initial: string
+    period_final: string
+}
+
+interface AssessmentsGroupsTableProps {
+    groups: Group[]
+}
+
+function AssessmentsGroupsTable( props: AssessmentsGroupsTableProps ) {
     const [ OPEN_MODAL, setOPEN_MODAL ] = useState< boolean >( false );
     const [ MODAL_TO_OPEN, setMODAL_TO_OPEN ] = useState< ModalAnalyticsSettings | null >();
 
-    function openAnalyticsModal() {
+    function openAnalyticsModal( group_id: number, group_name: string ) {
         setMODAL_TO_OPEN( {
-            title: `Grupo: Puxar nome do grupo`,
+            title: `Grupo: ${group_name}`,
             icon: <MdAnalytics />,
             type: 'user_to_user',
-            question_group_id: 1
+            question_group_id: group_id
         } )
 
         setOPEN_MODAL( true );
@@ -138,100 +152,30 @@ function AssessmentsGroupsTable() {
                 </thead>
 
                 <tbody className={`${styles['assessment-groups-table__body']}`}>
-                    <tr>
-                        <td>1</td>
-                        <td>Group Name</td>
-                        <td>360</td>
-                        <td>status</td>
-                        <td>Progresso</td>
-                        <td>users</td>
-                        <td>data</td>
-                        <td>data</td>
-                        <td>
-                            <div className='flex flex-align-center flex-justify-center flex-gap-10'>
-                                <ButtonActionTiny 
-                                    icon={<MdAnalytics />} 
-                                    bgColor={colors.highlightColor} 
-                                    tooltip="Teste tooltip"
-                                    onClick={ () => openAnalyticsModal() }
-                                />
-                                <ButtonActionTiny icon={<MdModeEdit />} bgColor={colors.info} />
-                                <ButtonActionTiny icon={<MdDeleteForever />} bgColor={colors.danger} />
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>1</td>
-                        <td>User Name</td>
-                        <td>360</td>
-                        <td>status</td>
-                        <td>Progresso</td>
-                        <td>users</td>
-                        <td>data</td>
-                        <td>data</td>
-                        <td>
-                            <div className='flex flex-align-center flex-justify-center flex-gap-10'>
-                                <ButtonActionTiny icon={<MdAnalytics />} bgColor={colors.highlightColor} />
-                                <ButtonActionTiny icon={<MdModeEdit />} bgColor={colors.info} />
-                                <ButtonActionTiny icon={<MdDeleteForever />} bgColor={colors.danger} />
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>1</td>
-                        <td>User Name</td>
-                        <td>360</td>
-                        <td>status</td>
-                        <td>Progresso</td>
-                        <td>users</td>
-                        <td>data</td>
-                        <td>data</td>
-                        <td>
-                            <div className='flex flex-align-center flex-justify-center flex-gap-10'>
-                                <ButtonActionTiny icon={<MdAnalytics />} bgColor={colors.highlightColor} />
-                                <ButtonActionTiny icon={<MdModeEdit />} bgColor={colors.info} />
-                                <ButtonActionTiny icon={<MdDeleteForever />} bgColor={colors.danger} />
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>1</td>
-                        <td>User Name</td>
-                        <td>360</td>
-                        <td>status</td>
-                        <td>Progresso</td>
-                        <td>users</td>
-                        <td>data</td>
-                        <td>data</td>
-                        <td>
-                            <div className='flex flex-align-center flex-justify-center flex-gap-10'>
-                                <ButtonActionTiny icon={<MdAnalytics />} bgColor={colors.highlightColor} />
-                                <ButtonActionTiny icon={<MdModeEdit />} bgColor={colors.info} />
-                                <ButtonActionTiny icon={<MdDeleteForever />} bgColor={colors.danger} />
-                            </div>
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td>1</td>
-                        <td>User Name</td>
-                        <td>360</td>
-                        <td>status</td>
-                        <td>Progresso</td>
-                        <td>users</td>
-                        <td>data</td>
-                        <td>data</td>
-                        <td>
-                            <div className='flex flex-align-center flex-justify-center flex-gap-10'>
-                                <ButtonActionTiny icon={<MdAnalytics />} bgColor={colors.highlightColor} />
-                                <ButtonActionTiny icon={<MdModeEdit />} bgColor={colors.info} />
-                                <ButtonActionTiny icon={<MdDeleteForever />} bgColor={colors.danger} />
-                            </div>
-                        </td>
-                    </tr>
+                    { props.groups && props.groups.map( group => (
+                        <tr key={group.id}>
+                            <td>{ group.id }</td>
+                            <td>{ group.name }</td>
+                            <td>{ group.research_type }</td>
+                            <td>{ group.status }</td>
+                            <td>{ group.progress }</td>
+                            <td>users</td>
+                            <td>{ group.period_initial }</td>
+                            <td>{ group.period_final }</td>
+                            <td>
+                                <div className='flex flex-align-center flex-justify-center flex-gap-10'>
+                                    <ButtonActionTiny 
+                                        icon={<MdAnalytics />} 
+                                        bgColor={colors.highlightColor} 
+                                        tooltip="Abrir análises"
+                                        onClick={ () => openAnalyticsModal( group.id, group.name ) }
+                                    />
+                                    <ButtonActionTiny icon={<MdModeEdit />} bgColor={colors.info} />
+                                    <ButtonActionTiny icon={<MdDeleteForever />} bgColor={colors.danger} />
+                                </div>
+                            </td>
+                        </tr>
+                    ) ) }
                 </tbody>
             </table>
 
@@ -241,7 +185,7 @@ function AssessmentsGroupsTable() {
                 title={ MODAL_TO_OPEN?.title }
                 icon={ MODAL_TO_OPEN?.icon }
             >
-                { ( MODAL_TO_OPEN != null && MODAL_TO_OPEN.type == 'user_to_user' ) && <UserToUserAnalysis /> }
+                { ( MODAL_TO_OPEN != null && MODAL_TO_OPEN.type == 'user_to_user' ) && <UserToUserAnalysis group_id={ MODAL_TO_OPEN.question_group_id }/> }
                 
             </SimpleModal>
         </>

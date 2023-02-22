@@ -4,7 +4,11 @@ import UsersAnalysis from '../UsersAnalysis';
 import QuestionsAnalysis from '../QuestionsAnalysis';
 import BetweenUsersAnalysis from '../BetweenUsersAnalysis';
 
-function UserToUserAnalysis() {
+interface UserToUserAnalysisProps {
+    group_id: number
+}
+
+function UserToUserAnalysis( props: UserToUserAnalysisProps ) {
     const TABS = [
         {
             tab_id: 'tab-users-analysis',
@@ -25,7 +29,7 @@ function UserToUserAnalysis() {
             tab_id: 'tab-users-analysis',
             tab_title: 'Usuários',
             tab_subtitle: 'Estatísticas do grupo por usuários',
-            tab_content: <UsersAnalysis />
+            tab_content: <UsersAnalysis group_id={ props.group_id }/>
         },
         {
             tab_id: 'tab-questions-analysis',

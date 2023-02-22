@@ -6,7 +6,20 @@ import TinyHolder from '@/components/dashboard/holders/TinyHolder';
 import SimpleHolder from '@/components/dashboard/holders/SimpleHolder';
 import AssessmentsGroupsTable from '@/components/dashboard/tables/AssessmentsGroupsTable';
 
-function Dashboard() {
+async function getAssessmentsGroups() {
+    const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/` );
+
+    if( ! RESPONSE.ok )
+        throw new Error('Failed to fetch data');
+    
+    const RESPONDE_PARSED = await RESPONSE.json();
+
+    return RESPONDE_PARSED.data;
+}
+
+async function Dashboard() {
+    const ASSESSMENT_GROUPS = await getAssessmentsGroups();
+
     return (
         <div>
             <section className='flex flex-wrap flex-gap-20'>
@@ -18,7 +31,7 @@ function Dashboard() {
 
             <section className='flex m-t-20 flex-gap-20'>
                 <SimpleHolder sizeClasses='col-xl col-xl-9' icon={<MdGroupWork />} mainTitle='Grupos de avaliações' subTitle='Últimos grupos cadastrados'>
-                    <AssessmentsGroupsTable />
+                    <AssessmentsGroupsTable groups={ASSESSMENT_GROUPS}/>
                 </SimpleHolder>
                 <SimpleHolder sizeClasses='col-xl col-xl-3' icon={<RiUserStarFill />} mainTitle='Rank' subTitle='Usuários mais bem avaliados'/>
             </section>

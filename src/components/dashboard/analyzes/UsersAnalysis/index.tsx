@@ -33,6 +33,7 @@ interface UsersTableBody {
 function UsersAnalysis( props: UsersAnalysisProps ) {
     const [ userSeleted, setUserSelected ] = useState< string >( 'Selecione um usuário' );
     const [ USER_SELECTED_NOTE_AVERAGE, setUSER_SELECTED_NOTE_AVERAGE ] = useState< string >( '~' );
+    const [ USER_EVALUATIONS_RECEIVED, setUSER_EVALUATIONS_RECEIVED ] = useState< string >( '~' );
     const [ questionsChartsData, setQuestionsChartsData ] = useState< any >( [] );
     const [ USERS_FROM_GROUP, setUSERS_FROM_GROUP ] = useState< any[] >( [] );
     const [ USERS_TABLE_BODY, setUSERS_TABLE_BODY ] = useState< UsersTableBody[] >( [] );
@@ -52,7 +53,8 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                 USERS_FROM_GROUP_DATA.push( {
                     name: user_evaluated.user_evaluated_name,
                     note_average: user_evaluated.note_average,
-                    note_per_questions: user_evaluated.evaluations_notes_per_questions[0]
+                    note_per_questions: user_evaluated.evaluations_notes_per_questions[0],
+                    evaluations_received: user_evaluated.evaluations_done
                 } );
 
                 ITEMS_USERS_TABLE.push( {
@@ -95,7 +97,8 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
         } );
 
         setUserSelected( SELECTED_USERNAME );
-        setUSER_SELECTED_NOTE_AVERAGE( USERS_FROM_GROUP[ user_index ].note_average )
+        setUSER_SELECTED_NOTE_AVERAGE( USERS_FROM_GROUP[ user_index ].note_average );
+        setUSER_EVALUATIONS_RECEIVED( USERS_FROM_GROUP[ user_index ].evaluations_received );
         setQuestionsChartsData( SELECTED_QUESTIONS_CHART_DATA );
     }
 
@@ -117,9 +120,6 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
     function customBarLabelList( props: any ) {
         const { x, y, width, height, value } = props;
         const radius = 15;
-
-        console.log( height );
-        console.log( y );
 
         return (
             <g>
@@ -146,11 +146,14 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                 <div className={`${styles['users-analysis-select-user-infos']} flex flex-align-center flex-justify-between`}>
                     <h3 className={`${styles['users-analysis-select-user-infos__user_name']}`}>{ userSeleted }</h3>
                     <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
+                        <p>Avalaições recebidas: { USER_EVALUATIONS_RECEIVED }</p>
+                    </div>
+                    <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
                         <p>Nota média: { USER_SELECTED_NOTE_AVERAGE }</p>
                     </div>
                 </div>
 
-                <div className={`${styles['users-analysis-chart-holder']} flex flex-column flex-justify-center flex-align-center flex-gap-20`}>
+                <div className={`${styles['users-analysis-chart-holder']} flex flex-column flex-justify-center flex-align-center flex-gap-20 m-t-20`}>
                     { questionsChartsData.length > 0 && (
                         <>
                             <ResponsiveContainer width={600} aspect={4/2}>

@@ -49,6 +49,32 @@
   }
 }
 
+// Tooltips
+.default-custom-tooltip {
+  border-radius: 5px;
+  background-color: $base-light;
+  box-shadow: 0 0 4px 2px #0002;
+  max-width: 500px;
+
+  &__header {
+    background-color: $highlight-color;
+    padding: 5px 10px;
+    border-radius: 5px 5px 0 0;
+
+    p {
+      @include font( 1, 500, $base-light );
+    }
+  }
+
+  &__content {
+    padding: 10px;
+
+    p {
+      @include font( 1, 400, $base-dark );
+    }
+  }
+}
+
 // Fonts
 .f-22 {
   @include font( 1.4, 600, $base-dark );

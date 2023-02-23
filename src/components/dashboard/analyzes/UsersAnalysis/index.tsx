@@ -14,7 +14,10 @@ import {
     ResponsiveContainer,
     BarChart,
     Bar,
-    CartesianGrid
+    CartesianGrid,
+    XAxis,
+    YAxis,
+    LabelList
 } from 'recharts';
 
 interface UsersAnalysisProps {
@@ -86,7 +89,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
 
         USERS_FROM_GROUP[ user_index ].note_per_questions.forEach( ( question: any ) => {
             SELECTED_QUESTIONS_CHART_DATA.push( {
-                question: question.question_id,
+                question: question.question_alias,
                 points: question.question_note_average
             } );
         } );
@@ -94,6 +97,38 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
         setUserSelected( SELECTED_USERNAME );
         setUSER_SELECTED_NOTE_AVERAGE( USERS_FROM_GROUP[ user_index ].note_average )
         setQuestionsChartsData( SELECTED_QUESTIONS_CHART_DATA );
+    }
+
+    function customTooltip( { active, payload, label }: any ) {
+        if( active && payload && payload.length )
+            return (
+                <div className="default-custom-tooltip">
+                    <div className="default-custom-tooltip__header">
+                        <p>{ payload[0].payload.question }</p>
+                    </div>
+
+                    <div className="default-custom-tooltip__content">
+                        <p className="label"><strong>Nota média:</strong> { payload[0].value }</p>
+                    </div>
+                </div>
+            );
+    }
+
+    function customBarLabelList( props: any ) {
+        const { x, y, width, height, value } = props;
+        const radius = 15;
+
+        console.log( height );
+        console.log( y );
+
+        return (
+            <g>
+            <circle cx={x + width / 2} cy={y - radius - 5} r={radius} fill={colors.highlightColor} />
+                <text x={x + width / 2} y={y - radius - 5} fill="#fff" textAnchor="middle" dominantBaseline="middle" fontSize={10}>
+                    { value }
+                </text>
+            </g>
+        );
     }
 
     return (
@@ -118,32 +153,42 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                 <div className={`${styles['users-analysis-chart-holder']} flex flex-column flex-justify-center flex-align-center flex-gap-20`}>
                     { questionsChartsData.length > 0 && (
                         <>
-                            <ResponsiveContainer width={500} aspect={4/2}>
+                            <ResponsiveContainer width={600} aspect={4/2}>
                                 <RadarChart data={questionsChartsData}>
                                     <PolarGrid />
                                     
                                     <PolarAngleAxis dataKey="question" />
 
-                                    <PolarRadiusAxis angle={30} domain={[0, 5]} />
+                                    <PolarRadiusAxis angle={30} domain={[1, 5]} />
 
                                     <Radar 
-                                        name='Gabriel Càmara' 
                                         dataKey='points' 
                                         stroke={colors.highlightColor} 
                                         fill={colors.highlightColor} 
                                         fillOpacity={0.6}
                                     />
 
-                                    <Tooltip />
+                                    <Tooltip content={ customTooltip } />
                                 </RadarChart>
                             </ResponsiveContainer>
 
-                            <ResponsiveContainer width={350} aspect={4/2}>
-                                <BarChart data={questionsChartsData}>
+                            <ResponsiveContainer width={600} aspect={4/3}>
+                                <BarChart data={questionsChartsData} margin={ { top: 40, bottom: 100 } }>
                                     <CartesianGrid strokeDasharray="3 3" />
-                                    <Bar dataKey='points' fill={colors.highlightColor}>
+                                    <XAxis 
+                                        dataKey='question'
+                                        angle={60}
+                                        tick={ { fontSize: 10 } }
+                                        tickLine={true}
+                                        type='category'
+                                        interval={0}
+                                        textAnchor='start'
+                                    />
+                                    <YAxis />
+                                    <Bar dataKey='points' fill={colors.highlightColor} barSize={20}>
+                                        <LabelList dataKey='points' content={ customBarLabelList }/>
                                     </Bar>
-                                    <Tooltip />
+                                    <Tooltip content={ customTooltip } />
                                 </BarChart>
                             </ResponsiveContainer>
                         </>

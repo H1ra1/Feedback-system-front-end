@@ -16,6 +16,12 @@ function SimpleModal( props: SimpleModalProps ) {
     const [ SHOW_MODAL, setSHOW_MODAL ] = useState< boolean >( false );
 
     useEffect( () => {
+        if( props.open_modal ) {
+            document.body.style.overflowY = 'hidden';
+        } else {
+            document.body.style.overflowY = 'auto';
+        }
+
         setSHOW_MODAL( props.open_modal );
     }, [ props.open_modal ] );
 

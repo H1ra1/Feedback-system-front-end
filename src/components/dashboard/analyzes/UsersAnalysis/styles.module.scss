@@ -3,6 +3,10 @@
         max-height: 60vh;
         overflow-y: auto;
 
+        @media( max-height: 880px ) {
+            max-height: 40vh;
+        }
+
         .users-analysis-select-user-infos {
             &__user_name {
                 @include font( 1.4, 600, $highlight-color );

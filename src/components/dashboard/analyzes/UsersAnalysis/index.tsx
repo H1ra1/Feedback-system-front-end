@@ -40,7 +40,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
 
     useEffect( () => {
         async function getUsersAnalysis() {
-            const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-group/average/360/` );
+            const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-group/average/360/${props.group_id}/` );
         
             if( ! RESPONSE.ok )
                 throw new Error( RESPONSE.statusText );

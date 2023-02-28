@@ -24,6 +24,7 @@ interface Group {
     status: string
     period_initial: string
     period_final: string
+    user_to_user: boolean
 }
 
 interface AssessmentsGroupsTableProps {
@@ -34,11 +35,11 @@ function AssessmentsGroupsTable( props: AssessmentsGroupsTableProps ) {
     const [ OPEN_MODAL, setOPEN_MODAL ] = useState< boolean >( false );
     const [ MODAL_TO_OPEN, setMODAL_TO_OPEN ] = useState< ModalAnalyticsSettings | null >();
 
-    function openAnalyticsModal( group_id: number, group_name: string ) {
+    function openAnalyticsModal( group_id: number, group_name: string, user_to_user: boolean ) {
         setMODAL_TO_OPEN( {
             title: `Grupo: ${group_name}`,
             icon: <MdAnalytics />,
-            type: 'user_to_user',
+            type: user_to_user ? 'user_to_user' : 'area',
             question_group_id: group_id
         } )
 
@@ -168,7 +169,7 @@ function AssessmentsGroupsTable( props: AssessmentsGroupsTableProps ) {
                                         icon={<MdAnalytics />} 
                                         bgColor={colors.highlightColor} 
                                         tooltip="Abrir análises"
-                                        onClick={ () => openAnalyticsModal( group.id, group.name ) }
+                                        onClick={ () => openAnalyticsModal( group.id, group.name, group.user_to_user ) }
                                     />
                                     <ButtonActionTiny icon={<MdModeEdit />} bgColor={colors.info} />
                                     <ButtonActionTiny icon={<MdDeleteForever />} bgColor={colors.danger} />

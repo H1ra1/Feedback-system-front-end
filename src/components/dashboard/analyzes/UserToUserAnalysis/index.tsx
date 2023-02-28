@@ -35,7 +35,7 @@ function UserToUserAnalysis( props: UserToUserAnalysisProps ) {
             tab_id: 'tab-questions-analysis',
             tab_title: 'Perguntas',
             tab_subtitle: 'Estatísticas do grupo por usuários com base nas perguntas',
-            tab_content: <QuestionsAnalysis />
+            tab_content: <QuestionsAnalysis group_id={ props.group_id }/>
         },
         {
             tab_id: 'tab-comparative-analysis',

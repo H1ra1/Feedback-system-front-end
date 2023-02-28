@@ -87,8 +87,6 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
         const SELECTED_USERNAME = USERS_FROM_GROUP[ user_index ].name;
         const SELECTED_QUESTIONS_CHART_DATA:any[] = [];
 
-        console.log( USERS_FROM_GROUP[ user_index ].note_per_questions );
-
         USERS_FROM_GROUP[ user_index ].note_per_questions.forEach( ( question: any ) => {
             SELECTED_QUESTIONS_CHART_DATA.push( {
                 question: question.question_alias,

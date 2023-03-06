@@ -12,6 +12,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import FeederLoading from "../../loadings/FeederLoading";
 
 interface QuestionsAnalysisProps {
     group_id: number
@@ -19,9 +20,11 @@ interface QuestionsAnalysisProps {
 
 function BetweenUsersAnalysis( props: QuestionsAnalysisProps ) {
     const [ averageByUsers, setAverageByUsers ] = useState< any >( [] );
+    const [ loading, setLoading ] = useState< boolean >( true );
 
     useEffect( () => {
         async function getUsersAverageComparative() {
+            setLoading( true );
             const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-group/average/360/comparative/${props.group_id}/` );
         
             if( ! RESPONSE.ok )
@@ -38,6 +41,7 @@ function BetweenUsersAnalysis( props: QuestionsAnalysisProps ) {
             } );
 
             setAverageByUsers( USERS_GROUP_DATA );
+            setLoading( false );
         }
 
         getUsersAverageComparative();
@@ -73,35 +77,39 @@ function BetweenUsersAnalysis( props: QuestionsAnalysisProps ) {
     }
 
     return (
-        <div className={`col-xl col-xl-12 custom-purple-scrollbar`}>
-            <div>
-                <h3 className={`f-22 f-c-highlight`}>Nota média por usuário</h3>
-            </div>
-
-            <div>
-                <ResponsiveContainer width="100%" height={450}>
-                    <BarChart data={averageByUsers} margin={ { top: 40, bottom: 130, right: 40 } }>
-                        <CartesianGrid strokeDasharray="3 3" />
-
-                        <XAxis 
-                            dataKey='username'
-                            angle={60}
-                            tick={ { fontSize: 10 } }
-                            tickLine={true}
-                            type='category'
-                            interval={0}
-                            textAnchor='start'
-                        />
-                        <YAxis />
-
-                        <Bar dataKey="points" fill={colors.highlightColor}>
-                            <LabelList dataKey='points' content={ customBarLabelList }/>
-                        </Bar>
-                        <Tooltip content={ customTooltip }/>
-                    </BarChart>
-                </ResponsiveContainer>
-            </div>
-        </div>
+        <>
+            { loading ? <FeederLoading /> :
+                <div className={`col-xl col-xl-12 custom-purple-scrollbar`}>
+                    <div>
+                        <h3 className={`f-22 f-c-highlight`}>Nota média por usuário</h3>
+                    </div>
+        
+                    <div>
+                        <ResponsiveContainer width="100%" height={450}>
+                            <BarChart data={averageByUsers} margin={ { top: 40, bottom: 130, right: 40 } }>
+                                <CartesianGrid strokeDasharray="3 3" />
+        
+                                <XAxis 
+                                    dataKey='username'
+                                    angle={60}
+                                    tick={ { fontSize: 10 } }
+                                    tickLine={true}
+                                    type='category'
+                                    interval={0}
+                                    textAnchor='start'
+                                />
+                                <YAxis />
+        
+                                <Bar dataKey="points" fill={colors.highlightColor}>
+                                    <LabelList dataKey='points' content={ customBarLabelList }/>
+                                </Bar>
+                                <Tooltip content={ customTooltip }/>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+            }
+        </>
     );
 }
 

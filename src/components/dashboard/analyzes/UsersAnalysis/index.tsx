@@ -19,6 +19,7 @@ import {
     YAxis,
     LabelList
 } from 'recharts';
+import FeederLoading from '../../loadings/FeederLoading';
 
 interface UsersAnalysisProps {
     group_id: number
@@ -37,9 +38,11 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
     const [ questionsChartsData, setQuestionsChartsData ] = useState< any >( [] );
     const [ userFromGroup, setUserFromGroup ] = useState< any[] >( [] );
     const [ usersTableBody, setUsersTableBody ] = useState< UsersTableBody[] >( [] );
+    const [ loading, setLoading ] = useState< boolean >( true );
 
     useEffect( () => {
         async function getUsersAnalysis() {
+            setLoading( true );
             const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-group/average/360/${props.group_id}/` );
         
             if( ! RESPONSE.ok )
@@ -69,6 +72,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
 
             setUserFromGroup( userFromGroup_DATA );
             setUsersTableBody( ITEMS_USERS_TABLE );
+            setLoading( false );
         }
 
         getUsersAnalysis();
@@ -130,73 +134,77 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
     }
 
     return (
-        <div className={`${styles['users-analysis']} flex flex-gap-20`}>
-            <div className={`${styles['users-analysis__side_holder']} col-xl col-xl-3`}>
-                <TinySimpleTable 
-                    head={USERS_TABLE_HEAD} 
-                    body={usersTableBody} 
-                    body_row_click_handler={ usersListClickHandler } 
-                    table_name='users-analysis-user-filter'
-                />
-            </div>
-
-            <div className={`${styles['users-analysis__content_holder']} col-xl col-xl-9 custom-purple-scrollbar`}>
-                <div className={`${styles['users-analysis-select-user-infos']} flex flex-align-center flex-justify-between`}>
-                    <h3 className={`${styles['users-analysis-select-user-infos__user_name']}`}>{ userSeleted }</h3>
-                    <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
-                        <p>Avalaições recebidas: { userEvaluationsReceived }</p>
+        <>
+            { loading ? <FeederLoading /> :
+                <div className={`${styles['users-analysis']} flex flex-gap-20`}>
+                    <div className={`${styles['users-analysis__side_holder']} col-xl col-xl-3`}>
+                        <TinySimpleTable 
+                            head={USERS_TABLE_HEAD} 
+                            body={usersTableBody} 
+                            body_row_click_handler={ usersListClickHandler } 
+                            table_name='users-analysis-user-filter'
+                        />
                     </div>
-                    <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
-                        <p>Nota média: { userSelectedNoteAverage }</p>
+        
+                    <div className={`${styles['users-analysis__content_holder']} col-xl col-xl-9 custom-purple-scrollbar`}>
+                        <div className={`${styles['users-analysis-select-user-infos']} flex flex-align-center flex-justify-between`}>
+                            <h3 className={`${styles['users-analysis-select-user-infos__user_name']}`}>{ userSeleted }</h3>
+                            <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
+                                <p>Avalaições recebidas: { userEvaluationsReceived }</p>
+                            </div>
+                            <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
+                                <p>Nota média: { userSelectedNoteAverage }</p>
+                            </div>
+                        </div>
+        
+                        <div className={`${styles['users-analysis-chart-holder']} flex flex-column flex-justify-center flex-align-center flex-gap-20 m-t-20`}>
+                            { questionsChartsData.length > 0 && (
+                                <>
+                                    <ResponsiveContainer width={600} aspect={4/2}>
+                                        <RadarChart data={questionsChartsData}>
+                                            <PolarGrid />
+                                            
+                                            <PolarAngleAxis dataKey="question" />
+        
+                                            <PolarRadiusAxis angle={30} domain={[1, 5]} />
+        
+                                            <Radar 
+                                                dataKey='points' 
+                                                stroke={colors.highlightColor} 
+                                                fill={colors.highlightColor} 
+                                                fillOpacity={0.6}
+                                            />
+        
+                                            <Tooltip content={ customTooltip } />
+                                        </RadarChart>
+                                    </ResponsiveContainer>
+        
+                                    <ResponsiveContainer width={600} aspect={4/3}>
+                                        <BarChart data={questionsChartsData} margin={ { top: 40, bottom: 100 } }>
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis 
+                                                dataKey='question'
+                                                angle={60}
+                                                tick={ { fontSize: 10 } }
+                                                tickLine={true}
+                                                type='category'
+                                                interval={0}
+                                                textAnchor='start'
+                                            />
+                                            <YAxis />
+                                            <Bar dataKey='points' fill={colors.highlightColor} barSize={20}>
+                                                <LabelList dataKey='points' content={ customBarLabelList }/>
+                                            </Bar>
+                                            <Tooltip content={ customTooltip } />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </>
+                            ) }
+                        </div>
                     </div>
                 </div>
-
-                <div className={`${styles['users-analysis-chart-holder']} flex flex-column flex-justify-center flex-align-center flex-gap-20 m-t-20`}>
-                    { questionsChartsData.length > 0 && (
-                        <>
-                            <ResponsiveContainer width={600} aspect={4/2}>
-                                <RadarChart data={questionsChartsData}>
-                                    <PolarGrid />
-                                    
-                                    <PolarAngleAxis dataKey="question" />
-
-                                    <PolarRadiusAxis angle={30} domain={[1, 5]} />
-
-                                    <Radar 
-                                        dataKey='points' 
-                                        stroke={colors.highlightColor} 
-                                        fill={colors.highlightColor} 
-                                        fillOpacity={0.6}
-                                    />
-
-                                    <Tooltip content={ customTooltip } />
-                                </RadarChart>
-                            </ResponsiveContainer>
-
-                            <ResponsiveContainer width={600} aspect={4/3}>
-                                <BarChart data={questionsChartsData} margin={ { top: 40, bottom: 100 } }>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis 
-                                        dataKey='question'
-                                        angle={60}
-                                        tick={ { fontSize: 10 } }
-                                        tickLine={true}
-                                        type='category'
-                                        interval={0}
-                                        textAnchor='start'
-                                    />
-                                    <YAxis />
-                                    <Bar dataKey='points' fill={colors.highlightColor} barSize={20}>
-                                        <LabelList dataKey='points' content={ customBarLabelList }/>
-                                    </Bar>
-                                    <Tooltip content={ customTooltip } />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </>
-                    ) }
-                </div>
-            </div>
-        </div>
+            }
+        </>
     );
 }
 

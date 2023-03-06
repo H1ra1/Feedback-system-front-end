@@ -13,6 +13,7 @@ import {
     YAxis,
     LabelList
 } from 'recharts';
+import FeederLoading from '../../loadings/FeederLoading';
 
 interface QuestionsAnalysisProps {
     group_id: number
@@ -29,9 +30,11 @@ function QuestionsAnalysis( props: QuestionsAnalysisProps ) {
     const [ QUESTIONS_GROUP, setQUESTIONS_GROUP ] = useState< any[] >( [] );
     const [ QUESTIONS_TABLE_BODY, setQUESTIONS_TABLE_BODY ] = useState< TinyTableBody[] >( [] );
     const [ QUESTION_SELECTED, setQUESTION_SELECTED ] = useState< string >( 'Selecione uma pergunta para continuar.' );
+    const [ loading, setLoading ] = useState< boolean >( true );
 
     useEffect( () => {
         async function getUsersAveragePerQuestions() {
+            setLoading( true );
             const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-group/average/per-questions/${props.group_id}/` );
         
             if( ! RESPONSE.ok )
@@ -59,6 +62,7 @@ function QuestionsAnalysis( props: QuestionsAnalysisProps ) {
 
             setQUESTIONS_GROUP( QUESTIONS_GROUP_DATA );
             setQUESTIONS_TABLE_BODY( ITEMS_QUESTIONS_TABLE );
+            setLoading( false );
         }
 
         getUsersAveragePerQuestions();
@@ -115,44 +119,48 @@ function QuestionsAnalysis( props: QuestionsAnalysisProps ) {
     }
 
     return (
-        <div className={`flex flex-gap-20`}>
-            <div className={`col-xl col-xl-3`}>
-                <TinySimpleTable head={QUESTIONS_TABLE_HEAD} body={QUESTIONS_TABLE_BODY} body_row_click_handler={ questionsListClickHandler } />
-            </div>
+        <>
+            { loading ? <FeederLoading /> : 
+                <div className={`flex flex-gap-20`}>
+                    <div className={`col-xl col-xl-3`}>
+                        <TinySimpleTable head={QUESTIONS_TABLE_HEAD} body={QUESTIONS_TABLE_BODY} body_row_click_handler={ questionsListClickHandler } />
+                    </div>
 
-            <div className={`col-xl col-xl-9 custom-purple-scrollbar`}>
-                <div className={`flex flex-align-center flex-justify-between`}>
-                    <h3 className={`f-22 f-c-highlight`}>{ QUESTION_SELECTED }</h3>
+                    <div className={`col-xl col-xl-9 custom-purple-scrollbar`}>
+                        <div className={`flex flex-align-center flex-justify-between`}>
+                            <h3 className={`f-22 f-c-highlight`}>{ QUESTION_SELECTED }</h3>
+                        </div>
+
+                        <div className={`flex flex-align-center m-t-20`}>
+                            { questionsChartsData.length > 0 && (
+                                <ResponsiveContainer width='100%' height={450}>
+                                    <BarChart data={questionsChartsData} margin={ { top: 40, bottom: 130, right: 40 } }>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis 
+                                            dataKey='username'
+                                            angle={60}
+                                            tick={ { fontSize: 10 } }
+                                            tickLine={true}
+                                            type='category'
+                                            interval={0}
+                                            textAnchor='start'
+                                        />
+                                        <YAxis />
+
+                                        <Bar dataKey='points' fill={colors.highlightColor} barSize={20}>
+                                            <LabelList dataKey='points' content={ customBarLabelList }/>
+                                        </Bar>
+
+                                        <Tooltip content={customTooltip}/>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            ) }
+                            
+                        </div>
+                    </div>
                 </div>
-
-                <div className={`flex flex-align-center m-t-20`}>
-                    { questionsChartsData.length > 0 && (
-                        <ResponsiveContainer width='100%' height={450}>
-                            <BarChart data={questionsChartsData} margin={ { top: 40, bottom: 130, right: 40 } }>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis 
-                                    dataKey='username'
-                                    angle={60}
-                                    tick={ { fontSize: 10 } }
-                                    tickLine={true}
-                                    type='category'
-                                    interval={0}
-                                    textAnchor='start'
-                                />
-                                <YAxis />
-
-                                <Bar dataKey='points' fill={colors.highlightColor} barSize={20}>
-                                    <LabelList dataKey='points' content={ customBarLabelList }/>
-                                </Bar>
-
-                                <Tooltip content={customTooltip}/>
-                            </BarChart>
-                        </ResponsiveContainer>
-                    ) }
-                    
-                </div>
-            </div>
-        </div>
+            }
+        </>
     )
 }
 

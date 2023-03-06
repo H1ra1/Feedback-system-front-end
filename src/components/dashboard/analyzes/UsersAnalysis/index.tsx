@@ -32,11 +32,11 @@ interface UsersTableBody {
 
 function UsersAnalysis( props: UsersAnalysisProps ) {
     const [ userSeleted, setUserSelected ] = useState< string >( 'Selecione um usuário' );
-    const [ USER_SELECTED_NOTE_AVERAGE, setUSER_SELECTED_NOTE_AVERAGE ] = useState< string >( '~' );
-    const [ USER_EVALUATIONS_RECEIVED, setUSER_EVALUATIONS_RECEIVED ] = useState< string >( '~' );
+    const [ userSelectedNoteAverage, setUserSelectedNoteAverage ] = useState< string >( '~' );
+    const [ userEvaluationsReceived, setUserEvaluationsReceived ] = useState< string >( '~' );
     const [ questionsChartsData, setQuestionsChartsData ] = useState< any >( [] );
-    const [ USERS_FROM_GROUP, setUSERS_FROM_GROUP ] = useState< any[] >( [] );
-    const [ USERS_TABLE_BODY, setUSERS_TABLE_BODY ] = useState< UsersTableBody[] >( [] );
+    const [ userFromGroup, setUserFromGroup ] = useState< any[] >( [] );
+    const [ usersTableBody, setUsersTableBody ] = useState< UsersTableBody[] >( [] );
 
     useEffect( () => {
         async function getUsersAnalysis() {
@@ -48,9 +48,9 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
             const RESPONDE_PARSED = await RESPONSE.json();
 
             const ITEMS_USERS_TABLE:UsersTableBody[] = [];
-            const USERS_FROM_GROUP_DATA: any[] = [];
+            const userFromGroup_DATA: any[] = [];
             RESPONDE_PARSED.data.forEach( ( user_evaluated: any ) => {
-                USERS_FROM_GROUP_DATA.push( {
+                userFromGroup_DATA.push( {
                     name: user_evaluated.user_evaluated_name,
                     note_average: user_evaluated.note_average,
                     note_per_questions: user_evaluated.evaluations_notes_per_questions[0],
@@ -67,8 +67,8 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                 } );
             } );
 
-            setUSERS_FROM_GROUP( USERS_FROM_GROUP_DATA );
-            setUSERS_TABLE_BODY( ITEMS_USERS_TABLE );
+            setUserFromGroup( userFromGroup_DATA );
+            setUsersTableBody( ITEMS_USERS_TABLE );
         }
 
         getUsersAnalysis();
@@ -84,10 +84,10 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
     ];
 
     function usersListClickHandler( e: MouseEvent, user_index: number ) {
-        const SELECTED_USERNAME = USERS_FROM_GROUP[ user_index ].name;
+        const SELECTED_USERNAME = userFromGroup[ user_index ].name;
         const SELECTED_QUESTIONS_CHART_DATA:any[] = [];
 
-        USERS_FROM_GROUP[ user_index ].note_per_questions.forEach( ( question: any ) => {
+        userFromGroup[ user_index ].note_per_questions.forEach( ( question: any ) => {
             SELECTED_QUESTIONS_CHART_DATA.push( {
                 question: question.question_alias,
                 points: question.question_note_average
@@ -95,8 +95,8 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
         } );
 
         setUserSelected( SELECTED_USERNAME );
-        setUSER_SELECTED_NOTE_AVERAGE( USERS_FROM_GROUP[ user_index ].note_average );
-        setUSER_EVALUATIONS_RECEIVED( USERS_FROM_GROUP[ user_index ].evaluations_received );
+        setUserSelectedNoteAverage( userFromGroup[ user_index ].note_average );
+        setUserEvaluationsReceived( userFromGroup[ user_index ].evaluations_received );
         setQuestionsChartsData( SELECTED_QUESTIONS_CHART_DATA );
     }
 
@@ -134,7 +134,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
             <div className={`${styles['users-analysis__side_holder']} col-xl col-xl-3`}>
                 <TinySimpleTable 
                     head={USERS_TABLE_HEAD} 
-                    body={USERS_TABLE_BODY} 
+                    body={usersTableBody} 
                     body_row_click_handler={ usersListClickHandler } 
                     table_name='users-analysis-user-filter'
                 />
@@ -144,10 +144,10 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                 <div className={`${styles['users-analysis-select-user-infos']} flex flex-align-center flex-justify-between`}>
                     <h3 className={`${styles['users-analysis-select-user-infos__user_name']}`}>{ userSeleted }</h3>
                     <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
-                        <p>Avalaições recebidas: { USER_EVALUATIONS_RECEIVED }</p>
+                        <p>Avalaições recebidas: { userEvaluationsReceived }</p>
                     </div>
                     <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
-                        <p>Nota média: { USER_SELECTED_NOTE_AVERAGE }</p>
+                        <p>Nota média: { userSelectedNoteAverage }</p>
                     </div>
                 </div>
 

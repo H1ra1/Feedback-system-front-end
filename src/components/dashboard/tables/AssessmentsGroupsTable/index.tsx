@@ -8,6 +8,7 @@ import styles from './styles.module.scss';
 import colors from '@/styles/colors.module.scss';
 import SimpleModal from '../../modals/SimpleModal';
 import UserToUserAnalysis from '../../analyzes/UserToUserAnalysis';
+import GroupAnalysis from '../../analyzes/GroupAnalysis';
 
 interface ModalAnalyticsSettings {
     title?: string
@@ -187,7 +188,7 @@ function AssessmentsGroupsTable( props: AssessmentsGroupsTableProps ) {
                 icon={ MODAL_TO_OPEN?.icon }
             >
                 { ( MODAL_TO_OPEN != null && MODAL_TO_OPEN.type == 'user_to_user' ) && <UserToUserAnalysis group_id={ MODAL_TO_OPEN.question_group_id }/> }
-                
+                { ( MODAL_TO_OPEN != null && MODAL_TO_OPEN.type == 'area' ) && <GroupAnalysis group_id={ MODAL_TO_OPEN.question_group_id }/> }
             </SimpleModal>
         </>
     );

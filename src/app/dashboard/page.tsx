@@ -39,11 +39,23 @@ async function getTopUsersBy( orderby: string ) {
     return RESPONDE_PARSED.data;
 }
 
+async function getTotalUsers() {
+    const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/total-users/` );
+
+    if( ! RESPONSE.ok )
+        throw new Error('Failed to fetch data');
+    
+    const RESPONDE_PARSED = await RESPONSE.json();
+
+    return RESPONDE_PARSED.data;
+}
+
 async function Dashboard() {
     const ASSESSMENT_GROUPS      = await getAssessmentsGroups();
     const TOP_AREAS_BY_NOTE      = await getTopAreasBy( 'note' );
     const TOP_AREAS_BY_QUANTITY  = await getTopAreasBy( 'quantity' );
-    const TOP_USERS_BY_NOTE      = await getTopUsersBy( 'note' );    
+    const TOP_USERS_BY_NOTE      = await getTopUsersBy( 'note' );
+    const TOTAL_USERS            = await getTotalUsers();
 
     return (
         <div>
@@ -66,7 +78,7 @@ async function Dashboard() {
                     subtitle='Top Usuário'
                     description={ `Nota média: ${TOP_USERS_BY_NOTE[0].note_average} \n Avaliações recebidas: ${TOP_USERS_BY_NOTE[0].evaluations_done_count} \n Usuário com maior nota e com no mínimo 4 avaliações recebidas.` }
                 />
-                <TinyHolder icon={ <FaUsers /> } title='48' subtitle='Total de usuários'/>
+                <TinyHolder icon={ <FaUsers /> } title={ TOTAL_USERS.total_users } subtitle='Total de usuários'/>
             </section>
 
             <section className='flex m-t-20 flex-gap-20'>

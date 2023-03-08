@@ -17,8 +17,19 @@ async function getAssessmentsGroups() {
     return RESPONDE_PARSED.data;
 }
 
-async function getTopAreaBy( orderby: string ) {
-    const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/top-area?orderby=${orderby}` );
+async function getTopAreasBy( orderby: string ) {
+    const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/top-areas?orderby=${orderby}` );
+
+    if( ! RESPONSE.ok )
+        throw new Error('Failed to fetch data');
+    
+    const RESPONDE_PARSED = await RESPONSE.json();
+
+    return RESPONDE_PARSED.data;
+}
+
+async function getTopUsersBy( orderby: string ) {
+    const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/top-users?orderby=${orderby}` );
 
     if( ! RESPONSE.ok )
         throw new Error('Failed to fetch data');
@@ -29,26 +40,32 @@ async function getTopAreaBy( orderby: string ) {
 }
 
 async function Dashboard() {
-    const ASSESSMENT_GROUPS     = await getAssessmentsGroups();
-    const TOP_AREA_BY_NOTE      = await getTopAreaBy( 'note' );
-    const TOP_AREA_BY_QUANTITY  = await getTopAreaBy( 'quantity' );
+    const ASSESSMENT_GROUPS      = await getAssessmentsGroups();
+    const TOP_AREAS_BY_NOTE      = await getTopAreasBy( 'note' );
+    const TOP_AREAS_BY_QUANTITY  = await getTopAreasBy( 'quantity' );
+    const TOP_USERS_BY_NOTE      = await getTopUsersBy( 'note' );    
 
     return (
         <div>
             <section className='flex flex-wrap flex-gap-20'>
                 <TinyHolder 
                     icon={ <IoMdRocket /> } 
-                    title={ TOP_AREA_BY_NOTE[0].name } 
+                    title={ TOP_AREAS_BY_NOTE[0].name } 
                     subtitle='Top área'
-                    description={ `Nota média: ${TOP_AREA_BY_NOTE[0].area_average_note}` }
+                    description={ `Nota média: ${TOP_AREAS_BY_NOTE[0].area_average_note}` }
                 />
                 <TinyHolder 
                     icon={ <MdOutlineLocalFireDepartment /> } 
-                    title={ TOP_AREA_BY_QUANTITY[0].name } 
+                    title={ TOP_AREAS_BY_QUANTITY[0].name } 
                     subtitle='Área mais avaliada'
-                    description={ `Avaliações recebidas: ${TOP_AREA_BY_QUANTITY[0].evaluations_done_count}` }
+                    description={ `Avaliações recebidas: ${TOP_AREAS_BY_QUANTITY[0].evaluations_done_count}` }
                 />
-                <TinyHolder icon={ <RiUserStarFill /> } title='Gabriel Câmara' subtitle='Top Usuário'/>
+                <TinyHolder 
+                    icon={ <RiUserStarFill /> }
+                    title={ TOP_USERS_BY_NOTE[0].name }
+                    subtitle='Top Usuário'
+                    description={ `Nota média: ${TOP_USERS_BY_NOTE[0].note_average} \n Avaliações recebidas: ${TOP_USERS_BY_NOTE[0].evaluations_done_count} \n Usuário com maior nota e com no mínimo 4 avaliações recebidas.` }
+                />
                 <TinyHolder icon={ <FaUsers /> } title='48' subtitle='Total de usuários'/>
             </section>
 

@@ -37,13 +37,14 @@
     }
 
     &__footer_content {
-        border-top: 1px solid $grey-less;
-        min-height: 45px;
-        max-height: 45px;
+        border-top: 1px solid #ececec;
+        min-height: 60px;
+        max-height: 60px;
         overflow: hidden;
 
         p {
             @include font( 0.8, 300, $base-dark-less );
+            white-space: pre-line;
             margin-top: 5px;
         }
     }

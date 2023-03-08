@@ -17,14 +17,37 @@ async function getAssessmentsGroups() {
     return RESPONDE_PARSED.data;
 }
 
+async function getTopAreaBy( orderby: string ) {
+    const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/top-area?orderby=${orderby}` );
+
+    if( ! RESPONSE.ok )
+        throw new Error('Failed to fetch data');
+    
+    const RESPONDE_PARSED = await RESPONSE.json();
+
+    return RESPONDE_PARSED.data;
+}
+
 async function Dashboard() {
-    const ASSESSMENT_GROUPS = await getAssessmentsGroups();
+    const ASSESSMENT_GROUPS     = await getAssessmentsGroups();
+    const TOP_AREA_BY_NOTE      = await getTopAreaBy( 'note' );
+    const TOP_AREA_BY_QUANTITY  = await getTopAreaBy( 'quantity' );
 
     return (
         <div>
             <section className='flex flex-wrap flex-gap-20'>
-                <TinyHolder icon={ <IoMdRocket /> } title='Mesa RV' subtitle='Top área'/>
-                <TinyHolder icon={ <MdOutlineLocalFireDepartment /> } title='Marketing' subtitle='Área mais avaliada'/>
+                <TinyHolder 
+                    icon={ <IoMdRocket /> } 
+                    title={ TOP_AREA_BY_NOTE[0].name } 
+                    subtitle='Top área'
+                    description={ `Nota média: ${TOP_AREA_BY_NOTE[0].area_average_note}` }
+                />
+                <TinyHolder 
+                    icon={ <MdOutlineLocalFireDepartment /> } 
+                    title={ TOP_AREA_BY_QUANTITY[0].name } 
+                    subtitle='Área mais avaliada'
+                    description={ `Avaliações recebidas: ${TOP_AREA_BY_QUANTITY[0].evaluations_done_count}` }
+                />
                 <TinyHolder icon={ <RiUserStarFill /> } title='Gabriel Câmara' subtitle='Top Usuário'/>
                 <TinyHolder icon={ <FaUsers /> } title='48' subtitle='Total de usuários'/>
             </section>

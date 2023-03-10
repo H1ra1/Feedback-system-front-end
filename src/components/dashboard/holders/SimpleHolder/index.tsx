@@ -9,6 +9,7 @@ interface SimpleHolderProps {
   mainTitle?: string;
   icon?: JSX.Element;
   children?: React.ReactNode | React.ReactNode[];
+  overflow?: boolean
 }
 
 function SimpleHolder( props: SimpleHolderProps ) {
@@ -25,7 +26,8 @@ function SimpleHolder( props: SimpleHolderProps ) {
             </div>
         </div>
 
-        <div className={`${styles['simple-holder__body']}`}>
+        {/* TEMP SCROLL */}
+        <div className={`${styles['simple-holder__body']} ${ props.overflow && `${styles[ '--overflow' ]} custom-purple-scrollbar` }`}>
             {props.children}
         </div>
     </div>

@@ -102,7 +102,7 @@ async function Dashboard() {
             </section>
 
             <section className='flex m-t-20 flex-gap-20'>
-                <SimpleHolder sizeClasses='col-xl col-xl-9' icon={<MdGroupWork />} mainTitle='Grupos de avaliações' subTitle='Últimos grupos cadastrados'>
+                <SimpleHolder overflow={ true } sizeClasses='col-xl col-xl-9' icon={<MdGroupWork />} mainTitle='Grupos de avaliações' subTitle='Últimos grupos cadastrados'>
                     <AssessmentsGroupsTable groups={ASSESSMENT_GROUPS}/>
                 </SimpleHolder>
                 <SimpleHolder sizeClasses='col-xl col-xl-3' icon={<RiUserStarFill />} mainTitle='Rank' subTitle='Usuários mais bem avaliados'>

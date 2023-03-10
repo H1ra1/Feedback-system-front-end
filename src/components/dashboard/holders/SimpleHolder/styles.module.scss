@@ -30,5 +30,10 @@
     &__body {
         margin-top: 10px;
         height: calc( 100% - 60px );
+
+        &.--overflow {
+            // TEMP SCROLL
+            overflow-y: auto;
+        }
     }
 }

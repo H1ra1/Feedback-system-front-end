@@ -36,12 +36,12 @@ function AveragePerArea( props: AveragePerAreaProps ) {
         const AREAS_FORMATTED: any = [];
 
         const DATA: any = props.data;
-        DATA.areas.forEach( ( area: any ) => {
+        DATA.areas.forEach( ( area: any, indice: number ) => {
             AREAS_FORMATTED.push( {
                 row_type: 'simple',
                 items: [
-                    ( <p>{ area.name }</p> ),
-                    ( <p>{ area.area_average_note }</p> )
+                    ( <p key={ indice }>{ area.name }</p> ),
+                    ( <p key={ indice }>{ area.area_average_note }</p> )
                 ]
             } );
         } );

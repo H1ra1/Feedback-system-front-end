@@ -1,0 +1,25 @@
+.simple-progress-bar {
+    position: relative;
+    width: 100px;
+    height: 22px;
+    border-radius: 5px;
+    padding: 1px;
+    background-color: $base-dark;
+
+    &__progress {
+        background-color: $highlight-color;
+        width: 20%;
+        height: 100%;
+        border-radius: 2.5px;
+        transition: all .2s cubic-bezier( 0.42, 0, 0.61, 1.28 );
+    }
+
+    &::after {
+        content: attr( data-simple-progress-bar );
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate( -50%, -50% );
+        @include font( .7, 600, $base-light );
+    }
+}

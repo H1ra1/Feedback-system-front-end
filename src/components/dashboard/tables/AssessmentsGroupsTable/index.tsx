@@ -9,6 +9,7 @@ import colors from '@/styles/colors.module.scss';
 import SimpleModal from '../../modals/SimpleModal';
 import UserToUserAnalysis from '../../analyzes/UserToUserAnalysis';
 import GroupAnalysis from '../../analyzes/GroupAnalysis';
+import SimpleProgressBar from '../../SimpleProgressBar';
 
 interface ModalAnalyticsSettings {
     title?: string
@@ -45,6 +46,14 @@ function AssessmentsGroupsTable( props: AssessmentsGroupsTableProps ) {
         } )
 
         setOPEN_MODAL( true );
+    }
+
+    function getStatusName( status: string ) {
+        const STATUS: any = {
+            inpr: 'Em progresso',
+        }
+
+        return STATUS[ status ]
     }
 
     return (
@@ -159,8 +168,8 @@ function AssessmentsGroupsTable( props: AssessmentsGroupsTableProps ) {
                             <td>{ group.id }</td>
                             <td>{ group.name }</td>
                             <td>{ group.research_type }</td>
-                            <td>{ group.status }</td>
-                            <td>{ group.progress }</td>
+                            <td>{ getStatusName( group.status ) }</td>
+                            <td><SimpleProgressBar progress={ group.progress }/></td>
                             <td>users</td>
                             <td>{ group.period_initial }</td>
                             <td>{ group.period_final }</td>

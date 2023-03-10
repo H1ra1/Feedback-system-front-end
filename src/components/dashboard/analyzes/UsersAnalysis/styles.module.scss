@@ -1,4 +1,8 @@
 .users-analysis {
+    &__side_holder {
+        max-height: 60vh;
+    }
+
     &__content_holder {
         max-height: 60vh;
         overflow-y: auto;

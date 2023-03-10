@@ -103,7 +103,7 @@ function BetweenUsersAnalysis( props: QuestionsAnalysisProps ) {
                                 <Bar dataKey="points" fill={colors.highlightColor}>
                                     <LabelList dataKey='points' content={ customBarLabelList }/>
                                 </Bar>
-                                <Tooltip content={ customTooltip }/>
+                                <Tooltip content={ customTooltip } cursor={ { fill: 'transparent' } }/>
                             </BarChart>
                         </ResponsiveContainer>
                     </div>

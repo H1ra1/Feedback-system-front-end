@@ -76,7 +76,7 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                     <div>
                         <h3 className={`f-22 f-c-highlight`}>Nota média por pergunta</h3>
                         <p><strong>Nota média:</strong> { areaData.average_note }</p>
-                        <p><strong>Avaliações recevidas:</strong> { areaData.evaluations_done_total }</p>
+                        <p><strong>Avaliações recebidas:</strong> { areaData.evaluations_done_total }</p>
                     </div>
         
                     <div>

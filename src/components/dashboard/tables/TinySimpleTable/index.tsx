@@ -17,6 +17,7 @@ interface TableBodyRows {
 interface TinySimpleTableProps {
     head: TableHeaderItem[]
     body: TableBodyRows[]
+    footer?: string
     table_name?: string
     body_row_click_handler?: Function
 }
@@ -41,7 +42,7 @@ function TinySimpleTable( props: TinySimpleTableProps ) {
                 </div>
             </div>
             
-            <div className={`${styles['tiny-simple-table__body']} custom-purple-scrollbar`}>
+            <div className={`${styles['tiny-simple-table__body']} ${ props.footer && styles['--has-footer']} custom-purple-scrollbar`}>
                 { props.body && props.body.map( ( row, row_index ) => {
                     const ROW_DEFAULT_ID = row.row_pre_id ? `${row.row_pre_id}-tiny-simple-table-select-row-${row_index}` : `tiny-simple-table-select-row-${row_index}`;
                     const ROW_ID = row.row_id ? row.row_id : ROW_DEFAULT_ID;
@@ -88,6 +89,13 @@ function TinySimpleTable( props: TinySimpleTableProps ) {
                         )
                 } ) }
             </div>
+            
+            { props.footer && (
+                <div className={`${styles['tiny-simple-table__footer']} flex flex-align-center`}>
+                    <p>{ props.footer }</p>
+                </div>
+            ) }
+            
         </div>
     )
 }

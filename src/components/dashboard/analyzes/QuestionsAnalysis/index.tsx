@@ -122,7 +122,7 @@ function QuestionsAnalysis( props: QuestionsAnalysisProps ) {
         <>
             { loading ? <FeederLoading /> : 
                 <div className={`flex flex-gap-20`}>
-                    <div className={`col-xl col-xl-3`}>
+                    <div className={`col-xl col-xl-3`} style={ { maxHeight: '60vh' } }>
                         <TinySimpleTable head={QUESTIONS_TABLE_HEAD} body={QUESTIONS_TABLE_BODY} body_row_click_handler={ questionsListClickHandler } />
                     </div>
 
@@ -151,7 +151,7 @@ function QuestionsAnalysis( props: QuestionsAnalysisProps ) {
                                             <LabelList dataKey='points' content={ customBarLabelList }/>
                                         </Bar>
 
-                                        <Tooltip content={customTooltip}/>
+                                        <Tooltip content={customTooltip} cursor={ { fill: 'transparent' } }/>
                                     </BarChart>
                                 </ResponsiveContainer>
                             ) }

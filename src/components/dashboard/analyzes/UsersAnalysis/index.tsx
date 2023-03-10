@@ -179,7 +179,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                                         </RadarChart>
                                     </ResponsiveContainer>
         
-                                    <ResponsiveContainer width={600} aspect={4/3}>
+                                    <ResponsiveContainer width={600} aspect={4/2}>
                                         <BarChart data={questionsChartsData} margin={ { top: 40, bottom: 100 } }>
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis 
@@ -195,7 +195,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                                             <Bar dataKey='points' fill={colors.highlightColor} barSize={20}>
                                                 <LabelList dataKey='points' content={ customBarLabelList }/>
                                             </Bar>
-                                            <Tooltip content={ customTooltip } />
+                                            <Tooltip content={ customTooltip } cursor={ { fill: 'transparent' } }/>
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </>

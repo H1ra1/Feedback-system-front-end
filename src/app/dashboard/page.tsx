@@ -5,6 +5,7 @@ import { FaUsers } from 'react-icons/fa';
 import TinyHolder from '@/components/dashboard/holders/TinyHolder';
 import SimpleHolder from '@/components/dashboard/holders/SimpleHolder';
 import AssessmentsGroupsTable from '@/components/dashboard/tables/AssessmentsGroupsTable';
+import AveragePerArea from '@/components/dashboard/analyzes/AveragePerArea';
 
 async function getAssessmentsGroups() {
     const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/` );
@@ -62,15 +63,15 @@ async function Dashboard() {
             <section className='flex flex-wrap flex-gap-20'>
                 <TinyHolder 
                     icon={ <IoMdRocket /> } 
-                    title={ TOP_AREAS_BY_NOTE[0].name } 
+                    title={ TOP_AREAS_BY_NOTE.areas[0].name } 
                     subtitle='Top área'
-                    description={ `Nota média: ${TOP_AREAS_BY_NOTE[0].area_average_note}` }
+                    description={ `Nota média: ${TOP_AREAS_BY_NOTE.areas[0].area_average_note}` }
                 />
                 <TinyHolder 
                     icon={ <MdOutlineLocalFireDepartment /> } 
-                    title={ TOP_AREAS_BY_QUANTITY[0].name } 
+                    title={ TOP_AREAS_BY_QUANTITY.areas[0].name } 
                     subtitle='Área mais avaliada'
-                    description={ `Avaliações recebidas: ${TOP_AREAS_BY_QUANTITY[0].evaluations_done_count}` }
+                    description={ `Avaliações recebidas: ${TOP_AREAS_BY_QUANTITY.areas[0].evaluations_done_count}` }
                 />
                 <TinyHolder 
                     icon={ <RiUserStarFill /> }
@@ -89,7 +90,9 @@ async function Dashboard() {
             </section>
 
             <section className='flex m-t-20 flex-gap-20'>
-                <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por áreas' supTitle='Média dos pontos por áreas' />
+                <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por áreas' supTitle='Média dos pontos por áreas'>
+                    <AveragePerArea data={ TOP_AREAS_BY_NOTE }/>
+                </SimpleHolder>
                 <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por perguntas' supTitle='Pontuação média por cada pergunta' />
             </section>
 

@@ -1,0 +1,21 @@
+.simple-rank {
+    &__item {
+        .simple-rank-icon {
+            width: 42px;
+            height: 42px;
+            background-color: $base-dark;
+            border: 1px solid $highlight-color;
+            border-radius: 50%;
+
+            span {
+                @include font( .8, 600, $base-light );
+            }
+        }
+
+        div {
+            p {
+                @include font( 1, 400, $base-dark );
+            }
+        }
+    }
+}

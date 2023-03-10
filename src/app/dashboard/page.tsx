@@ -6,6 +6,7 @@ import TinyHolder from '@/components/dashboard/holders/TinyHolder';
 import SimpleHolder from '@/components/dashboard/holders/SimpleHolder';
 import AssessmentsGroupsTable from '@/components/dashboard/tables/AssessmentsGroupsTable';
 import AveragePerArea from '@/components/dashboard/analyzes/AveragePerArea';
+import SimpleRank from '@/components/dashboard/SimpleRank';
 
 async function getAssessmentsGroups() {
     const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/` );
@@ -58,6 +59,24 @@ async function Dashboard() {
     const TOP_USERS_BY_NOTE      = await getTopUsersBy( 'note' );
     const TOTAL_USERS            = await getTotalUsers();
 
+    const FORMATTED_USERS_RANK   = ( top_users: any ) => {
+        const RANK_USERS: any = [];
+
+        for( const user of top_users ) {
+            if( RANK_USERS.length == 6 )
+                break;
+
+            RANK_USERS.push( {
+                key:   user.id,
+                label: user.name,
+                value: user.note_average,
+                icon:  user.acronym
+            } );
+        }
+
+        return RANK_USERS;
+    } 
+
     return (
         <div>
             <section className='flex flex-wrap flex-gap-20'>
@@ -86,7 +105,9 @@ async function Dashboard() {
                 <SimpleHolder sizeClasses='col-xl col-xl-9' icon={<MdGroupWork />} mainTitle='Grupos de avaliações' subTitle='Últimos grupos cadastrados'>
                     <AssessmentsGroupsTable groups={ASSESSMENT_GROUPS}/>
                 </SimpleHolder>
-                <SimpleHolder sizeClasses='col-xl col-xl-3' icon={<RiUserStarFill />} mainTitle='Rank' subTitle='Usuários mais bem avaliados'/>
+                <SimpleHolder sizeClasses='col-xl col-xl-3' icon={<RiUserStarFill />} mainTitle='Rank' subTitle='Usuários mais bem avaliados'>
+                    <SimpleRank rank={ FORMATTED_USERS_RANK( TOP_USERS_BY_NOTE ) }/>
+                </SimpleHolder>
             </section>
 
             <section className='flex m-t-20 flex-gap-20'>

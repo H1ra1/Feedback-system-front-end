@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import TinySimpleTable from '../../tables/TinySimpleTable';
 import SimplePieChart from '../../charts/SimplePieChart';
 

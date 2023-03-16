@@ -7,6 +7,7 @@ import SimpleHolder from '@/components/dashboard/holders/SimpleHolder';
 import AssessmentsGroupsTable from '@/components/dashboard/tables/AssessmentsGroupsTable';
 import AveragePerArea from '@/components/dashboard/analyzes/AveragePerArea';
 import SimpleRank from '@/components/dashboard/SimpleRank';
+import QuestionsAverageFromGroupAnalysis from '@/components/dashboard/analyzes/QuestionsAverageFromGroupAnalysis';
 
 async function getAssessmentsGroups() {
     const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/` );
@@ -52,12 +53,24 @@ async function getTotalUsers() {
     return RESPONDE_PARSED.data;
 }
 
+async function getTAverageQuestionsFromGroup( question_group_id: number ) {
+    const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-average-from-group/${question_group_id}/` );
+
+    if( ! RESPONSE.ok )
+        throw new Error('Failed to fetch data');
+    
+    const RESPONDE_PARSED = await RESPONSE.json();
+
+    return RESPONDE_PARSED.data;
+}
+
 async function Dashboard() {
-    const ASSESSMENT_GROUPS      = await getAssessmentsGroups();
-    const TOP_AREAS_BY_NOTE      = await getTopAreasBy( 'note' );
-    const TOP_AREAS_BY_QUANTITY  = await getTopAreasBy( 'quantity' );
-    const TOP_USERS_BY_NOTE      = await getTopUsersBy( 'note' );
-    const TOTAL_USERS            = await getTotalUsers();
+    const ASSESSMENT_GROUPS             = await getAssessmentsGroups();
+    const TOP_AREAS_BY_NOTE             = await getTopAreasBy( 'note' );
+    const TOP_AREAS_BY_QUANTITY         = await getTopAreasBy( 'quantity' );
+    const TOP_USERS_BY_NOTE             = await getTopUsersBy( 'note' );
+    const TOTAL_USERS                   = await getTotalUsers();
+    const AVERAGE_QUESTIONS_FROM_GROUP  = await getTAverageQuestionsFromGroup( 31 );
 
     const FORMATTED_USERS_RANK   = ( top_users: any ) => {
         const RANK_USERS: any = [];
@@ -114,7 +127,9 @@ async function Dashboard() {
                 <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por áreas' supTitle='Média dos pontos por áreas'>
                     <AveragePerArea data={ TOP_AREAS_BY_NOTE }/>
                 </SimpleHolder>
-                <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por perguntas' supTitle='Pontuação média por cada pergunta' />
+                <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por perguntas' supTitle='Pontuação média por cada pergunta'>
+                    <QuestionsAverageFromGroupAnalysis data={ AVERAGE_QUESTIONS_FROM_GROUP } />
+                </SimpleHolder>
             </section>
 
             <section className='flex m-t-20 flex-gap-20'>

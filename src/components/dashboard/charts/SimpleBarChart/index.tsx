@@ -68,7 +68,7 @@ export default function SimpleBarChart( props: SimplePieChartProps ) {
                 />
                 <YAxis />
 
-                <Bar dataKey="value" fill={ colors.highlightColor } barSize={ 30 } isAnimationActive={ false }>
+                <Bar dataKey="value" fill={ colors.highlightColor } barSize={ 30 } isAnimationActive={ true }>
                     <LabelList dataKey='value' content={ customBarLabelList } position='top'/>
                 </Bar>
 

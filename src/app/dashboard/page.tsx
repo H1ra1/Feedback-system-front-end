@@ -132,11 +132,11 @@ async function Dashboard() {
                 </SimpleHolder>
             </section>
 
-            <section className='flex m-t-20 flex-gap-20'>
+            {/* <section className='flex m-t-20 flex-gap-20'>
                 <SimpleHolder sizeClasses='col-xl col-xl-5' mainTitle='Pontuação por usuários' supTitle='Pontuação total por usuário' />
                 <SimpleHolder sizeClasses='col-xl col-xl-4' mainTitle='Pontuação por áreas' supTitle='Pontuação mensal de áreas' />
                 <SimpleHolder sizeClasses='col-xl col-xl-3' mainTitle='Total de respostas' supTitle='Total de respostas por áreas' />
-            </section>
+            </section> */}
         </div>
     );
 }

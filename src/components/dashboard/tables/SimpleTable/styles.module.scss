@@ -1,0 +1,85 @@
+.simple-table-container {
+    background-color: $base-light;
+    border-radius: 5px;
+    padding: 5px 10px;
+
+    .simple-table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+
+        thead, tbody {
+            display: block;
+        }
+
+        th, td {
+            text-align: left;
+            width: 300px;
+        }
+
+        thead {
+            width: 100%;
+
+            tr {
+                border-bottom: 1px solid #d9d9d9;
+                height: 50px;
+                th {
+                    user-select: none;
+                    .simple-table__thead_item {
+                        .simple-table-head-item-order-holder {
+                            svg {
+                                transition: all .2s ease-in-out;
+
+                                &:nth-child( 2 ) {
+                                    margin-top: -10px;
+                                }
+                            }
+                        }
+
+                        &.--order {
+                            cursor: pointer;
+
+                            &:hover {
+                                svg {
+                                    color: $highlight-color;
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        tbody {
+            overflow-y: auto;
+            height: 220px;
+            width: 100%;
+            border-radius: 2.5px;
+
+            tr {
+                height: 50px;
+
+                &:nth-child( odd ) {
+                    background-color: #F4F3F4;
+                }
+
+                &:not( :last-child ) {
+                    border-bottom: 1px solid #d9d9d9;
+                }
+            }
+        }
+    }
+
+    &__footer {
+        width: 100%;
+        padding: 10px;
+        background-color: $highlight-color;
+        border-radius: 5px;
+        margin-top: 10px;
+
+        p {
+            @include font( 1, 600, $base-light );
+        }
+    }
+}

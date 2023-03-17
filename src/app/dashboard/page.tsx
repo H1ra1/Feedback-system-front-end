@@ -8,6 +8,7 @@ import AssessmentsGroupsTable from '@/components/dashboard/tables/AssessmentsGro
 import AveragePerArea from '@/components/dashboard/analyzes/AveragePerArea';
 import SimpleRank from '@/components/dashboard/SimpleRank';
 import QuestionsAverageFromGroupAnalysis from '@/components/dashboard/analyzes/QuestionsAverageFromGroupAnalysis';
+import PointsPerUserAnalysis from '@/components/dashboard/analyzes/PointsPerUserAnalysis';
 
 async function getAssessmentsGroups() {
     const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/` );
@@ -75,7 +76,7 @@ async function Dashboard() {
     const FORMATTED_USERS_RANK   = ( top_users: any ) => {
         const RANK_USERS: any = [];
 
-        for( const user of top_users ) {
+        for( const user of top_users.users ) {
             if( RANK_USERS.length == 6 )
                 break;
 
@@ -107,9 +108,9 @@ async function Dashboard() {
                 />
                 <TinyHolder 
                     icon={ <RiUserStarFill /> }
-                    title={ TOP_USERS_BY_NOTE[0].name }
+                    title={ TOP_USERS_BY_NOTE.users[0].name }
                     subtitle='Top Usuário'
-                    description={ `Nota média: ${TOP_USERS_BY_NOTE[0].note_average} \n Avaliações recebidas: ${TOP_USERS_BY_NOTE[0].evaluations_done_count} \n Usuário com maior nota e com no mínimo 4 avaliações recebidas.` }
+                    description={ `Nota média: ${TOP_USERS_BY_NOTE.users[0].note_average} \n Avaliações recebidas: ${TOP_USERS_BY_NOTE.users[0].evaluations_done_count} \n Usuário com maior nota e com no mínimo 4 avaliações recebidas.` }
                 />
                 <TinyHolder icon={ <FaUsers /> } title={ TOTAL_USERS.total_users } subtitle='Total de usuários'/>
             </section>
@@ -132,11 +133,13 @@ async function Dashboard() {
                 </SimpleHolder>
             </section>
 
-            {/* <section className='flex m-t-20 flex-gap-20'>
-                <SimpleHolder sizeClasses='col-xl col-xl-5' mainTitle='Pontuação por usuários' supTitle='Pontuação total por usuário' />
+            <section className='flex m-t-20 flex-gap-20'>
+                <SimpleHolder sizeClasses='col-xl col-xl-5' mainTitle='Pontuação por usuários' supTitle='Pontuação total por usuário'>
+                    <PointsPerUserAnalysis data={ TOP_USERS_BY_NOTE } />
+                </SimpleHolder>
                 <SimpleHolder sizeClasses='col-xl col-xl-4' mainTitle='Pontuação por áreas' supTitle='Pontuação mensal de áreas' />
                 <SimpleHolder sizeClasses='col-xl col-xl-3' mainTitle='Total de respostas' supTitle='Total de respostas por áreas' />
-            </section> */}
+            </section>
         </div>
     );
 }

@@ -112,8 +112,8 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                         </div>
                         
                         <div className={ `${styles['group-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` }>
-                            { areaData.text_notes.map( ( ( note: string ) => (
-                                <div className={ `${styles['group-analysis-text-note']}` }>
+                            { areaData.text_notes.map( ( ( note: string, index: number ) => (
+                                <div className={ `${styles['group-analysis-text-note']}` } key={ index }>
                                     <p>{ note }</p> 
                                 </div>
                             ) ) ) }

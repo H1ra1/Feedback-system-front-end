@@ -213,8 +213,8 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                             </div>
                             
                             <div className={ `${styles['users-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` }>
-                                { userSelectedTextNotes.map( ( note => (
-                                    <div className={ `${styles['users-analysis-text-note']}` }>
+                                { userSelectedTextNotes.map( ( ( note: string, index: number ) => (
+                                    <div className={ `${styles['users-analysis-text-note']}` } key={ index }>
                                         <p>{ note }</p> 
                                     </div>
                                 ) ) ) }

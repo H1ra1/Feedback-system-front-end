@@ -39,6 +39,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
     const [ userFromGroup, setUserFromGroup ] = useState< any[] >( [] );
     const [ usersTableBody, setUsersTableBody ] = useState< UsersTableBody[] >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
+    const [ userSelectedTextNotes, setUserSelectedTextNotes ] = useState( [] );
 
     useEffect( () => {
         async function getUsersAnalysis() {
@@ -57,7 +58,8 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                     name: user_evaluated.user_evaluated_name,
                     note_average: user_evaluated.note_average,
                     note_per_questions: user_evaluated.evaluations_notes_per_questions[0],
-                    evaluations_received: user_evaluated.evaluations_done
+                    evaluations_received: user_evaluated.evaluations_done,
+                    text_notes: user_evaluated.text_notes
                 } );
 
                 ITEMS_USERS_TABLE.push( {
@@ -98,10 +100,13 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
             } );
         } );
 
+        console.log(  );
+
         setUserSelected( SELECTED_USERNAME );
         setUserSelectedNoteAverage( userFromGroup[ user_index ].note_average );
         setUserEvaluationsReceived( userFromGroup[ user_index ].evaluations_received );
         setQuestionsChartsData( SELECTED_QUESTIONS_CHART_DATA );
+        setUserSelectedTextNotes( userFromGroup[ user_index ].text_notes );
     }
 
     function customTooltip( { active, payload, label }: any ) {
@@ -200,6 +205,21 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                                     </ResponsiveContainer>
                                 </>
                             ) }
+                        </div>
+
+                        <div className={ `${styles['users-analysis-text-notes-holder']} m-t-40 flex flex-column flex-align-center` }>
+                            <div className={ `${styles['users-analysis-text-notes__title']}` }>
+                                <p>Pontos fortes e fracos</p>
+                            </div>
+                            
+                            <div className={ `${styles['users-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` }>
+                                { userSelectedTextNotes.map( ( note => (
+                                    <div className={ `${styles['users-analysis-text-note']}` }>
+                                        <p>{ note }</p> 
+                                    </div>
+                                ) ) ) }
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

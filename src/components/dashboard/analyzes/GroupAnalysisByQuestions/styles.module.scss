@@ -1,0 +1,42 @@
+.group-analysis {
+    max-height: 55vh;
+    overflow-y: auto;
+
+    .group-analysis-text-notes {
+        &__title {
+            p {
+                @include font( 1.2, 600, $highlight-color );
+            }
+        }
+
+        &__scroll_box {
+            width: 90%;
+            max-height: 300px;
+            background-color: $base-light;
+            border-radius: 5px;
+            overflow-y: auto;
+
+            .group-analysis-text-note {
+                padding: 30px 15px;
+                border-bottom: 1px solid #cdcdcd;
+
+                p {
+                    @include font( 1, 400, $base-dark );
+                }
+
+                &:nth-child( odd ) {
+                    background-color: #f7f7f7;
+                }
+
+                &:first-child {
+                    border-radius: 5px 5px 0 0;
+                }
+
+                &:last-child {
+                    border-bottom: none;
+                    border-radius: 0 0 5px 5px;
+                }
+            }
+        }
+    }
+}

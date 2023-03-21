@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import FeederLoading from '../../loadings/FeederLoading';
 import colors from '@/styles/colors.module.scss';
+import styles from './styles.module.scss';
 
 interface QuestionsAnalysisProps {
     group_id: number
@@ -72,7 +73,7 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
     return (
         <>
             { loading ? <FeederLoading /> :
-                <div className={`col-xl col-xl-12 custom-purple-scrollbar`}>
+                <div className={`${styles['group-analysis']} col-xl col-xl-12 custom-purple-scrollbar`}>
                     <div>
                         <h3 className={`f-22 f-c-highlight`}>Nota média por pergunta</h3>
                         <p><strong>Nota média:</strong> { areaData.average_note }</p>
@@ -103,6 +104,21 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
 
                             </BarChart>
                         </ResponsiveContainer>
+                    </div>
+
+                    <div className={ `${styles['group-analysis-text-notes-holder']} m-t-40 flex flex-column flex-align-center` }>
+                        <div className={ `${styles['group-analysis-text-notes__title']}` }>
+                            <p>Pontos fortes e fracos</p>
+                        </div>
+                        
+                        <div className={ `${styles['group-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` }>
+                            { areaData.text_notes.map( ( ( note: string ) => (
+                                <div className={ `${styles['group-analysis-text-note']}` }>
+                                    <p>{ note }</p> 
+                                </div>
+                            ) ) ) }
+                        </div>
+                        
                     </div>
                 </div>
             }

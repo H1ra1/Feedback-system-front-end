@@ -7,6 +7,7 @@ import styles from './styles.module.scss';
 interface SimpleTableProps {
     thead: THead[]
     tbody: TBodyRow[]
+    flex?: boolean
     footer?: string
 }
 
@@ -18,6 +19,7 @@ interface THead {
 
 interface TBodyRow {
     id:    number
+    flex?: false
     items:  TBodyRowItem[]
 }
 
@@ -84,7 +86,7 @@ function SimpleTable( props: SimpleTableProps ) {
         <div className={ `${styles['simple-table-container']} default-shadow` }>
             <table className={ `${styles['simple-table']}` }>
                 <thead>
-                    <tr>
+                    <tr className={ props.flex ? 'flex flex-align-center' : '' }>
                         { props.thead.map( ( thead_item, index ) => (
                             <th key={ index } style={ {
                                 width: thead_item.column_size ?? '300px'
@@ -110,7 +112,7 @@ function SimpleTable( props: SimpleTableProps ) {
 
                 <tbody className={ `custom-purple-scrollbar` }>
                     { tbodyItems.map( ( row, row_index ) => (
-                        <tr key={ row.id }>
+                        <tr key={ row.id } className={ props.flex ? 'flex flex-align-center' : '' }>
                             { row.items.map( ( item, item_index ) => (
                                 <td 
                                     key={ item_index } 

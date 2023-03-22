@@ -14,15 +14,15 @@ function formattedTableBodyData( props: PointsPerUserAnalysisProps ) {
             id:   user.id,
             items: [
                 {
-                    column_size: '40%',
+                    column_size: '60%',
                     item: user.name
                 },
                 {
-                    column_size: '15%',
+                    column_size: '20%',
                     item: user.evaluations_done_count
                 },
                 {
-                    column_size: '15%',
+                    column_size: '20%',
                     item: user.total_points
                 }
             ]
@@ -41,11 +41,13 @@ function PointsPerUserAnalysis( props: PointsPerUserAnalysisProps ) {
         },
         {
             order: true,
-            item: 'Avaliações recebidas'
+            item: 'Avaliações recebidas',
+            column_size: '30%'
         },
         {
             order: true,
-            item: 'Pontos'
+            item: 'Pontos',
+            column_size: '20%'
         }
     ];
     const TABLE_BODY_ITEMS = formattedTableBodyData( props );
@@ -53,7 +55,7 @@ function PointsPerUserAnalysis( props: PointsPerUserAnalysisProps ) {
     return (
         <div className={`flex flex-gap-10`} style={ { maxHeight: '100%' } }>
             <div className={`col-xl-12`}>
-                <SimpleTable thead={ TABLE_HEADER_ITEMS } tbody={ TABLE_BODY_ITEMS } footer={ `Pontuação total: ${props.data.total}` } />
+                <SimpleTable thead={ TABLE_HEADER_ITEMS } tbody={ TABLE_BODY_ITEMS } footer={ `Pontuação total: ${props.data.total}` } flex={ true } />
             </div>
         </div>
     )

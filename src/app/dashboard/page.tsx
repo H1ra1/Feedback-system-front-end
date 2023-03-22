@@ -10,6 +10,7 @@ import SimpleRank from '@/components/dashboard/SimpleRank';
 import QuestionsAverageFromGroupAnalysis from '@/components/dashboard/analyzes/QuestionsAverageFromGroupAnalysis';
 import PointsPerUserAnalysis from '@/components/dashboard/analyzes/PointsPerUserAnalysis';
 import PointsPerAreas from '@/components/dashboard/analyzes/PointsPerAreas';
+import TotalAnswersPerAreas from '@/components/dashboard/analyzes/TotalAnswersPerAreas';
 
 async function getAssessmentsGroups() {
     const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/` );
@@ -142,7 +143,9 @@ async function Dashboard() {
                 <SimpleHolder sizeClasses='col-xl col-xl-4' mainTitle='Pontuação por áreas' supTitle='Pontuação mensal de áreas'>
                     <PointsPerAreas data={ POINTS_PER_AREAS } />
                 </SimpleHolder>
-                <SimpleHolder sizeClasses='col-xl col-xl-3' mainTitle='Total de respostas' supTitle='Total de respostas por áreas' />
+                <SimpleHolder sizeClasses='col-xl col-xl-3' mainTitle='Total de respostas' supTitle='Total de respostas por áreas'>
+                    <TotalAnswersPerAreas data={ POINTS_PER_AREAS } />
+                </SimpleHolder>
             </section>
         </div>
     );

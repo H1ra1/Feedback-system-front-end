@@ -33,7 +33,7 @@ function QuestionsAverageFromGroupAnalysis( props: QuestionsAverageFromGroupAnal
 
     return (
         <div>
-            <SimpleBarChart chart_data={ AVERAGE_QUESTIONS_NOTES_FORMATTED } />
+            <SimpleBarChart chart_data={ AVERAGE_QUESTIONS_NOTES_FORMATTED } chart_aspect={ 2 } />
         </div>
     )
 }

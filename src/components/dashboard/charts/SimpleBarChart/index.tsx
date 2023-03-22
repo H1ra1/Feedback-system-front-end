@@ -15,6 +15,7 @@ import {
 
 interface SimplePieChartProps {
     chart_data: ChartData[]
+    chart_aspect: number
 }
 
 interface ChartData {
@@ -53,7 +54,7 @@ function customBarLabelList( props: any ) {
 
 export default function SimpleBarChart( props: SimplePieChartProps ) {
     return (
-        <ResponsiveContainer width="100%" aspect={4/2}>
+        <ResponsiveContainer width="100%" aspect={ props.chart_aspect }>
             <BarChart data={ props.chart_data } margin={ { top: 60, bottom: 130 } }>
                 <CartesianGrid strokeDasharray="3 3" />
 

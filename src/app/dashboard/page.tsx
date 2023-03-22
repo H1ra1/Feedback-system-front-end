@@ -9,6 +9,7 @@ import AveragePerArea from '@/components/dashboard/analyzes/AveragePerArea';
 import SimpleRank from '@/components/dashboard/SimpleRank';
 import QuestionsAverageFromGroupAnalysis from '@/components/dashboard/analyzes/QuestionsAverageFromGroupAnalysis';
 import PointsPerUserAnalysis from '@/components/dashboard/analyzes/PointsPerUserAnalysis';
+import PointsPerAreas from '@/components/dashboard/analyzes/PointsPerAreas';
 
 async function getAssessmentsGroups() {
     const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/` );
@@ -72,6 +73,7 @@ async function Dashboard() {
     const TOP_USERS_BY_NOTE             = await getTopUsersBy( 'note' );
     const TOTAL_USERS                   = await getTotalUsers();
     const AVERAGE_QUESTIONS_FROM_GROUP  = await getTAverageQuestionsFromGroup( 31 );
+    const POINTS_PER_AREAS              = await getTopAreasBy( 'points' );
 
     const FORMATTED_USERS_RANK   = ( top_users: any ) => {
         const RANK_USERS: any = [];
@@ -137,7 +139,9 @@ async function Dashboard() {
                 <SimpleHolder sizeClasses='col-xl col-xl-5' mainTitle='Pontuação por usuários' supTitle='Pontuação total por usuário'>
                     <PointsPerUserAnalysis data={ TOP_USERS_BY_NOTE } />
                 </SimpleHolder>
-                <SimpleHolder sizeClasses='col-xl col-xl-4' mainTitle='Pontuação por áreas' supTitle='Pontuação mensal de áreas' />
+                <SimpleHolder sizeClasses='col-xl col-xl-4' mainTitle='Pontuação por áreas' supTitle='Pontuação mensal de áreas'>
+                    <PointsPerAreas data={ POINTS_PER_AREAS } />
+                </SimpleHolder>
                 <SimpleHolder sizeClasses='col-xl col-xl-3' mainTitle='Total de respostas' supTitle='Total de respostas por áreas' />
             </section>
         </div>

@@ -100,8 +100,6 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
             } );
         } );
 
-        console.log(  );
-
         setUserSelected( SELECTED_USERNAME );
         setUserSelectedNoteAverage( userFromGroup[ user_index ].note_average );
         setUserEvaluationsReceived( userFromGroup[ user_index ].evaluations_received );

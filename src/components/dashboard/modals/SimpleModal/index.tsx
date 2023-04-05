@@ -40,7 +40,7 @@ function SimpleModal( props: SimpleModalProps ) {
                         <p>{ props.title }</p>
                     </div>
                     
-                    <div className={`${styles['simple-modal-box__content_holder']}`}>
+                    <div className={`${styles['simple-modal-box__content_holder']} custom-purple-scrollbar`}>
                         { props.children }
                     </div>
                 </div>

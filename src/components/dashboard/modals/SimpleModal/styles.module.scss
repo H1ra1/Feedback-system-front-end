@@ -11,9 +11,10 @@
 
     .simple-modal-box {
         position: relative;
-        width: 90%;
+        width: 95%;
         max-width: 1800px;
-        max-height: 90%;
+        max-height: 95%;
+        height: 95%;
         background-color: $base-light;
         border-radius: 5px;
         padding: 20px;
@@ -35,13 +36,15 @@
         }
 
         &__content_holder {
+            height: calc( 100% - 100px );
+            overflow: auto;
             margin-top: 20px;
         }
 
         &--close-modal {
             position: absolute;
-            top: -26px;
-            right: -26px;
+            top: -15px;
+            right: -15px;
             width: 52px;
             height: 52px;
             border-radius: 50%;

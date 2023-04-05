@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useId } from 'react';
-import { Tooltip } from 'react-tooltip';
-import 'react-tooltip/dist/react-tooltip.css';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 import styles from './styles.module.scss';
 
 interface ButtonActionTinyProps {
@@ -14,23 +14,17 @@ interface ButtonActionTinyProps {
 }
 
 function ButtonActionTiny( props: ButtonActionTinyProps ) {
-    const BUTTON_ID = useId();
-
     return (
-        <>
+        <Tippy content={ props.tooltip } disabled={ props.tooltip ? false : true }>
             <button 
                 className={`${styles['button-action-tiny']} flex flex-justify-center flex-align-center default-shadow`}
                 type={ props.type || 'button' }
                 onClick={ props.onClick }
                 style={{ backgroundColor: props.bgColor }}
-                id={BUTTON_ID}
             >
                 {props.icon}
             </button>
-
-            { props.tooltip && <Tooltip anchorId={BUTTON_ID} content={props.tooltip}/> }
-            
-        </>
+        </Tippy>
     )
 }
 

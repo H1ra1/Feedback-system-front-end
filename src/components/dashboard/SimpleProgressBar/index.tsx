@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useState, useEffect, useId } from 'react';
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 import styles from './styles.module.scss';
-import { Tooltip } from 'react-tooltip';
-import 'react-tooltip/dist/react-tooltip.css';
 
 interface SimpleProgressBarProps {
     progress: number
@@ -32,13 +32,11 @@ function SimpleProgressBar( props: SimpleProgressBarProps ) {
     }, [ props.progress ] );
 
     return (
-        <>
+        <Tippy content={ props.tooltip } disabled={ props.tooltip ? false : true }>
             <div className={ `${ styles[ 'simple-progress-bar' ] }` } data-simple-progress-bar={ `${progress}%` } id={ PROGRESS_ID }>
                 <div className={ `${ styles['simple-progress-bar__progress'] }` } style={ { width: `${progress}%` } }></div>
             </div>
-
-            { props.tooltip && <Tooltip anchorId={ PROGRESS_ID } content={ props.tooltip }/> }
-        </>
+        </Tippy>
     )
 }
 

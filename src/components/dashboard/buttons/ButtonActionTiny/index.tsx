@@ -4,6 +4,7 @@ import React, { useId } from 'react';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import styles from './styles.module.scss';
+import SpinLoading from '../../loadings/SpinLoading';
 
 interface ButtonActionTinyProps {
     icon?: JSX.Element;
@@ -11,6 +12,7 @@ interface ButtonActionTinyProps {
     onClick?: React.MouseEventHandler;
     bgColor?: string;
     tooltip?: string;
+    loading?: boolean
 }
 
 function ButtonActionTiny( props: ButtonActionTinyProps ) {
@@ -22,7 +24,7 @@ function ButtonActionTiny( props: ButtonActionTinyProps ) {
                 onClick={ props.onClick }
                 style={{ backgroundColor: props.bgColor }}
             >
-                {props.icon}
+                { props.loading ? <SpinLoading /> : props.icon}
             </button>
         </Tippy>
     )

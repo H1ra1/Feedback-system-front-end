@@ -22,6 +22,7 @@ interface Group {
     id: number
     name: string
     progress: number
+    progress_info: string
     research_type: string
     status: string
     period_initial: string
@@ -169,7 +170,7 @@ function AssessmentsGroupsTable( props: AssessmentsGroupsTableProps ) {
                             <td>{ group.name }</td>
                             <td>{ group.research_type }</td>
                             <td>{ getStatusName( group.status ) }</td>
-                            <td><SimpleProgressBar progress={ group.progress }/></td>
+                            <td><SimpleProgressBar progress={ group.progress } tooltip={ group.progress_info }/></td>
                             <td>users</td>
                             <td>{ group.period_initial }</td>
                             <td>{ group.period_final }</td>

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import { ResponsiveContainer, Tooltip, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, RadarChart } from 'recharts';
 import FeederLoading from '../../loadings/FeederLoading';
 import colors from '@/styles/colors.module.scss';
 import styles from './styles.module.scss';
@@ -157,27 +157,22 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
         
                     <div ref={ CHART_REF }>
                         <ResponsiveContainer width="100%" aspect={4/1}>
-                            <BarChart data={areaDataChart} margin={ { top: 60, bottom: 130 } }>
-                                <CartesianGrid strokeDasharray="3 3" />
-        
-                                <XAxis 
-                                    dataKey='question'
-                                    angle={60}
-                                    tick={ { fontSize: 10 } }
-                                    tickLine={true}
-                                    type='category'
-                                    interval={0}
-                                    textAnchor='start'
+                            <RadarChart data={areaDataChart}>
+                                <PolarGrid />
+                                
+                                <PolarAngleAxis dataKey="question" />
+
+                                <PolarRadiusAxis angle={30} domain={[1, 5]} />
+
+                                <Radar 
+                                    dataKey='points' 
+                                    stroke={colors.highlightColor} 
+                                    fill={colors.highlightColor} 
+                                    fillOpacity={0.6}
                                 />
-                                <YAxis />
-        
-                                <Bar dataKey="points" fill={colors.highlightColor} barSize={30} isAnimationActive={ false }>
-                                    <LabelList dataKey='points' content={ customBarLabelList } position='top'/>
-                                </Bar>
 
-                                <Tooltip content={ customTooltip } cursor={ { fill: 'transparent' } }/>
-
-                            </BarChart>
+                                <Tooltip content={ customTooltip } />
+                            </RadarChart>
                         </ResponsiveContainer>
                     </div>
 

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { ResponsiveContainer, Tooltip, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, RadarChart, BarChart, CartesianGrid, XAxis, YAxis, Bar, LabelList } from 'recharts';
+import { ResponsiveContainer, Tooltip, BarChart, CartesianGrid, XAxis, YAxis, Bar, LabelList } from 'recharts';
 import FeederLoading from '../../loadings/FeederLoading';
 import colors from '@/styles/colors.module.scss';
 import styles from './styles.module.scss';
@@ -107,7 +107,8 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
             RESPONDE_PARSED.data.note_per_questions.forEach( ( area: any ) => {
                 AREA_DATA.push( {
                     id: area.id,
-                    question: area.alias,
+                    question_alias: area.alias,
+                    question: area.question,
                     points: area.note_average
                 } );
             } );
@@ -173,25 +174,27 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
         
                     <div ref={ CHART_REF }>
                         <ResponsiveContainer width="100%" aspect={3/1}>
-                            <BarChart data={areaDataChart} margin={ { top: 80, bottom: 130, right: 40 } }>
+
+                            <BarChart data={areaDataChart} margin={ { top: 80, bottom: 50, right: 40 } }>
                                 <CartesianGrid strokeDasharray="3 3" />
         
                                 <XAxis 
-                                    dataKey='question'
-                                    angle={60}
+                                    dataKey='question_alias'
+                                    angle={0}
                                     tick={ { fontSize: 16 } }
+                                    tickMargin={ 20 }
                                     tickLine={true}
                                     type='category'
                                     interval={0}
-                                    textAnchor='start'
+                                    textAnchor='middle'
                                     stroke = "#1D1128"
                                 />
                                 <YAxis />
         
-                                <Bar dataKey="points" fill={colors.highlightColor}>
+                                <Bar dataKey="points" fill={ colors.highlightColor }>
                                     <LabelList dataKey='points' content={ customBarLabelList }/>
                                 </Bar>
-                                <Tooltip content={ customTooltip }/>
+                                <Tooltip content={ customTooltip } cursor={ { fill: 'transparent' } }/>
                             </BarChart>
                         </ResponsiveContainer>
                     </div>

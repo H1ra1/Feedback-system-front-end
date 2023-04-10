@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { ResponsiveContainer, Tooltip, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, RadarChart } from 'recharts';
+import { ResponsiveContainer, Tooltip, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, RadarChart, BarChart, CartesianGrid, XAxis, YAxis, Bar, LabelList } from 'recharts';
 import FeederLoading from '../../loadings/FeederLoading';
 import colors from '@/styles/colors.module.scss';
 import styles from './styles.module.scss';
@@ -29,6 +29,7 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
         setDownloadPdfLoading( true );
 
         const PDF = new jsPDF("portrait", "pt", "a4");
+        const PAGE_HEIGHT = PDF.internal.pageSize.height;
 
         PDF.setTextColor( 141, 21, 236 );
         PDF.setFontSize( 18 );
@@ -61,7 +62,22 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
             const QUALITATIVE_PROPS = PDF.getImageProperties( QUALITATIVE_IMAGE );
             const QUALITATIVE_WIDTH = PDF.internal.pageSize.getWidth();
             const QUALITATIVE_HEIGHT = (QUALITATIVE_PROPS.height * QUALITATIVE_WIDTH) / QUALITATIVE_PROPS.width;
-            PDF.addImage( QUALITATIVE_IMAGE, "PNG", 5, CHART_HEIGHT + 100, QUALITATIVE_WIDTH, QUALITATIVE_HEIGHT );
+
+            PDF.addPage();
+
+            let pageHeight = PAGE_HEIGHT;
+            let heightLeft = QUALITATIVE_HEIGHT;
+            let position = 10;
+
+            PDF.addImage( QUALITATIVE_IMAGE, 'PNG', 5, position, QUALITATIVE_WIDTH, QUALITATIVE_HEIGHT );
+            heightLeft -= pageHeight;
+
+            while ( heightLeft >= 0 ) {
+                position += heightLeft - QUALITATIVE_HEIGHT;
+                PDF.addPage();
+                PDF.addImage( QUALITATIVE_IMAGE, 'PNG', 0, position, QUALITATIVE_WIDTH, QUALITATIVE_HEIGHT );
+                heightLeft -= pageHeight;
+            }
         }
 
         
@@ -156,23 +172,27 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                     </div>
         
                     <div ref={ CHART_REF }>
-                        <ResponsiveContainer width="100%" aspect={4/1}>
-                            <RadarChart data={areaDataChart}>
-                                <PolarGrid />
-                                
-                                <PolarAngleAxis dataKey="question" />
-
-                                <PolarRadiusAxis angle={30} domain={[1, 5]} />
-
-                                <Radar 
-                                    dataKey='points' 
-                                    stroke={colors.highlightColor} 
-                                    fill={colors.highlightColor} 
-                                    fillOpacity={0.6}
+                        <ResponsiveContainer width="100%" aspect={3/1}>
+                            <BarChart data={areaDataChart} margin={ { top: 80, bottom: 130, right: 40 } }>
+                                <CartesianGrid strokeDasharray="3 3" />
+        
+                                <XAxis 
+                                    dataKey='question'
+                                    angle={60}
+                                    tick={ { fontSize: 16 } }
+                                    tickLine={true}
+                                    type='category'
+                                    interval={0}
+                                    textAnchor='start'
+                                    stroke = "#1D1128"
                                 />
-
-                                <Tooltip content={ customTooltip } />
-                            </RadarChart>
+                                <YAxis />
+        
+                                <Bar dataKey="points" fill={colors.highlightColor}>
+                                    <LabelList dataKey='points' content={ customBarLabelList }/>
+                                </Bar>
+                                <Tooltip content={ customTooltip }/>
+                            </BarChart>
                         </ResponsiveContainer>
                     </div>
 

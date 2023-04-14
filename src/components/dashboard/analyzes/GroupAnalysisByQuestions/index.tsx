@@ -160,9 +160,10 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                             <h3 className={`f-22 f-c-highlight`}>Nota média por pergunta</h3>
                             <p className='f-18'><strong>Nota média:</strong> { areaData.average_note }</p>
                             <p className='f-18'><strong>Média geral:</strong> { areaData.total_average }</p>
-                            <p className='f-18'><strong>Avaliações recebidas:</strong> { areaData.evaluations_done_total }</p>
-                            <p className='f-18'><strong>Avaliações não concluídas:</strong> { areaData.evaluations_not_done }</p>
-                            <p className='f-18'><strong>Não conhece a área:</strong> { areaData.evaluations_dont_know }</p>
+                            <p className='f-18'><strong>Avaliações enviadas:</strong> { areaData.evaluations_sended }</p>
+                            <p className='f-18'><strong>Avaliações realizadas:</strong> { areaData.evaluations_done_total }</p>
+                            <p className='f-18'><strong>Avaliações não realizadas:</strong> { areaData.evaluations_not_done }</p>
+                            <p className='f-18'><strong>Pessoas que não conhecem a área:</strong> { areaData.evaluations_dont_know }</p>
                         </div>
 
                         <div style={ { marginRight: '10px' } } ref={ ICONS_AREA_REF }>
@@ -235,7 +236,34 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                                 </div>
                             ) ) ) }
                         </div>
+                    </div>
+
+                    <div className={ `${styles['group-analysis-text-notes-holder']} m-t-40 flex flex-column flex-align-center` } ref={ QUALITATIVE_REF }>
+                        <div className={ `${styles['group-analysis-text-notes__title']}` }>
+                            <p>Pessoas que não conhecem a área</p>
+                        </div>
                         
+                        <div className={ `${styles['group-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` } ref={ QUALITATIVE_BOX_REF }>
+                            { areaData.dont_know_users.map( ( ( note: string, index: number ) => (
+                                <div className={ `${styles['group-analysis-text-note']}` } key={ index }>
+                                    <p>{ note }</p> 
+                                </div>
+                            ) ) ) }
+                        </div>
+                    </div>
+
+                    <div className={ `${styles['group-analysis-text-notes-holder']} m-t-40 flex flex-column flex-align-center` } ref={ QUALITATIVE_REF }>
+                        <div className={ `${styles['group-analysis-text-notes__title']}` }>
+                            <p>Pessoas que não realizaram a avaliação</p>
+                        </div>
+                        
+                        <div className={ `${styles['group-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` } ref={ QUALITATIVE_BOX_REF }>
+                            { areaData.not_done_users.map( ( ( note: string, index: number ) => (
+                                <div className={ `${styles['group-analysis-text-note']}` } key={ index }>
+                                    <p>{ note }</p> 
+                                </div>
+                            ) ) ) }
+                        </div>
                     </div>
                 </div>
             }

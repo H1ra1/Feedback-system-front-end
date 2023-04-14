@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { ResponsiveContainer, Tooltip, BarChart, CartesianGrid, XAxis, YAxis, Bar, LabelList } from 'recharts';
+import { ResponsiveContainer, Tooltip, CartesianGrid, XAxis, YAxis, Bar, LabelList, ComposedChart, Line, Area, Legend } from 'recharts';
 import FeederLoading from '../../loadings/FeederLoading';
 import colors from '@/styles/colors.module.scss';
 import styles from './styles.module.scss';
@@ -19,6 +19,7 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
     const [ areaData, setAreaData ] = useState< any >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ downloadPdfLoading, setDownloadPdfLoading ] = useState< boolean >( false );
+    const [ chartAspect, setChartAspect ] = useState< number >( 3/1 );
     const GROUP_INFO_REF = useRef< HTMLDivElement >( null );
     const CHART_REF = useRef< HTMLDivElement >( null );
     const QUALITATIVE_REF = useRef< HTMLDivElement >( null );
@@ -27,6 +28,7 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
 
     async function createPdf() {
         setDownloadPdfLoading( true );
+        setChartAspect( 4/4 );
 
         const PDF = new jsPDF("portrait", "pt", "a4");
         const PAGE_HEIGHT = PDF.internal.pageSize.height;
@@ -49,7 +51,7 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
         const CHART_PROPS = PDF.getImageProperties( CHART_IMAGE );
         const CHART_WIDTH = PDF.internal.pageSize.getWidth();
         const CHART_HEIGHT = (CHART_PROPS.height * CHART_WIDTH) / CHART_PROPS.width;
-        PDF.addImage( CHART_IMAGE, "PNG", 5, GROUP_INFO_REF_HEIGHT + 80, CHART_WIDTH, CHART_HEIGHT );
+        PDF.addImage( CHART_IMAGE, "PNG", 0, GROUP_INFO_REF_HEIGHT + 80, CHART_WIDTH, CHART_HEIGHT );
 
         // QUALITATIVE
         if( QUALITATIVE_REF.current !== null && QUALITATIVE_BOX_REF.current !== null ) {
@@ -79,9 +81,6 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                 heightLeft -= pageHeight;
             }
         }
-
-        
-        
         
         PDF.save( `Avaliações - ${areaData.name}.pdf`, { returnPromise:true } ).then( () => {
             if( QUALITATIVE_REF.current !== null && QUALITATIVE_BOX_REF.current !== null && ICONS_AREA_REF.current !== null ) {
@@ -89,6 +88,7 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                 QUALITATIVE_BOX_REF.current.style.maxHeight = ' 300px';
                 QUALITATIVE_BOX_REF.current.style.boxShadow = '0px 0px 4px 1px rgba(0, 0, 0, 0.09)';
                 QUALITATIVE_BOX_REF.current.style.backgroundColor = '#FCFBFC';
+                setChartAspect( 3/1 );
                 setDownloadPdfLoading( false );
             }
         } );
@@ -109,7 +109,8 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                     id: area.id,
                     question_alias: area.alias,
                     question: area.question,
-                    points: area.note_average
+                    points: area.note_average,
+                    total_average: RESPONDE_PARSED.data.total_average
                 } );
             } );
 
@@ -142,8 +143,8 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
 
         return (
             <g>
-            <circle cx={x + width / 2} cy={y - radius - 5} r={radius} fill={colors.highlightColor} />
-                <text x={x + width / 2} y={y - radius - 5} fill="#fff" textAnchor="middle" dominantBaseline="middle" fontSize={14}>
+            <circle cx={ width } cy={y - radius - 2} r={radius} fill={colors.highlightColor} />
+                <text x={ width } y={y - radius - 2} fill="#fff" textAnchor="middle" dominantBaseline="middle" fontSize={14}>
                     { value }
                 </text>
             </g>
@@ -157,8 +158,11 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                     <div className='flex flex-justify-between flex-align-center'>
                         <div ref={ GROUP_INFO_REF } style={ { width: '100%' } }>
                             <h3 className={`f-22 f-c-highlight`}>Nota média por pergunta</h3>
-                            <p><strong>Nota média:</strong> { areaData.average_note }</p>
-                            <p><strong>Avaliações recebidas:</strong> { areaData.evaluations_done_total }</p>
+                            <p className='f-18'><strong>Nota média:</strong> { areaData.average_note }</p>
+                            <p className='f-18'><strong>Média geral:</strong> { areaData.total_average }</p>
+                            <p className='f-18'><strong>Avaliações recebidas:</strong> { areaData.evaluations_done_total }</p>
+                            <p className='f-18'><strong>Avaliações não concluídas:</strong> { areaData.evaluations_not_done }</p>
+                            <p className='f-18'><strong>Não conhece a área:</strong> { areaData.evaluations_dont_know }</p>
                         </div>
 
                         <div style={ { marginRight: '10px' } } ref={ ICONS_AREA_REF }>
@@ -173,29 +177,49 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                     </div>
         
                     <div ref={ CHART_REF }>
-                        <ResponsiveContainer width="100%" aspect={3/1}>
-
-                            <BarChart data={areaDataChart} margin={ { top: 80, bottom: 50, right: 40 } }>
-                                <CartesianGrid strokeDasharray="3 3" />
+                        <ResponsiveContainer width="100%" aspect={ chartAspect } >
+                            <ComposedChart 
+                                data={areaDataChart} 
+                                margin={ { top: 80, bottom: 0, right: 30, left: 0 } }
+                                layout='vertical'
+                            >
+                                <CartesianGrid stroke={ colors.highlightColor  } />
         
                                 <XAxis 
-                                    dataKey='question_alias'
-                                    angle={0}
-                                    tick={ { fontSize: 18 } }
-                                    tickMargin={ 20 }
-                                    tickLine={true}
-                                    type='category'
-                                    interval={0}
-                                    textAnchor='middle'
-                                    stroke = "#1D1128"
+                                    dataKey='points'
+                                    type='number'
+                                    stroke='#1D1128'
+                                    scale='sequential'
                                 />
-                                <YAxis />
+
+                                <YAxis 
+                                    stroke='#1D1128'
+                                    dataKey='question_alias' 
+                                    type='category' 
+                                    scale='band'
+                                    tick={ { fontSize: 18 } }
+                                    width={ 300 }
+                                    tickLine={{ stroke: 'black' }}
+                                />
         
-                                <Bar dataKey="points" fill={ colors.highlightColor }>
+                                <Bar dataKey="points" fill={ colors.highlightColor } isAnimationActive={ false } barSize={ 20 } name='Pontuação por questões'>
                                     <LabelList dataKey='points' content={ customBarLabelList }/>
                                 </Bar>
+
+                                <Area type="monotone" dataKey="points" fill="#8d15ec59" stroke="#8d15ec59" name='Pontuação por questões área'
+                                    isAnimationActive={ false }
+                                />
+                                <Line type="monotone" dataKey="total_average" stroke="#ff7300" name='Média geral' 
+                                isAnimationActive={ false }
+                                    label={ {
+                                        fontSize: 18,
+                                        fill: '#ff7300',
+                                        position: 'right'
+                                    } } 
+                                />
                                 <Tooltip content={ customTooltip } cursor={ { fill: 'transparent' } }/>
-                            </BarChart>
+                                <Legend margin={ { top: 80 } } align='center' />
+                            </ComposedChart>
                         </ResponsiveContainer>
                     </div>
 

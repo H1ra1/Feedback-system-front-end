@@ -138,12 +138,12 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
 
     function customBarLabelList( props: any ) {
         const { x, y, width, height, value } = props;
-        const radius = 15;
+        const radius = 20;
 
         return (
             <g>
             <circle cx={x + width / 2} cy={y - radius - 5} r={radius} fill={colors.highlightColor} />
-                <text x={x + width / 2} y={y - radius - 5} fill="#fff" textAnchor="middle" dominantBaseline="middle" fontSize={10}>
+                <text x={x + width / 2} y={y - radius - 5} fill="#fff" textAnchor="middle" dominantBaseline="middle" fontSize={14}>
                     { value }
                 </text>
             </g>
@@ -181,7 +181,7 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                                 <XAxis 
                                     dataKey='question_alias'
                                     angle={0}
-                                    tick={ { fontSize: 16 } }
+                                    tick={ { fontSize: 18 } }
                                     tickMargin={ 20 }
                                     tickLine={true}
                                     type='category'

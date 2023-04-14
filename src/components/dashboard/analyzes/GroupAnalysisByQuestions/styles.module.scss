@@ -19,7 +19,7 @@
                 border-bottom: 1px solid #cdcdcd;
 
                 p {
-                    @include font( 1, 400, $base-dark );
+                    @include font( 1.4, 400, $base-dark );
                 }
 
                 &:nth-child( odd ) {

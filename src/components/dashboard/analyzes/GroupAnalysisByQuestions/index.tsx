@@ -25,6 +25,11 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
     const QUALITATIVE_REF = useRef< HTMLDivElement >( null );
     const QUALITATIVE_BOX_REF = useRef< HTMLDivElement >( null );
     const ICONS_AREA_REF = useRef< HTMLDivElement >( null );
+    const BOXS_CONTAINERS_REF = useRef< HTMLDivElement >( null );
+
+    function prepareBoxToPdf() {
+
+    }
 
     async function createPdf() {
         setDownloadPdfLoading( true );
@@ -53,41 +58,47 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
         const CHART_HEIGHT = (CHART_PROPS.height * CHART_WIDTH) / CHART_PROPS.width;
         PDF.addImage( CHART_IMAGE, "PNG", 0, GROUP_INFO_REF_HEIGHT + 80, CHART_WIDTH, CHART_HEIGHT );
 
-        // QUALITATIVE
-        if( QUALITATIVE_REF.current !== null && QUALITATIVE_BOX_REF.current !== null ) {
-            QUALITATIVE_BOX_REF.current.style.overflow = 'auto';
-            QUALITATIVE_BOX_REF.current.style.maxHeight = 'none';
-            QUALITATIVE_BOX_REF.current.style.boxShadow = 'none';
-            QUALITATIVE_BOX_REF.current.style.backgroundColor = 'transparent';
-            const QUALITATIVE_ELEMENT = await html2canvas( QUALITATIVE_REF.current ? QUALITATIVE_REF.current : new HTMLDivElement );
-            const QUALITATIVE_IMAGE = QUALITATIVE_ELEMENT.toDataURL("image/png");
-            const QUALITATIVE_PROPS = PDF.getImageProperties( QUALITATIVE_IMAGE );
-            const QUALITATIVE_WIDTH = PDF.internal.pageSize.getWidth();
-            const QUALITATIVE_HEIGHT = (QUALITATIVE_PROPS.height * QUALITATIVE_WIDTH) / QUALITATIVE_PROPS.width;
+        const CONTAINERS_BOX: any = BOXS_CONTAINERS_REF.current?.children;
 
+        for ( const BOX of CONTAINERS_BOX ) {
+            const BOX_SCROLL = BOX.querySelector( '.box-scroll' );
+            BOX_SCROLL.style.overflow = 'auto';
+            BOX_SCROLL.style.maxHeight = 'none';
+            BOX_SCROLL.style.BOX_SCROLLShadow = 'none';
+            BOX_SCROLL.style.backgroundColor = 'transparent';
+        }
+
+        PDF.addPage();
+
+        const BOX_ELEMENT = await html2canvas( BOXS_CONTAINERS_REF.current ? BOXS_CONTAINERS_REF.current : new HTMLDivElement );
+        const BOX_IMAGE = BOX_ELEMENT.toDataURL("image/png");
+        const BOX_PROPS = PDF.getImageProperties( BOX_IMAGE );
+        const BOX_WIDTH = PDF.internal.pageSize.getWidth();
+        const BOX_HEIGHT = ( BOX_PROPS.height * BOX_WIDTH ) / BOX_PROPS.width;
+
+        let pageHeight = PAGE_HEIGHT;
+        let heightLeft = BOX_HEIGHT;
+        let position = 10;
+
+        PDF.addImage( BOX_IMAGE, 'PNG', 5, position, BOX_WIDTH, BOX_HEIGHT );
+        heightLeft -= pageHeight;
+
+        while ( heightLeft >= 0 ) {
+            position = heightLeft - BOX_HEIGHT;
             PDF.addPage();
-
-            let pageHeight = PAGE_HEIGHT;
-            let heightLeft = QUALITATIVE_HEIGHT;
-            let position = 10;
-
-            PDF.addImage( QUALITATIVE_IMAGE, 'PNG', 5, position, QUALITATIVE_WIDTH, QUALITATIVE_HEIGHT );
+            PDF.addImage( BOX_IMAGE, 'PNG', 5, position, BOX_WIDTH, BOX_HEIGHT );
             heightLeft -= pageHeight;
-
-            while ( heightLeft >= 0 ) {
-                position += heightLeft - QUALITATIVE_HEIGHT;
-                PDF.addPage();
-                PDF.addImage( QUALITATIVE_IMAGE, 'PNG', 0, position, QUALITATIVE_WIDTH, QUALITATIVE_HEIGHT );
-                heightLeft -= pageHeight;
-            }
         }
         
-        PDF.save( `Avaliações - ${areaData.name}.pdf`, { returnPromise:true } ).then( () => {
+        PDF.save( `Avaliações - ${areaData.name}.pdf`, { returnPromise: true } ).then( () => {
             if( QUALITATIVE_REF.current !== null && QUALITATIVE_BOX_REF.current !== null && ICONS_AREA_REF.current !== null ) {
-                QUALITATIVE_BOX_REF.current.style.overflow = 'auto';
-                QUALITATIVE_BOX_REF.current.style.maxHeight = ' 300px';
-                QUALITATIVE_BOX_REF.current.style.boxShadow = '0px 0px 4px 1px rgba(0, 0, 0, 0.09)';
-                QUALITATIVE_BOX_REF.current.style.backgroundColor = '#FCFBFC';
+                // for ( const BOX of CONTAINERS_BOX ) {
+                //     const BOX_SCROLL = BOX.querySelector( '.box-scroll' );
+                //     BOX_SCROLL.style.overflow = 'auto';
+                //     BOX_SCROLL.style.maxHeight = ' 300px';
+                //     BOX_SCROLL.style.boxShadow = '0px 0px 4px 1px rgba(0, 0, 0, 0.09)';
+                //     BOX_SCROLL.style.backgroundColor = '#FCFBFC';
+                // }
                 setChartAspect( 3/1 );
                 setDownloadPdfLoading( false );
             }
@@ -223,46 +234,48 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                             </ComposedChart>
                         </ResponsiveContainer>
                     </div>
+                    
+                    <div ref={BOXS_CONTAINERS_REF}>
+                        <div className={ `${styles['group-analysis-text-notes-holder']} m-t-40 flex flex-column flex-align-center` } ref={ QUALITATIVE_REF }>
+                            <div className={ `${styles['group-analysis-text-notes__title']}` }>
+                                <p>Pontos fortes e fracos</p>
+                            </div>
+                            
+                            <div className={ `${styles['group-analysis-text-notes__scroll_box']} box-scroll custom-purple-scrollbar default-shadow` } ref={ QUALITATIVE_BOX_REF }>
+                                { areaData.text_notes.map( ( ( note: string, index: number ) => (
+                                    <div className={ `${styles['group-analysis-text-note']}` } key={ index }>
+                                        <p>{ note }</p> 
+                                    </div>
+                                ) ) ) }
+                            </div>
+                        </div>
 
-                    <div className={ `${styles['group-analysis-text-notes-holder']} m-t-40 flex flex-column flex-align-center` } ref={ QUALITATIVE_REF }>
-                        <div className={ `${styles['group-analysis-text-notes__title']}` }>
-                            <p>Pontos fortes e fracos</p>
+                        <div className={ `${styles['group-analysis-text-notes-holder']} m-t-40 flex flex-column flex-align-center` } ref={ QUALITATIVE_REF }>
+                            <div className={ `${styles['group-analysis-text-notes__title']}` }>
+                                <p>Pessoas que não conhecem a área</p>
+                            </div>
+                            
+                            <div className={ `${styles['group-analysis-text-notes__scroll_box']} box-scroll custom-purple-scrollbar default-shadow` } ref={ QUALITATIVE_BOX_REF }>
+                                { areaData.dont_know_users.map( ( ( note: string, index: number ) => (
+                                    <div className={ `${styles['group-analysis-text-note']}` } key={ index }>
+                                        <p>{ note }</p> 
+                                    </div>
+                                ) ) ) }
+                            </div>
                         </div>
-                        
-                        <div className={ `${styles['group-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` } ref={ QUALITATIVE_BOX_REF }>
-                            { areaData.text_notes.map( ( ( note: string, index: number ) => (
-                                <div className={ `${styles['group-analysis-text-note']}` } key={ index }>
-                                    <p>{ note }</p> 
-                                </div>
-                            ) ) ) }
-                        </div>
-                    </div>
 
-                    <div className={ `${styles['group-analysis-text-notes-holder']} m-t-40 flex flex-column flex-align-center` } ref={ QUALITATIVE_REF }>
-                        <div className={ `${styles['group-analysis-text-notes__title']}` }>
-                            <p>Pessoas que não conhecem a área</p>
-                        </div>
-                        
-                        <div className={ `${styles['group-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` } ref={ QUALITATIVE_BOX_REF }>
-                            { areaData.dont_know_users.map( ( ( note: string, index: number ) => (
-                                <div className={ `${styles['group-analysis-text-note']}` } key={ index }>
-                                    <p>{ note }</p> 
-                                </div>
-                            ) ) ) }
-                        </div>
-                    </div>
-
-                    <div className={ `${styles['group-analysis-text-notes-holder']} m-t-40 flex flex-column flex-align-center` } ref={ QUALITATIVE_REF }>
-                        <div className={ `${styles['group-analysis-text-notes__title']}` }>
-                            <p>Pessoas que não realizaram a avaliação</p>
-                        </div>
-                        
-                        <div className={ `${styles['group-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` } ref={ QUALITATIVE_BOX_REF }>
-                            { areaData.not_done_users.map( ( ( note: string, index: number ) => (
-                                <div className={ `${styles['group-analysis-text-note']}` } key={ index }>
-                                    <p>{ note }</p> 
-                                </div>
-                            ) ) ) }
+                        <div className={ `${styles['group-analysis-text-notes-holder']} m-t-40 flex flex-column flex-align-center` } ref={ QUALITATIVE_REF }>
+                            <div className={ `${styles['group-analysis-text-notes__title']}` }>
+                                <p>Pessoas que não realizaram a avaliação</p>
+                            </div>
+                            
+                            <div className={ `${styles['group-analysis-text-notes__scroll_box']} box-scroll custom-purple-scrollbar default-shadow` } ref={ QUALITATIVE_BOX_REF }>
+                                { areaData.not_done_users.map( ( ( note: string, index: number ) => (
+                                    <div className={ `${styles['group-analysis-text-note']}` } key={ index }>
+                                        <p>{ note }</p> 
+                                    </div>
+                                ) ) ) }
+                            </div>
                         </div>
                     </div>
                 </div>

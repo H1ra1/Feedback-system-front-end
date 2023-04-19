@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { ResponsiveContainer, Tooltip, CartesianGrid, XAxis, YAxis, Bar, LabelList, ComposedChart, Line, Area, Legend } from 'recharts';
+import { ResponsiveContainer, Tooltip, Legend, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 import FeederLoading from '../../loadings/FeederLoading';
 import colors from '@/styles/colors.module.scss';
 import styles from './styles.module.scss';
@@ -92,13 +92,13 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
         
         PDF.save( `Avaliações - ${areaData.name}.pdf`, { returnPromise: true } ).then( () => {
             if( QUALITATIVE_REF.current !== null && QUALITATIVE_BOX_REF.current !== null && ICONS_AREA_REF.current !== null ) {
-                // for ( const BOX of CONTAINERS_BOX ) {
-                //     const BOX_SCROLL = BOX.querySelector( '.box-scroll' );
-                //     BOX_SCROLL.style.overflow = 'auto';
-                //     BOX_SCROLL.style.maxHeight = ' 300px';
-                //     BOX_SCROLL.style.boxShadow = '0px 0px 4px 1px rgba(0, 0, 0, 0.09)';
-                //     BOX_SCROLL.style.backgroundColor = '#FCFBFC';
-                // }
+                for ( const BOX of CONTAINERS_BOX ) {
+                    const BOX_SCROLL = BOX.querySelector( '.box-scroll' );
+                    BOX_SCROLL.style.overflow = 'auto';
+                    BOX_SCROLL.style.maxHeight = ' 300px';
+                    BOX_SCROLL.style.boxShadow = '0px 0px 4px 1px rgba(0, 0, 0, 0.09)';
+                    BOX_SCROLL.style.backgroundColor = '#FCFBFC';
+                }
                 setChartAspect( 3/1 );
                 setDownloadPdfLoading( false );
             }
@@ -190,48 +190,40 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
         
                     <div ref={ CHART_REF }>
                         <ResponsiveContainer width="100%" aspect={ chartAspect } >
-                            <ComposedChart 
-                                data={areaDataChart} 
-                                margin={ { top: 80, bottom: 0, right: 30, left: 0 } }
-                                layout='vertical'
-                            >
-                                <CartesianGrid stroke={ colors.highlightColor  } />
-        
-                                <XAxis 
-                                    dataKey='points'
-                                    type='number'
-                                    stroke='#1D1128'
-                                    scale='sequential'
-                                />
+                            <RadarChart data={areaDataChart}>
+                                <PolarGrid />
+                                
+                                <PolarAngleAxis dataKey="question_alias" />
 
-                                <YAxis 
-                                    stroke='#1D1128'
-                                    dataKey='question_alias' 
-                                    type='category' 
-                                    scale='band'
-                                    tick={ { fontSize: 18 } }
-                                    width={ 300 }
-                                    tickLine={{ stroke: 'black' }}
-                                />
-        
-                                <Bar dataKey="points" fill={ colors.highlightColor } isAnimationActive={ false } barSize={ 20 } name='Pontuação por questões'>
-                                    <LabelList dataKey='points' content={ customBarLabelList }/>
-                                </Bar>
+                                <PolarRadiusAxis angle={30} domain={[1, 5]} />
 
-                                <Area type="monotone" dataKey="points" fill="#8d15ec59" stroke="#8d15ec59" name='Pontuação por questões área'
+                                <Radar 
+                                    dataKey='points' 
+                                    stroke={colors.highlightColor} 
+                                    fill={colors.highlightColor} 
+                                    fillOpacity={0.4}
+                                    name='Pontuação por questões'
+                                    label={ { 
+                                        position: 'center', 
+                                        fill: '#000',
+                                        fontSize: 18,
+                                        fontWeight: 600,
+                                        angle: 0
+                                    } }
                                     isAnimationActive={ false }
                                 />
-                                <Line type="monotone" dataKey="total_average" stroke="#ff7300" name='Média geral' 
-                                isAnimationActive={ false }
-                                    label={ {
-                                        fontSize: 18,
-                                        fill: '#ff7300',
-                                        position: 'right'
-                                    } } 
+
+                                <Radar 
+                                    dataKey='total_average' 
+                                    stroke='#d88107'
+                                    fill='#d88107'
+                                    fillOpacity={0.2}
+                                    name='Média geral'
                                 />
-                                <Tooltip content={ customTooltip } cursor={ { fill: 'transparent' } }/>
+
+                                <Tooltip content={ customTooltip } />
                                 <Legend margin={ { top: 80 } } align='center' />
-                            </ComposedChart>
+                            </RadarChart>
                         </ResponsiveContainer>
                     </div>
                     

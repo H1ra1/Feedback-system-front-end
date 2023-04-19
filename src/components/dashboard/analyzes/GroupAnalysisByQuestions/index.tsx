@@ -282,7 +282,7 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                             <RadarChart data={areaDataChart}>
                                 <PolarGrid />
                                 
-                                <PolarAngleAxis dataKey="question_alias" />
+                                <PolarAngleAxis dataKey="question_alias" fontSize={ 20 } fontWeight={ 600 } />
 
                                 <PolarRadiusAxis angle={30} domain={[1, 5]} />
 

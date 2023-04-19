@@ -28,7 +28,7 @@ function SimpleModal( props: SimpleModalProps ) {
     return (
         <>
             {SHOW_MODAL ?
-            <div className={`${styles['simple-modal']} flex flex-align-center flex-justify-center`}>
+            <div className={`${styles['simple-modal']} flex flex-align-center flex-justify-center custom-purple-scrollbar`}>
                 <div className={`${styles['simple-modal-box']} default-shadow`}>
                     <div 
                         className={`${styles['simple-modal-box--close-modal']} default-shadow flex flex-align-center flex-justify-center`}

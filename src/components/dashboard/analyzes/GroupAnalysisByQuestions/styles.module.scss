@@ -1,5 +1,28 @@
 .group-analysis {
 
+    &__kpis {
+        gap: 10px;
+        .group-analysis-kpi-box {
+            width: 100%;
+            padding: 10px 5px;
+            background-color: $base-light;
+            border-radius: 5px;
+
+            p, span {
+                text-align: center;
+                display: block;
+            }
+
+            p {
+                @include font( 1.4, 600, $base-dark );
+            }
+
+            span {
+                @include font( .9, 300, $base-dark );
+            }
+        }
+    }
+
     .group-analysis-text-notes {
         &__title {
             p {

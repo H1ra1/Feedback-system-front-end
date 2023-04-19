@@ -27,13 +27,8 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
     const ICONS_AREA_REF = useRef< HTMLDivElement >( null );
     const BOXS_CONTAINERS_REF = useRef< HTMLDivElement >( null );
 
-    function prepareBoxToPdf() {
-
-    }
-
     async function createPdf() {
         setDownloadPdfLoading( true );
-        setChartAspect( 4/4 );
 
         const PDF = new jsPDF("portrait", "pt", "a4");
         const PAGE_HEIGHT = PDF.internal.pageSize.height;
@@ -99,7 +94,6 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                     BOX_SCROLL.style.boxShadow = '0px 0px 4px 1px rgba(0, 0, 0, 0.09)';
                     BOX_SCROLL.style.backgroundColor = '#FCFBFC';
                 }
-                setChartAspect( 3/1 );
                 setDownloadPdfLoading( false );
             }
         } );
@@ -167,17 +161,39 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
             { loading ? <FeederLoading /> :
                 <div className={`${styles['group-analysis']} col-xl col-xl-12 custom-purple-scrollbar`}>
                     <div className='flex flex-justify-between flex-align-center'>
-                        <div ref={ GROUP_INFO_REF } style={ { width: '100%' } }>
-                            <h3 className={`f-22 f-c-highlight`}>Nota média por pergunta</h3>
-                            <p className='f-18'><strong>Nota média:</strong> { areaData.average_note }</p>
-                            <p className='f-18'><strong>Média geral:</strong> { areaData.total_average }</p>
-                            <p className='f-18'><strong>Avaliações enviadas:</strong> { areaData.evaluations_sended }</p>
-                            <p className='f-18'><strong>Avaliações realizadas:</strong> { areaData.evaluations_done_total }</p>
-                            <p className='f-18'><strong>Avaliações não realizadas:</strong> { areaData.evaluations_not_done }</p>
-                            <p className='f-18'><strong>Pessoas que não conhecem a área:</strong> { areaData.evaluations_dont_know }</p>
+                        <div className={`${styles['group-analysis__kpis']} flex`} ref={ GROUP_INFO_REF } style={ { width: '100%' } }>
+                            <div className={`${styles['group-analysis-kpi-box']} default-shadow`}>
+                                <p>{ areaData.average_note }</p>
+                                <span>Nota média</span>
+                            </div>
+
+                            <div className={`${styles['group-analysis-kpi-box']} default-shadow`}>
+                                <p>{ areaData.total_average }</p>
+                                <span>Média geral</span>
+                            </div>
+
+                            <div className={`${styles['group-analysis-kpi-box']} default-shadow`}>
+                                <p>{ areaData.evaluations_sended }</p>
+                                <span>Avaliações enviadas</span>
+                            </div>
+
+                            <div className={`${styles['group-analysis-kpi-box']} default-shadow`}>
+                            <p>{ areaData.evaluations_done_total }</p>
+                            <span>Avaliações realizadas</span>
+                            </div>
+
+                            <div className={`${styles['group-analysis-kpi-box']} default-shadow`}>
+                                <p>{ areaData.evaluations_not_done }</p>
+                                <span>Avaliações não realizadas</span>
+                            </div>
+                            
+                            <div className={`${styles['group-analysis-kpi-box']} default-shadow`}>
+                            <p>{ areaData.evaluations_dont_know }</p>
+                            <span>Pessoas que não conhecem a área</span>
+                            </div>
                         </div>
 
-                        <div style={ { marginRight: '10px' } } ref={ ICONS_AREA_REF }>
+                        <div style={ { marginRight: '10px', paddingLeft: '50px' } } ref={ ICONS_AREA_REF }>
                             <ButtonActionTiny 
                                 icon={<AiOutlineFilePdf />} 
                                 bgColor={colors.highlightColor} 

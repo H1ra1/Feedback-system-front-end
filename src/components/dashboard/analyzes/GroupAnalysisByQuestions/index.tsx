@@ -1,7 +1,25 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { ResponsiveContainer, Tooltip, Legend, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
+import { 
+    ResponsiveContainer, 
+    Tooltip, Legend, 
+    RadarChart, 
+    PolarGrid, 
+    PolarAngleAxis, 
+    PolarRadiusAxis, 
+    Radar, 
+    ComposedChart, 
+    CartesianGrid, 
+    XAxis, 
+    YAxis, 
+    Bar, 
+    LabelList,
+    Line,
+    PieChart,
+    Pie,
+    Cell
+ } from 'recharts';
 import FeederLoading from '../../loadings/FeederLoading';
 import colors from '@/styles/colors.module.scss';
 import styles from './styles.module.scss';
@@ -20,6 +38,7 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ downloadPdfLoading, setDownloadPdfLoading ] = useState< boolean >( false );
     const [ chartAspect, setChartAspect ] = useState< number >( 3/1 );
+    const [ PieChartData, setPieChartData ] = useState< Array< any > >( [] );
     const GROUP_INFO_REF = useRef< HTMLDivElement >( null );
     const CHART_REF = useRef< HTMLDivElement >( null );
     const QUALITATIVE_REF = useRef< HTMLDivElement >( null );
@@ -119,7 +138,29 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                 } );
             } );
 
+            const total_evaluations = RESPONDE_PARSED.data.evaluations_done_total + RESPONDE_PARSED.data.evaluations_not_done + RESPONDE_PARSED.data.evaluations_dont_know;
+
             setAreaDataChart( AREA_DATA );
+            setPieChartData( [
+                { 
+                    title: 'Avaliações realizadas',
+                    value: RESPONDE_PARSED.data.evaluations_done_total,
+                    percent: Math.round( ( RESPONDE_PARSED.data.evaluations_done_total * 100 ) / total_evaluations ),
+                    color: '#59ec04'
+                },
+                { 
+                    title: 'Avaliações não realizadas',
+                    value: RESPONDE_PARSED.data.evaluations_not_done,
+                    percent: Math.round( ( RESPONDE_PARSED.data.evaluations_not_done * 100 ) / total_evaluations ),
+                    color: '#ec043a'
+                },
+                { 
+                    title: 'Pessoas que não conhecem a área',
+                    value: RESPONDE_PARSED.data.evaluations_dont_know,
+                    percent: Math.round( ( RESPONDE_PARSED.data.evaluations_dont_know * 100 ) / total_evaluations ),
+                    color: '#ffb500'
+                }
+            ] );
             setAreaData( RESPONDE_PARSED.data );
             setLoading( false );
         }
@@ -143,16 +184,48 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
     }
 
     function customBarLabelList( props: any ) {
-        const { x, y, width, height, value } = props;
+        const { x, y, width, value } = props;
         const radius = 20;
 
         return (
             <g>
-            <circle cx={ width } cy={y - radius - 2} r={radius} fill={colors.highlightColor} />
-                <text x={ width } y={y - radius - 2} fill="#fff" textAnchor="middle" dominantBaseline="middle" fontSize={14}>
+            <circle cx={x + width / 2} cy={y - radius - 5} r={radius} fill={colors.highlightColor} />
+                <text x={x + width / 2} y={y - radius - 5} fill="#fff" textAnchor="middle" dominantBaseline="middle" fontSize={16}>
                     { value }
                 </text>
             </g>
+        );
+    }
+
+    function customPieLabel( { 
+        innerRadius, 
+        outerRadius,
+        midAngle,
+        cx,
+        cy,
+        title,
+        value,
+        percent
+    }: any ) {
+        const RADIAN = Math.PI / 180;
+          // eslint-disable-next-line
+          const radius = 25 + innerRadius + (outerRadius - innerRadius);
+          // eslint-disable-next-line
+          const x = cx + radius * Math.cos(-midAngle * RADIAN);
+          // eslint-disable-next-line
+          const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+          return (
+            <text
+              x={x}
+              y={y}
+              fill="#000"
+              fontWeight={ 600 }
+              textAnchor={x > cx ? "start" : "end"}
+              dominantBaseline="central"
+            >
+              {title} ( {value} ) ( { percent }% )
+            </text>
         );
     }
 
@@ -240,6 +313,60 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                                 <Tooltip content={ customTooltip } />
                                 <Legend margin={ { top: 80 } } align='center' />
                             </RadarChart>
+                        </ResponsiveContainer>
+
+                        <ResponsiveContainer width="100%" aspect={ 3/1 }>
+                            <ComposedChart data={areaDataChart} margin={ { top: 60, bottom: 100 } }>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis 
+                                    dataKey='question_alias'
+                                    angle={0}
+                                    tick={ { fontSize: 14, fontWeight: 600 } }
+                                    tickLine={true}
+                                    type='category'
+                                    interval={0}
+                                    textAnchor='middle'
+                                />
+                                <YAxis scale='sequential' />
+                                
+                                <Bar dataKey='points' fill={colors.highlightColor} barSize={ 40 } isAnimationActive={ false } name='Pontuação por questões'>
+                                    <LabelList dataKey='points' content={ customBarLabelList }/>
+                                </Bar>
+
+                                <Line 
+                                    type="monotone" 
+                                    dataKey="total_average" 
+                                    stroke="#ff7300" 
+                                    name='Média geral'
+                                    isAnimationActive={ false }
+                                    label={ {
+                                        fontSize: 18,
+                                        fill: '#ff7300',
+                                        position: 'bottom',
+                                    } } 
+                                />
+
+                                <Tooltip content={ customTooltip } cursor={ { fill: 'transparent' } }/>
+
+                                <Legend margin={ { top: 80 } } align='center' />
+                            </ComposedChart>
+                        </ResponsiveContainer>
+
+                        <ResponsiveContainer width="100%" aspect={ 3/1 }>
+                            <PieChart>
+                                <Pie
+                                    data={ PieChartData }
+                                    labelLine={true}
+                                    fill="#8884d8"
+                                    dataKey="value"
+                                    label={ customPieLabel }
+                                    isAnimationActive={ false }
+                                >
+                                    {PieChartData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={ entry.color } />
+                                    ))}
+                                </Pie>
+                            </PieChart>
                         </ResponsiveContainer>
                     </div>
                     

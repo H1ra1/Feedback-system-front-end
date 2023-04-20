@@ -13,7 +13,7 @@ import PointsPerAreas from '@/components/dashboard/analyzes/PointsPerAreas';
 import TotalAnswersPerAreas from '@/components/dashboard/analyzes/TotalAnswersPerAreas';
 
 async function getAssessmentsGroups() {
-    const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/` );
+    const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/`, { cache: 'no-store' } );
 
     if( ! RESPONSE.ok )
         throw new Error('Failed to fetch data');

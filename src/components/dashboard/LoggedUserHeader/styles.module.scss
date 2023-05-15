@@ -8,7 +8,11 @@
             height: 48px;
             border: 1px solid $highlight-color;
             border-radius: 50%;
-            background-color: $grey-less;
+            background-color: $base-dark;
+
+            p {
+                @include font( 1, 600, $base-light );
+            }
         }
 
         .logged-user-info {

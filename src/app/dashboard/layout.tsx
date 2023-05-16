@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={`${ROBOTO.className} custom-purple-scrollbar`}>
+            <body className={`${ROBOTO.className} custom-purple-scrollbar`} suppressHydrationWarning={ true }>
                 <AuthProvider>
                     <div className='default-dashboard-container'>
                         <aside className='default-dashboard-container__sidebar-holder'>

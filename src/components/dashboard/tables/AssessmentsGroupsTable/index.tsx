@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoMdArrowDropup, IoMdArrowDropdown } from 'react-icons/io';
 import { MdAnalytics, MdModeEdit, MdDeleteForever } from 'react-icons/md';
 import ButtonActionTiny from '@/components/dashboard/buttons/ButtonActionTiny';
@@ -10,6 +10,7 @@ import SimpleModal from '../../modals/SimpleModal';
 import UserToUserAnalysis from '../../analyzes/UserToUserAnalysis';
 import GroupAnalysis from '../../analyzes/GroupAnalysis';
 import SimpleProgressBar from '../../SimpleProgressBar';
+import { useSession } from 'next-auth/react';
 
 interface ModalAnalyticsSettings {
     title?: string
@@ -30,13 +31,35 @@ interface Group {
     user_to_user: boolean
 }
 
-interface AssessmentsGroupsTableProps {
-    groups: Group[]
-}
+function AssessmentsGroupsTable() {
+    const { data: session, status }             = useSession();
+    const [ OPEN_MODAL, setOPEN_MODAL ]         = useState< boolean >( false );
+    const [ MODAL_TO_OPEN, setMODAL_TO_OPEN ]   = useState< ModalAnalyticsSettings | null >();
+    const [ groups, setGroups ]                 = useState< Group[] >();
+    
+    useEffect( () => {
+        async function getAssessmentsGroups() {
+            if( session ) {
+                const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${session?.user.data.access_token}`
+                    }
+                } );
+            
+                if( ! RESPONSE.ok )
+                    throw new Error('Failed to fetch data');
+                
+                const RESPONDE_PARSED = await RESPONSE.json();
+            
+                setGroups( RESPONDE_PARSED.data );
+            }
+        }
 
-function AssessmentsGroupsTable( props: AssessmentsGroupsTableProps ) {
-    const [ OPEN_MODAL, setOPEN_MODAL ] = useState< boolean >( false );
-    const [ MODAL_TO_OPEN, setMODAL_TO_OPEN ] = useState< ModalAnalyticsSettings | null >();
+        getAssessmentsGroups();        
+    }, [ session ] );
+    
 
     function openAnalyticsModal( group_id: number, group_name: string, user_to_user: boolean ) {
         setMODAL_TO_OPEN( {
@@ -164,7 +187,7 @@ function AssessmentsGroupsTable( props: AssessmentsGroupsTableProps ) {
                 </thead>
 
                 <tbody className={`${styles['assessment-groups-table__body']}`}>
-                    { props.groups && props.groups.map( group => (
+                    { groups && groups.map( group => (
                         <tr key={group.id}>
                             <td>{ group.id }</td>
                             <td>{ group.name }</td>

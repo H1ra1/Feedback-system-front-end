@@ -1,6 +1,6 @@
 'use client'
 
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import React from 'react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import styles from './styles.module.scss';
@@ -9,7 +9,7 @@ function LoggedUserHeader() {
     const { data: session, status } = useSession();
 
     function handleClick() {
-        console.log( session?.user.data.email );
+        signOut();
     }
 
     return (

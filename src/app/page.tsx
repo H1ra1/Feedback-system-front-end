@@ -10,6 +10,10 @@ async function Home() {
     } else {
         redirect( '/dashboard' );
     }
+
+    return (
+        <h1>Sistema de avaliações</h1>
+    )
 }
 
 export default Home;

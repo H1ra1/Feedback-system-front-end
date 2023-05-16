@@ -11,6 +11,9 @@ import QuestionsAverageFromGroupAnalysis from '@/components/dashboard/analyzes/Q
 import PointsPerUserAnalysis from '@/components/dashboard/analyzes/PointsPerUserAnalysis';
 import PointsPerAreas from '@/components/dashboard/analyzes/PointsPerAreas';
 import TotalAnswersPerAreas from '@/components/dashboard/analyzes/TotalAnswersPerAreas';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { redirect } from 'next/navigation';
 
 async function getAssessmentsGroups() {
     const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/`, { cache: 'no-store' } );
@@ -68,14 +71,19 @@ async function getTAverageQuestionsFromGroup( question_group_id: number ) {
 }
 
 async function Dashboard() {
-    const ASSESSMENT_GROUPS             = await getAssessmentsGroups();
-    const TOP_AREAS_BY_NOTE             = await getTopAreasBy( 'note' );
-    const TOP_AREAS_BY_QUANTITY         = await getTopAreasBy( 'quantity' );
-    const TOP_USERS_BY_NOTE             = await getTopUsersBy( 'note' );
-    const TOTAL_USERS                   = await getTotalUsers();
-    const AVERAGE_QUESTIONS_FROM_GROUP  = await getTAverageQuestionsFromGroup( 31 );
-    const POINTS_PER_AREAS              = await getTopAreasBy( 'points' );
+    const  SESSION = await getServerSession( authOptions );
 
+    if( ! SESSION ) {
+        redirect( '/api/auth/signin' );
+    }
+
+    const TOP_AREAS_BY_NOTE             = SESSION.user?.data.master ? await getTopAreasBy( 'note' ) : {};
+    const TOP_AREAS_BY_QUANTITY         = SESSION.user?.data.master ? await getTopAreasBy( 'quantity' ) : {};
+    const TOP_USERS_BY_NOTE             = SESSION.user?.data.master ? await getTopUsersBy( 'note' ) : {};
+    const TOTAL_USERS                   = SESSION.user?.data.master ? await getTotalUsers() : {};
+    const AVERAGE_QUESTIONS_FROM_GROUP  = SESSION.user?.data.master ? await getTAverageQuestionsFromGroup( 31 ) : {};
+    const POINTS_PER_AREAS              = SESSION.user?.data.master ? await getTopAreasBy( 'points' ) : {};
+    
     const FORMATTED_USERS_RANK   = ( top_users: any ) => {
         const RANK_USERS: any = [];
 
@@ -92,62 +100,72 @@ async function Dashboard() {
         }
 
         return RANK_USERS;
-    } 
+    }
 
     return (
-        <div>
-            <section className='flex flex-wrap flex-gap-20'>
-                <TinyHolder 
-                    icon={ <IoMdRocket /> } 
-                    title={ TOP_AREAS_BY_NOTE.areas[0].name } 
-                    subtitle='Top área'
-                    description={ `Nota média: ${TOP_AREAS_BY_NOTE.areas[0].area_average_note}` }
-                />
-                <TinyHolder 
-                    icon={ <MdOutlineLocalFireDepartment /> } 
-                    title={ TOP_AREAS_BY_QUANTITY.areas[0].name } 
-                    subtitle='Área mais avaliada'
-                    description={ `Avaliações recebidas: ${TOP_AREAS_BY_QUANTITY.areas[0].evaluations_done_count}` }
-                />
-                <TinyHolder 
-                    icon={ <RiUserStarFill /> }
-                    title={ TOP_USERS_BY_NOTE.users[0].name }
-                    subtitle='Top Usuário'
-                    description={ `Nota média: ${TOP_USERS_BY_NOTE.users[0].note_average} \n Avaliações recebidas: ${TOP_USERS_BY_NOTE.users[0].evaluations_done_count} \n Usuário com maior nota e com no mínimo 4 avaliações recebidas.` }
-                />
-                <TinyHolder icon={ <FaUsers /> } title={ TOTAL_USERS.total_users } subtitle='Total de usuários'/>
-            </section>
+        <>
+            { SESSION.user?.data.master ? (
+                <section className='flex flex-wrap flex-gap-20'>
+                    <TinyHolder 
+                        icon={ <IoMdRocket /> } 
+                        title={ TOP_AREAS_BY_NOTE.areas[0].name } 
+                        subtitle='Top área'
+                        description={ `Nota média: ${TOP_AREAS_BY_NOTE.areas[0].area_average_note}` }
+                    />
+                    <TinyHolder 
+                        icon={ <MdOutlineLocalFireDepartment /> } 
+                        title={ TOP_AREAS_BY_QUANTITY.areas[0].name } 
+                        subtitle='Área mais avaliada'
+                        description={ `Avaliações recebidas: ${TOP_AREAS_BY_QUANTITY.areas[0].evaluations_done_count}` }
+                    />
+                    <TinyHolder 
+                        icon={ <RiUserStarFill /> }
+                        title={ TOP_USERS_BY_NOTE.users[0].name }
+                        subtitle='Top Usuário'
+                        description={ `Nota média: ${TOP_USERS_BY_NOTE.users[0].note_average} \n Avaliações recebidas: ${TOP_USERS_BY_NOTE.users[0].evaluations_done_count} \n Usuário com maior nota e com no mínimo 4 avaliações recebidas.` }
+                    />
+                    <TinyHolder icon={ <FaUsers /> } title={ TOTAL_USERS.total_users } subtitle='Total de usuários'/>
+                </section>
+            ) : '' }
+            
 
             <section className='flex m-t-20 flex-gap-20'>
-                <SimpleHolder overflow={ true } sizeClasses='col-xl col-xl-9' icon={<MdGroupWork />} mainTitle='Grupos de avaliações' subTitle='Últimos grupos cadastrados'>
-                    <AssessmentsGroupsTable groups={ASSESSMENT_GROUPS}/>
+                <SimpleHolder overflow={ true } sizeClasses={`col-xl ${ SESSION?.user.master ? 'col-xl-9' : 'col-xl-12' }`} icon={<MdGroupWork />} mainTitle='Grupos de avaliações' subTitle='Últimos grupos cadastrados'>
+                    <AssessmentsGroupsTable />
                 </SimpleHolder>
-                <SimpleHolder sizeClasses='col-xl col-xl-3' icon={<RiUserStarFill />} mainTitle='Rank' subTitle='Usuários mais bem avaliados'>
-                    <SimpleRank rank={ FORMATTED_USERS_RANK( TOP_USERS_BY_NOTE ) }/>
-                </SimpleHolder>
-            </section>
 
-            <section className='flex m-t-20 flex-gap-20'>
-                <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por áreas' supTitle='Média dos pontos por áreas'>
-                    <AveragePerArea data={ TOP_AREAS_BY_NOTE }/>
-                </SimpleHolder>
-                <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por perguntas' supTitle='Pontuação média por cada pergunta'>
-                    <QuestionsAverageFromGroupAnalysis data={ AVERAGE_QUESTIONS_FROM_GROUP } />
-                </SimpleHolder>
+                { SESSION.user?.data.master ? (
+                    <SimpleHolder sizeClasses='col-xl col-xl-3' icon={<RiUserStarFill />} mainTitle='Rank' subTitle='Usuários mais bem avaliados'>
+                        <SimpleRank rank={ FORMATTED_USERS_RANK( TOP_USERS_BY_NOTE ) }/>
+                    </SimpleHolder>
+                ) : '' }
             </section>
+            
+            { SESSION.user?.data.master ? (
+                <>
+                    <section className='flex m-t-20 flex-gap-20'>
+                        <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por áreas' supTitle='Média dos pontos por áreas'>
+                            <AveragePerArea data={ TOP_AREAS_BY_NOTE }/>
+                        </SimpleHolder>
+                        <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por perguntas' supTitle='Pontuação média por cada pergunta'>
+                            <QuestionsAverageFromGroupAnalysis data={ AVERAGE_QUESTIONS_FROM_GROUP } />
+                        </SimpleHolder>
+                    </section>
 
-            <section className='flex m-t-20 flex-gap-20'>
-                <SimpleHolder sizeClasses='col-xl col-xl-5' mainTitle='Pontuação por usuários' supTitle='Pontuação total por usuário'>
-                    <PointsPerUserAnalysis data={ TOP_USERS_BY_NOTE } />
-                </SimpleHolder>
-                <SimpleHolder sizeClasses='col-xl col-xl-4' mainTitle='Pontuação por áreas' supTitle='Pontuação mensal de áreas'>
-                    <PointsPerAreas data={ POINTS_PER_AREAS } />
-                </SimpleHolder>
-                <SimpleHolder sizeClasses='col-xl col-xl-3' mainTitle='Total de respostas' supTitle='Total de respostas por áreas'>
-                    <TotalAnswersPerAreas data={ POINTS_PER_AREAS } />
-                </SimpleHolder>
-            </section>
-        </div>
+                    <section className='flex m-t-20 flex-gap-20'>
+                        <SimpleHolder sizeClasses='col-xl col-xl-5' mainTitle='Pontuação por usuários' supTitle='Pontuação total por usuário'>
+                            <PointsPerUserAnalysis data={ TOP_USERS_BY_NOTE } />
+                        </SimpleHolder>
+                        <SimpleHolder sizeClasses='col-xl col-xl-4' mainTitle='Pontuação por áreas' supTitle='Pontuação mensal de áreas'>
+                            <PointsPerAreas data={ POINTS_PER_AREAS } />
+                        </SimpleHolder>
+                        <SimpleHolder sizeClasses='col-xl col-xl-3' mainTitle='Total de respostas' supTitle='Total de respostas por áreas'>
+                            <TotalAnswersPerAreas data={ POINTS_PER_AREAS } />
+                        </SimpleHolder>
+                    </section>
+                </>
+            ) : '' }
+        </>
     );
 }
 

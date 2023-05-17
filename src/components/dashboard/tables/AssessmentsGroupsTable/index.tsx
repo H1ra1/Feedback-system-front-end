@@ -82,6 +82,8 @@ function AssessmentsGroupsTable() {
     function getStatusName( status: string ) {
         const STATUS: any = {
             inpr: 'Em progresso',
+            expi: 'Finalizado',
+            done: 'Finalizado'
         }
 
         return STATUS[ status ]

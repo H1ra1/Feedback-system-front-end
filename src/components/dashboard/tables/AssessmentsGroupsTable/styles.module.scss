@@ -55,5 +55,32 @@
                 text-align: center;
             }
         }
+
+        .assessment-groups-table-users {
+            gap: 5px;
+
+            .assessment-groups-table-user-icon {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background-color: $base-dark;
+                border: 1px solid $highlight-color;
+                margin-left: -15px;
+                transition: all .2s ease-in-out;
+                user-select: none;
+
+                &:first-of-type {
+                    margin: 0;
+                }
+    
+                span {
+                    @include font( .6, 500, $base-light );
+                }
+
+                &:hover {
+                    z-index: 200;
+                }
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { IoMdArrowDropup, IoMdArrowDropdown } from 'react-icons/io';
 import { MdAnalytics, MdModeEdit, MdDeleteForever } from 'react-icons/md';
 import ButtonActionTiny from '@/components/dashboard/buttons/ButtonActionTiny';
@@ -12,6 +12,7 @@ import GroupAnalysis from '../../analyzes/GroupAnalysis';
 import SimpleProgressBar from '../../SimpleProgressBar';
 import { useSession } from 'next-auth/react';
 import FeederLoading from '../../loadings/FeederLoading';
+import Tippy from '@tippyjs/react';
 
 interface ModalAnalyticsSettings {
     title?: string
@@ -30,6 +31,7 @@ interface Group {
     period_initial: string
     period_final: string
     user_to_user: boolean
+    users_to_answer: []
 }
 
 function AssessmentsGroupsTable() {
@@ -202,7 +204,25 @@ function AssessmentsGroupsTable() {
                             <td>{ group.research_type }</td>
                             <td>{ getStatusName( group.status ) }</td>
                             <td><SimpleProgressBar progress={ group.progress } tooltip={ group.progress_info }/></td>
-                            <td>users</td>
+                            <td>
+                                <div className={`${styles['assessment-groups-table-users']} flex flex-align-center flex-justify-center`}>
+                                    { group.users_to_answer.map( ( user: any, indice: number ) => {
+                                        if( indice > 4 )
+                                            return;
+
+                                        if( indice <= 3 )
+                                            return (
+                                                <Tippy content={ `${user.first_name} ${user.last_name}` }>
+                                                    <div className={`${styles['assessment-groups-table-user-icon']} flex flex-align-center flex-justify-center`}>
+                                                        <span>{ user.abbreviation }</span>
+                                                    </div>
+                                                </Tippy>
+                                            );
+                                        
+                                        return '...';
+                                    } ) }
+                                </div>
+                            </td>
                             <td>{ group.period_initial }</td>
                             <td>{ group.period_final }</td>
                             <td>

@@ -11,6 +11,7 @@ import UserToUserAnalysis from '../../analyzes/UserToUserAnalysis';
 import GroupAnalysis from '../../analyzes/GroupAnalysis';
 import SimpleProgressBar from '../../SimpleProgressBar';
 import { useSession } from 'next-auth/react';
+import FeederLoading from '../../loadings/FeederLoading';
 
 interface ModalAnalyticsSettings {
     title?: string
@@ -32,14 +33,17 @@ interface Group {
 }
 
 function AssessmentsGroupsTable() {
-    const { data: session, status }             = useSession();
+    const { data: session, status }             = useSession( {
+        required: true
+    } );
     const [ OPEN_MODAL, setOPEN_MODAL ]         = useState< boolean >( false );
     const [ MODAL_TO_OPEN, setMODAL_TO_OPEN ]   = useState< ModalAnalyticsSettings | null >();
     const [ groups, setGroups ]                 = useState< Group[] >();
+    const [ loading, setLoading ]               = useState< boolean >( true );
     
     useEffect( () => {
         async function getAssessmentsGroups() {
-            if( session ) {
+            if( session && session.user?.data ) {
                 const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/`, {
                     method: 'GET',
                     headers: {
@@ -54,6 +58,7 @@ function AssessmentsGroupsTable() {
                 const RESPONDE_PARSED = await RESPONSE.json();
             
                 setGroups( RESPONDE_PARSED.data );
+                setLoading( false );
             }
         }
 
@@ -79,6 +84,9 @@ function AssessmentsGroupsTable() {
 
         return STATUS[ status ]
     }
+
+    if( loading )
+        return <FeederLoading />;
 
     return (
         <>

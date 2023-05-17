@@ -4,17 +4,26 @@ import '../../styles/utils.global.scss';
 import Sidebar from '../../components/dashboard/Sidebar';
 import Header from '../../components/dashboard/Header';
 import AuthProvider from '@/providers/AuthProvider';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { redirect } from 'next/navigation';
 
 const ROBOTO = Roboto({
     weight: [ '100', '300', '400', '500', '700', '900' ],
     subsets: [ 'latin' ]
 });
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const  SESSION = await getServerSession( authOptions );
+
+    if( ! SESSION || ! SESSION.user?.data ) {
+        redirect( '/api/auth/signin' );
+    }
+
     return (
         <html lang="en">
             <body className={`${ROBOTO.className} custom-purple-scrollbar`} suppressHydrationWarning={ true }>

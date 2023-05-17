@@ -15,17 +15,6 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { redirect } from 'next/navigation';
 
-async function getAssessmentsGroups() {
-    const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/questions-group/company/`, { cache: 'no-store' } );
-
-    if( ! RESPONSE.ok )
-        throw new Error('Failed to fetch data');
-    
-    const RESPONDE_PARSED = await RESPONSE.json();
-
-    return RESPONDE_PARSED.data;
-}
-
 async function getTopAreasBy( orderby: string ) {
     const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/top-areas?orderby=${orderby}` );
 
@@ -71,12 +60,7 @@ async function getTAverageQuestionsFromGroup( question_group_id: number ) {
 }
 
 async function Dashboard() {
-    const  SESSION = await getServerSession( authOptions );
-
-    if( ! SESSION || ! SESSION.user?.data ) {
-        redirect( '/api/auth/signin' );
-    }
-
+    const SESSION                      = await getServerSession( authOptions );
     const TOP_AREAS_BY_NOTE             = SESSION.user?.data.master ? await getTopAreasBy( 'note' ) : {};
     const TOP_AREAS_BY_QUANTITY         = SESSION.user?.data.master ? await getTopAreasBy( 'quantity' ) : {};
     const TOP_USERS_BY_NOTE             = SESSION.user?.data.master ? await getTopUsersBy( 'note' ) : {};

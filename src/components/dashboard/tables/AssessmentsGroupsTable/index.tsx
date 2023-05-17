@@ -235,8 +235,6 @@ function AssessmentsGroupsTable() {
                                         tooltip="Abrir análises"
                                         onClick={ () => openAnalyticsModal( group.id, group.name, group.user_to_user ) }
                                     />
-                                    <ButtonActionTiny icon={<MdModeEdit />} bgColor={colors.info} />
-                                    <ButtonActionTiny icon={<MdDeleteForever />} bgColor={colors.danger} />
                                 </div>
                             </td>
                         </tr>

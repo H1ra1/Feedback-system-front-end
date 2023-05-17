@@ -73,7 +73,7 @@ async function getTAverageQuestionsFromGroup( question_group_id: number ) {
 async function Dashboard() {
     const  SESSION = await getServerSession( authOptions );
 
-    if( ! SESSION ) {
+    if( ! SESSION || ! SESSION.user?.data ) {
         redirect( '/api/auth/signin' );
     }
 

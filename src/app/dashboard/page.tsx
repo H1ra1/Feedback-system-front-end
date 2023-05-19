@@ -13,7 +13,7 @@ import PointsPerAreas from '@/components/dashboard/analyzes/PointsPerAreas';
 import TotalAnswersPerAreas from '@/components/dashboard/analyzes/TotalAnswersPerAreas';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { redirect } from 'next/navigation';
+import CompareAreas from '@/components/dashboard/analyzes/CompareAreas';
 
 async function getTopAreasBy( orderby: string ) {
     const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/top-areas?orderby=${orderby}` );
@@ -123,6 +123,12 @@ async function Dashboard() {
                         <SimpleRank rank={ FORMATTED_USERS_RANK( TOP_USERS_BY_NOTE ) }/>
                     </SimpleHolder>
                 ) : '' }
+            </section>
+
+            <section className='flex m-t-20 flex-gap-20'>
+                <SimpleHolder sizeClasses='col-xl col-xl-12' icon={<RiUserStarFill />} mainTitle='Áreas' subTitle='Comparações entre áreas'>
+                    <CompareAreas />
+                </SimpleHolder>
             </section>
             
             { SESSION.user?.data.master ? (

@@ -134,15 +134,6 @@ async function Dashboard() {
             { SESSION.user?.data.master ? (
                 <>
                     <section className='flex m-t-20 flex-gap-20'>
-                        <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por áreas' supTitle='Média dos pontos por áreas'>
-                            <AveragePerArea data={ TOP_AREAS_BY_NOTE }/>
-                        </SimpleHolder>
-                        <SimpleHolder sizeClasses='col-xl col-xl-6' mainTitle='Média por perguntas' supTitle='Pontuação média por cada pergunta'>
-                            <QuestionsAverageFromGroupAnalysis data={ AVERAGE_QUESTIONS_FROM_GROUP } />
-                        </SimpleHolder>
-                    </section>
-
-                    <section className='flex m-t-20 flex-gap-20'>
                         <SimpleHolder sizeClasses='col-xl col-xl-5' mainTitle='Pontuação por usuários' supTitle='Pontuação total por usuário'>
                             <PointsPerUserAnalysis data={ TOP_USERS_BY_NOTE } />
                         </SimpleHolder>

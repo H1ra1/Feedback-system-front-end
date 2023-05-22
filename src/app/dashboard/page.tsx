@@ -124,12 +124,14 @@ async function Dashboard() {
                     </SimpleHolder>
                 ) : '' }
             </section>
-
+            
+            { SESSION.user?.data.master ? (
             <section className='flex m-t-20 flex-gap-20'>
                 <SimpleHolder sizeClasses='col-xl col-xl-12' icon={<RiUserStarFill />} mainTitle='Áreas' subTitle='Comparações entre áreas'>
                     <CompareAreas />
                 </SimpleHolder>
             </section>
+            ) : '' }
             
             { SESSION.user?.data.master ? (
                 <>

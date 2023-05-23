@@ -8,6 +8,29 @@
         overflow: auto;
         height: 100%;
 
+        .sort-full-table-header-holder {
+            .sort-full-table-order-holder {
+                svg {
+                    transition: all .2s ease-in-out;
+    
+                    &:nth-child( 2 ) {
+                        margin-top: -10px;
+                    }
+                }
+            }
+
+            &.--order {
+                cursor: pointer;
+
+                &:hover {
+                    svg {
+                        color: $highlight-color;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+
         thead {
             position: sticky;
             top: -1px;

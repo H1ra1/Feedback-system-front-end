@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import styles from './styles.module.scss';
 
 interface SortFullTableProps {
@@ -90,7 +91,19 @@ function SortFullTable( props: SortFullTableProps ) {
                 <thead>
                     <tr>
                         { props.thead && props.thead.map( ( thead, indice ) => (
-                            <th key={ `thead-${indice}` } onClick={ () => thead.order ? sortTable( indice ) : false }>{ thead.item }</th>
+                            <th key={ `thead-${indice}` } onClick={ () => thead.order ? sortTable( indice ) : false }>
+                                <div className={`${styles['sort-full-table-header-holder']} flex flex-align-center ${ thead.order && styles['--order' ] }`}>
+                                    <p>{ thead.item }</p>
+                                    { thead.order && 
+                                        <div 
+                                            className={`${styles['sort-full-table-order-holder']} flex flex-column`}
+                                        >
+                                            <IoMdArrowDropup />
+                                            <IoMdArrowDropdown />
+                                        </div>
+                                    }
+                                </div>
+                            </th>
                         ) ) }
                     </tr>
                 </thead>
@@ -114,18 +127,6 @@ function SortFullTable( props: SortFullTableProps ) {
                             </tr>
                         );
                     } ) }
-
-                    {/* <tr className={ `${styles[ 'sort-full-table-footer' ]}` }>
-                        <td>4.22</td>
-                        <td>3.26</td>
-                        <td>4.12</td>
-                        <td>2.52</td>
-                        <td>4.25</td>
-                        <td>3.26</td>
-                        <td>4.12</td>
-                        <td>2.52</td>
-                        <td>4.25</td>
-                    </tr> */}
                 </tbody>
             </table>
         </div>

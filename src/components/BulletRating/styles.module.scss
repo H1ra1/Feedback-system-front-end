@@ -1,0 +1,32 @@
+.bullet-rating {
+    gap: 10px;
+    
+    label {
+        span {
+            width: 20px;
+            height: 20px;
+            background-color: transparent;
+            display: inline-block;
+            border-radius: 50%;
+            border: 1px solid $highlight-color;
+            transition: all .2s ease-in-out;
+            cursor: pointer;
+        }    
+    }
+
+    input {
+        display: none;
+    }
+
+    input:checked {
+        & ~ span {
+            background-color: $highlight-color;
+        }
+    }
+
+    &--active {
+        & ~ span {
+            background-color: $highlight-color !important;
+        }
+    }
+}

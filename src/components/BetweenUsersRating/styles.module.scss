@@ -1,0 +1,27 @@
+.between-users-rating {
+    padding: 10px;
+    &__container {
+        table {
+            border-collapse: collapse;
+
+            th, td {
+                @include font( 1, 400, $base-dark );
+                border: 1px solid #d7d7d7;
+                padding: 10px !important;
+            }
+
+            th {
+                @include font( 1, 600, $base-dark );
+            }
+
+            tbody {
+                tr {
+                    td {
+                        text-align: center;
+                        padding: 50px 10px !important;
+                    }
+                }
+            }
+        }
+    }
+}

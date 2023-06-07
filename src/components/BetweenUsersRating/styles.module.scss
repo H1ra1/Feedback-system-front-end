@@ -1,17 +1,22 @@
 .between-users-rating {
     padding: 10px;
     &__container {
+        @media( max-width: 1750px ) {
+            max-width: 95%;
+            overflow-x: auto;
+        }
+
         table {
             border-collapse: collapse;
 
             th, td {
-                @include font( 1, 400, $base-dark );
+                @include font( .8, 400, $base-dark );
                 border: 1px solid #d7d7d7;
                 padding: 10px !important;
             }
 
             th {
-                @include font( 1, 600, $base-dark );
+                @include font( .8, 600, $base-dark );
             }
 
             tbody {
@@ -19,6 +24,10 @@
                     td {
                         text-align: center;
                         padding: 50px 10px !important;
+                    }
+
+                    &.--hide {
+                        display: none;
                     }
                 }
             }

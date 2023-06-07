@@ -4,13 +4,14 @@ import React, { useState } from 'react';
 import styles from './styles.module.scss';
 
 interface BulletRatingProps {
-    id: string|number
+    id:         string|number
+    callback?:  Function
 }
 
 interface RadioProps {
-    value:   number
-    checked: boolean
-    active:  boolean
+    value:      number
+    checked:    boolean
+    active:     boolean
 }
 
 function BulletRating( props: BulletRatingProps ) {
@@ -64,6 +65,9 @@ function BulletRating( props: BulletRatingProps ) {
         }
 
         setRadios( [ ...radios ] );
+
+        if( props.callback )
+            props.callback( radios[ CHECKED_RADIO_INDEX ].value );
     }
 
     return (

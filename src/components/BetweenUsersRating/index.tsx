@@ -32,7 +32,11 @@ import {
   } from '@chakra-ui/react';
 import { MdClose } from 'react-icons/md';
 
-function BetweenUsersRating() {
+interface BetweenUsersRatingProps {
+    rating_user_code: string
+}
+
+function BetweenUsersRating( props: BetweenUsersRatingProps ) {
     const [ tableHeader, setTableHeader ]                       = useState( [] );
     const [ tableBody, setTableBody ]                           = useState( [] );
     const [ expectedAnswers, setExpectedAnswers ]               = useState< any >( [] );
@@ -210,7 +214,7 @@ function BetweenUsersRating() {
 
     useEffect( () => {
         async function getRatingRows() {
-            const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/rating/user/code/d3354f5f-bb11-4bc8-b97b-40a71ed79891/` );
+            const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/rating/user/code/${props.rating_user_code}/` );
         
             if( ! RESPONSE.ok )
                 throw new Error( RESPONSE.statusText );
@@ -223,7 +227,7 @@ function BetweenUsersRating() {
         }
 
         getRatingRows();
-    }, [] );
+    }, [ props.rating_user_code ] );
 
     return (
         <div className={`${styles[ 'between-users-rating' ]} flex flex-justify-center`}>

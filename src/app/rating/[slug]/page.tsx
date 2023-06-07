@@ -1,8 +1,15 @@
 import BetweenUsersRating from '@/components/BetweenUsersRating';
 
-async function Rating() {
+interface SlugProps {
+    params: {
+        slug: string
+    }
+}
+
+async function Rating( { params }: SlugProps ) {
+    
     return (
-        <BetweenUsersRating />
+        <BetweenUsersRating rating_user_code={ params.slug } />
     )
 }
 

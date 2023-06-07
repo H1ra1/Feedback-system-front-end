@@ -334,6 +334,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                             _hover={ {
                                 background: colors.baseDark
                             } }
+                            onClick={onCloseModal}
                         >Confirmar</Button>
                     </ModalFooter>
                 </ModalContent>

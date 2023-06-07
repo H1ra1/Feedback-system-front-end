@@ -236,8 +236,8 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                     <thead>
                         <tr>
                             { tableHeader.map( ( header: any, index ) => (
-                                <Tooltip hasArrow label={header.tooltip}>
-                                    <th key={`header-${index}`}>{header.item}</th>
+                                <Tooltip hasArrow label={header.tooltip} key={`header-${index}`}>
+                                    <th>{header.item}</th>
                                 </Tooltip>
                             ) ) }
                         </tr>

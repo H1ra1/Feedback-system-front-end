@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react';
 import styles from './styles.module.scss';
+import { Tooltip } from '@chakra-ui/react';
 
 interface BulletRatingProps {
     id:         string|number
     callback?:  Function
+    tooltip: string
 }
 
 interface RadioProps {
@@ -81,7 +83,9 @@ function BulletRating( props: BulletRatingProps ) {
                         className={`${radio.active ? styles[ 'bullet-rating--active' ] : ''}`} 
                         onClick={ () => activeBulletRating( index ) } 
                     />
-                    <span></span>
+                    <Tooltip hasArrow label={props.tooltip}>
+                        <span></span>
+                    </Tooltip>
                 </label>
                 
             ) ) }

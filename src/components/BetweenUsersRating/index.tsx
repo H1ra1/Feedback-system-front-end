@@ -37,7 +37,7 @@ interface BetweenUsersRatingProps {
 }
 
 function BetweenUsersRating( props: BetweenUsersRatingProps ) {
-    const [ tableHeader, setTableHeader ]                       = useState( [] );
+    const [ tableHeader, setTableHeader ]                       = useState< any >( [] );
     const [ tableBody, setTableBody ]                           = useState( [] );
     const [ expectedAnswers, setExpectedAnswers ]               = useState< any >( [] );
     const [ currentPointsModal, setCurrentPointsModal ]         = useState< any >( {} );
@@ -235,7 +235,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                 <table>
                     <thead>
                         <tr>
-                            { tableHeader.map( ( header: any, index ) => (
+                            { tableHeader.map( ( header: any, index: number ) => (
                                 <Tooltip hasArrow label={header.tooltip} key={`header-${index}`}>
                                     <th>{header.item}</th>
                                 </Tooltip>
@@ -265,16 +265,19 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
 
                                         {body.item == 'text' && ( body.value )}
 
-                                        {body.item == 'radio' && ( <BulletRating 
-                                            id={body.id ? body.id : index}
-                                            callback={ ( value: number ) => { updateRadioAnswer( { 
-                                                answer: value, 
-                                                rating_user_id: tr.id,
-                                                question_id: body.question_id
-                                            } ) } }
-                                        /> )}
+                                        {body.item == 'radio' && ( 
+                                            <BulletRating 
+                                                id={body.id ? body.id : index}
+                                                callback={ ( value: number ) => { updateRadioAnswer( { 
+                                                    answer: value, 
+                                                    rating_user_id: tr.id,
+                                                    question_id: body.question_id
+                                                } ) } }
+                                                tooltip={tableHeader[index].tooltip}
+                                            /> 
+                                        )}
 
-                                        {body.item == 'points' && ( <Button onClick={() => openModalPoints( tr.id )} >Responder</Button> )}
+                                        {body.item == 'points' && ( <Button onClick={() => openModalPoints( tr.id )} >Responder</Button> ) }
                                     </td>
                                 ) ) }
                             </tr>

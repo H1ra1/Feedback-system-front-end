@@ -382,7 +382,20 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                             Finalizar avaliação
                         </Button>
                     ) : ( 
-                        <Button size='lg' colorScheme='gray' cursor='not-allowed' disabled={true}>
+                        <Button 
+                            size='lg' 
+                            colorScheme='gray' 
+                            cursor='not-allowed'
+                            onClick={ () => {
+                                toast( {
+                                    title: 'Erro!',
+                                    description: 'Responda toda a avaliação antes e finalizar.',
+                                    status: 'error',
+                                    position: 'bottom-right',
+                                    isClosable: true
+                                } );
+                            } }
+                        >
                             Finalizar avaliação
                         </Button>
                      ) }

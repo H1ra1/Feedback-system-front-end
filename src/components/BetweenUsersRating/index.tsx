@@ -28,7 +28,9 @@ import {
     AccordionPanel,
     AccordionIcon,
     Box,
-    Tooltip
+    Tooltip,
+    useToast,
+    Text
   } from '@chakra-ui/react';
 import { MdClose, MdCheckCircle } from 'react-icons/md';
 
@@ -54,6 +56,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
         onClose: onCloseModal 
     } = useDisclosure();
     const cancelRef = React.useRef( null );
+    const toast     = useToast();
 
     function mountTableHeader( object: any ) {
         const TABLE_HEADER: any = [
@@ -180,6 +183,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
 
         setCurrentPointsModal( {
             rating_user_id: ratingUserId,
+            rated_name: RATING_USER_EXPECTED_ANSWER.rated_name,
             pfo: RATING_USER_EXPECTED_ANSWER.questions.pfo.answer,
             pfa: RATING_USER_EXPECTED_ANSWER.questions.pfa.answer
         } );
@@ -253,7 +257,13 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
         if( PFO.answer != '' && PFA.answer != '' ) {
             onCloseModal();
         } else {
-            console.log( 'alerta toast' );
+            toast( {
+                title: 'Atenção!',
+                description: 'Preencha os pontos fortes e fracos.',
+                status: 'warning',
+                position: 'bottom-right',
+                isClosable: true
+            } );
         }
 
         setExpectedAnswers( EXPECTED_ANSWERS );
@@ -376,7 +386,11 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
             <Modal isOpen={isOpenModal} onClose={ closePointsModal } isCentered>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Pontos fortes e fracos</ModalHeader>
+                    <ModalHeader>
+                        <Text>Pontos fortes e fracos </Text>
+                        <Text fontWeight={500} fontSize='.8em' color={ colors.highlightColor }>{ currentPointsModal.rated_name }</Text>
+                    </ModalHeader>
+                    
 
                     <ModalCloseButton onClick={ closePointsModal } />
 
@@ -421,7 +435,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                             backgroundColor={colors.highlightColor}
                             color={colors.baseLight}
                             _hover={ {
-                                background: colors.baseDark
+                                background: colors.highlightColorMore
                             } }
                             onClick={confirmPointsAnswers}
                         >Confirmar</Button>

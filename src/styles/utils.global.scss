@@ -125,6 +125,14 @@
   justify-content: space-evenly;
 }
 
+.flex-justify-start {
+  justify-content: flex-start;
+}
+
+.flex-justify-end {
+  justify-content: flex-end;
+}
+
 .flex-wrap {
   flex-wrap: wrap;
 }

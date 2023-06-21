@@ -30,7 +30,7 @@ import {
     Box,
     Tooltip
   } from '@chakra-ui/react';
-import { MdClose } from 'react-icons/md';
+import { MdClose, MdCheckCircle } from 'react-icons/md';
 
 interface BetweenUsersRatingProps {
     rating_user_code: string
@@ -42,6 +42,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
     const [ expectedAnswers, setExpectedAnswers ]               = useState< any >( [] );
     const [ currentPointsModal, setCurrentPointsModal ]         = useState< any >( {} );
     const [ currentRemoveUserRate, setCurrentRemoveUserRate ]   = useState< any >( {} );
+    const [ ratingFinished, setRatingFinished ]                             = useState< boolean >( false );
     const { 
         isOpen: isOpenDialog, 
         onOpen: onOpenDialog, 
@@ -168,6 +169,10 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
         const UPDATE_EXPECT_ANSWERS: any = expectedAnswers;
         UPDATE_EXPECT_ANSWERS[ radioResponse.rating_user_id ].questions[ radioResponse.question_id ].answer = radioResponse.answer;
         UPDATE_EXPECT_ANSWERS[ radioResponse.rating_user_id ].questions[ radioResponse.question_id ].done   = true;
+
+        setExpectedAnswers( UPDATE_EXPECT_ANSWERS );
+
+        checkIfRatingIsDone();
     }
 
     function openModalPoints( ratingUserId: number ) {
@@ -189,6 +194,8 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
         EXPECTED_ANSWERS[ CURRENT_POINTS_MODAL.rating_user_id ].questions[ type ].answer = event.target.value;
 
         setExpectedAnswers( EXPECTED_ANSWERS );
+
+        checkIfRatingIsDone();
     }
 
     function openCurrentRemoveUserRated( ratingUserId: number ) {
@@ -210,6 +217,54 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
         setExpectedAnswers( EXPECTED_ANSWERS );
 
         onCloseDialog();
+    }
+
+    function checkIfRatingIsDone() {
+        const FINISHED: any = [];
+
+        for( const RATING_ID in expectedAnswers ) {
+            const RATING = expectedAnswers[ RATING_ID ]
+            if( RATING.cancel )
+                continue
+
+            for( const QUESTION_ID in RATING.questions ) {
+                const QUESTION = RATING.questions[ QUESTION_ID ];
+
+                FINISHED.push( QUESTION.done );
+            }
+        }
+
+        if( FINISHED.every( ( val: any ) => val === true ) ) {
+            setRatingFinished( true );
+        } else {
+            setRatingFinished( false );
+        }
+    }
+
+    function confirmPointsAnswers() {
+        const EXPECTED_ANSWERS: any     = expectedAnswers;
+        const CURRENT_POINTS_MODAL      = currentPointsModal;
+        const PFO                       = EXPECTED_ANSWERS[ CURRENT_POINTS_MODAL.rating_user_id ].questions[ 'pfo' ];
+        const PFA                       = EXPECTED_ANSWERS[ CURRENT_POINTS_MODAL.rating_user_id ].questions[ 'pfa' ];
+
+        PFO.done = PFO.answer != '' ? true : false;
+        PFA.done = PFA.answer != '' ? true : false;
+
+        if( PFO.answer != '' && PFA.answer != '' ) {
+            onCloseModal();
+        } else {
+            console.log( 'alerta toast' );
+        }
+
+        setExpectedAnswers( EXPECTED_ANSWERS );
+
+        checkIfRatingIsDone();
+    }
+
+    function closePointsModal() {
+        confirmPointsAnswers();
+
+        onCloseModal()
     }
 
     useEffect( () => {
@@ -277,22 +332,53 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                                             /> 
                                         )}
 
-                                        {body.item == 'points' && ( <Button onClick={() => openModalPoints( tr.id )} >Responder</Button> ) }
+                                        {body.item == 'points' && expectedAnswers[ tr.id ].questions.pfo.done && expectedAnswers[ tr.id ].questions.pfa.done ? ( 
+                                                <Button 
+                                                    onClick={() => openModalPoints( tr.id )} 
+                                                    colorScheme='whatsapp'
+                                                    leftIcon={ <MdCheckCircle /> }
+                                                >
+                                                    Respondido
+                                                </Button> 
+                                            ) : body.item == 'points' && (
+                                                <Button 
+                                                    onClick={() => openModalPoints( tr.id )}
+                                                >
+                                                    Responder
+                                                </Button> 
+                                            ) }
                                     </td>
                                 ) ) }
                             </tr>
                         ) ) }
                     </tbody>
                 </table>
+
+                <div className='flex flex-justify-end m-t-20'>
+                    { ratingFinished ? (
+                        <Button size='lg' backgroundColor={ colors.highlightColor } color={ colors.baseLight } 
+                            _hover={ {
+                                backgroundColor: colors.highlightColorMore
+                            } }
+                        >
+                            Finalizar avaliação
+                        </Button>
+                    ) : ( 
+                        <Button size='lg' colorScheme='gray' cursor='not-allowed' disabled={true}>
+                            Finalizar avaliação
+                        </Button>
+                     ) }
+                    
+                </div>
             </div>
 
             {/* Modal answer text */}
-            <Modal isOpen={isOpenModal} onClose={onCloseModal} isCentered>
+            <Modal isOpen={isOpenModal} onClose={ closePointsModal } isCentered>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Pontos fortes e fracos</ModalHeader>
 
-                    <ModalCloseButton />
+                    <ModalCloseButton onClick={ closePointsModal } />
 
                     <ModalBody>
                         <Accordion defaultIndex={[0, 1]} allowMultiple>
@@ -337,7 +423,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                             _hover={ {
                                 background: colors.baseDark
                             } }
-                            onClick={onCloseModal}
+                            onClick={confirmPointsAnswers}
                         >Confirmar</Button>
                     </ModalFooter>
                 </ModalContent>

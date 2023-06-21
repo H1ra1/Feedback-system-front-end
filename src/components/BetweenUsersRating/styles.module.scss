@@ -62,6 +62,9 @@
     }
 
     &__finish_container {
+        position: sticky;
+        left: 0;
+
         @media( max-width: 750px ) {
             position: relative;
             padding-top: 50px;

@@ -60,4 +60,20 @@
             }
         }
     }
+
+    &__finish_container {
+        @media( max-width: 750px ) {
+            position: relative;
+            padding-top: 50px;
+
+            button {
+                position: fixed;
+                left: 0;
+                bottom: 10px;
+                z-index: 100;
+                width: 100%;
+                border-radius: 10px 10px 0 0;
+            }
+        }
+    }
 }

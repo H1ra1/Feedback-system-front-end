@@ -277,6 +277,10 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
         onCloseModal()
     }
 
+    function finishRating() {
+        console.log( expectedAnswers );
+    }
+
     useEffect( () => {
         async function getRatingRows() {
             const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/rating/user/code/${props.rating_user_code}/` );
@@ -364,12 +368,16 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                     </tbody>
                 </table>
 
-                <div className='flex flex-justify-end m-t-20'>
+                <div className={`${styles['between-users-rating__finish_container']} flex flex-justify-end m-t-20`}>
                     { ratingFinished ? (
-                        <Button size='lg' backgroundColor={ colors.highlightColor } color={ colors.baseLight } 
+                        <Button 
+                            size='lg' 
+                            backgroundColor={ colors.highlightColor } 
+                            color={ colors.baseLight } 
                             _hover={ {
                                 backgroundColor: colors.highlightColorMore
                             } }
+                            onClick={ finishRating }
                         >
                             Finalizar avaliação
                         </Button>

@@ -39,12 +39,13 @@ interface BetweenUsersRatingProps {
 }
 
 function BetweenUsersRating( props: BetweenUsersRatingProps ) {
-    const [ tableHeader, setTableHeader ]                       = useState< any >( [] );
-    const [ tableBody, setTableBody ]                           = useState( [] );
-    const [ expectedAnswers, setExpectedAnswers ]               = useState< any >( [] );
-    const [ currentPointsModal, setCurrentPointsModal ]         = useState< any >( {} );
-    const [ currentRemoveUserRate, setCurrentRemoveUserRate ]   = useState< any >( {} );
+    const [ tableHeader, setTableHeader ]                                   = useState< any >( [] );
+    const [ tableBody, setTableBody ]                                       = useState( [] );
+    const [ expectedAnswers, setExpectedAnswers ]                           = useState< any >( [] );
+    const [ currentPointsModal, setCurrentPointsModal ]                     = useState< any >( {} );
+    const [ currentRemoveUserRate, setCurrentRemoveUserRate ]               = useState< any >( {} );
     const [ ratingFinished, setRatingFinished ]                             = useState< boolean >( false );
+    const [ buttonRatingFinishedLoading, setButtonRatingFinishedLoading ]   = useState< boolean >( false ); 
     const { 
         isOpen: isOpenDialog, 
         onOpen: onOpenDialog, 
@@ -279,6 +280,8 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
 
     function finishRating() {
         console.log( expectedAnswers );
+
+        setButtonRatingFinishedLoading( true );
     }
 
     useEffect( () => {
@@ -378,6 +381,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                                 backgroundColor: colors.highlightColorMore
                             } }
                             onClick={ finishRating }
+                            isLoading={ buttonRatingFinishedLoading }
                         >
                             Finalizar avaliação
                         </Button>

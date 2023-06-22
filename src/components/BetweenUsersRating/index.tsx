@@ -304,6 +304,14 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
 
         setTimeout( () => {
             setSendRatingStatus( 'sended' );
+
+            toast( {
+                status: 'success',
+                title: 'Sucesso!',
+                description: 'Avaliação enviada com sucesso!',
+                position: 'bottom-right',
+                isClosable: true
+            } );
         }, 5000 );
     }
 
@@ -606,7 +614,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                                 >
                                     Confirmar
                                 </Button>
-                            ) : sendRatingStatus == 'sending' ?? (
+                            ) : sendRatingStatus == 'sending' && (
                                 <Button 
                                     backgroundColor={ colors.highlightColor } 
                                     color={ colors.baseLight } 

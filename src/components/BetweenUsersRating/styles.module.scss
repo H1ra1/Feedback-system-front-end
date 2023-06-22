@@ -79,4 +79,52 @@
             }
         }
     }
+
+    &__rating_resumes {
+        max-height: 60vh;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+
+        .rating-resume-item {
+            background-color: #efefef;
+            padding: 10px;
+
+            &:not( :first-of-type ) {
+                border-top: 10px dashed $base-light;
+            }
+
+            &__title {
+                p {
+                    @include font( 1.1, 600, $base-dark );
+                }
+            }
+
+            &__list {
+                padding: 5px 0;
+                p {
+                    white-space: pre;
+                }
+
+                span {
+                    width: 100%;
+                    border-bottom: 2px dotted $base-dark;
+                    margin: 0 10px 5px 10px;
+                }
+            }
+
+            &__title_text {
+                padding: 10px 0;
+
+                p {
+                    &:nth-child( 1 ) {
+                        @include font( 1, 600, $base-dark )
+                    }
+
+                    &:nth-child( 2 ) {
+                        @include font( .9, 300, $base-dark );
+                    }
+                }
+            }
+        }
+    }
 }

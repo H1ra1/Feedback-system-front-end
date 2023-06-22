@@ -32,7 +32,7 @@ import {
     useToast,
     Text
   } from '@chakra-ui/react';
-import { MdClose, MdCheckCircle } from 'react-icons/md';
+import { MdClose, MdCheckCircle, MdOutlineCheckCircleOutline } from 'react-icons/md';
 
 interface BetweenUsersRatingProps {
     rating_user_code: string
@@ -46,6 +46,9 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
     const [ currentRemoveUserRate, setCurrentRemoveUserRate ]               = useState< any >( {} );
     const [ ratingFinished, setRatingFinished ]                             = useState< boolean >( false );
     const [ buttonRatingFinishedLoading, setButtonRatingFinishedLoading ]   = useState< boolean >( false ); 
+    const [ sendRatingStatus, setSendRatingStatus ]                         = useState< string >( 'waiting' );
+    const cancelRef                                                         = React.useRef( null );
+    const toast                                                             = useToast();
     const { 
         isOpen: isOpenDialog, 
         onOpen: onOpenDialog, 
@@ -56,8 +59,12 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
         onOpen: onOpenModal, 
         onClose: onCloseModal 
     } = useDisclosure();
-    const cancelRef = React.useRef( null );
-    const toast     = useToast();
+    const { 
+        isOpen: isOpenModalResume, 
+        onOpen: onOpenModalResume, 
+        onClose: onCloseModalResume 
+    } = useDisclosure();
+    
 
     function mountTableHeader( object: any ) {
         const TABLE_HEADER: any = [
@@ -279,9 +286,25 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
     }
 
     function finishRating() {
-        console.log( expectedAnswers );
+        onOpenModalResume();
 
         setButtonRatingFinishedLoading( true );
+    }
+
+    function closeRatingResume() {
+        setButtonRatingFinishedLoading( false );
+
+        onCloseModalResume();
+    }
+
+    function sendRating() {
+        console.log( expectedAnswers );
+
+        setSendRatingStatus( 'sending' );
+
+        setTimeout( () => {
+            setSendRatingStatus( 'sended' );
+        }, 5000 );
     }
 
     useEffect( () => {
@@ -371,40 +394,42 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                     </tbody>
                 </table>
 
-                <div className={`${styles['between-users-rating__finish_container']} flex flex-justify-end m-t-20`}>
-                    { ratingFinished ? (
-                        <Button 
-                            size='lg' 
-                            backgroundColor={ colors.highlightColor } 
-                            color={ colors.baseLight } 
-                            _hover={ {
-                                backgroundColor: colors.highlightColorMore
-                            } }
-                            onClick={ finishRating }
-                            isLoading={ buttonRatingFinishedLoading }
-                        >
-                            Finalizar avaliação
-                        </Button>
-                    ) : ( 
-                        <Button 
-                            size='lg' 
-                            colorScheme='gray' 
-                            cursor='not-allowed'
-                            onClick={ () => {
-                                toast( {
-                                    title: 'Erro!',
-                                    description: 'Responda toda a avaliação antes e finalizar.',
-                                    status: 'error',
-                                    position: 'bottom-right',
-                                    isClosable: true
-                                } );
-                            } }
-                        >
-                            Finalizar avaliação
-                        </Button>
-                     ) }
-                    
-                </div>
+                { sendRatingStatus != 'sended' ?? (
+                    <div className={`${styles['between-users-rating__finish_container']} flex flex-justify-end m-t-20`}>
+                        { ratingFinished ? (
+                            <Button 
+                                size='lg' 
+                                backgroundColor={ colors.highlightColor } 
+                                color={ colors.baseLight } 
+                                _hover={ {
+                                    backgroundColor: colors.highlightColorMore
+                                } }
+                                onClick={ finishRating }
+                                isLoading={ buttonRatingFinishedLoading }
+                            >
+                                Finalizar avaliação
+                            </Button>
+                        ) : ( 
+                            <Button 
+                                size='lg' 
+                                colorScheme='gray' 
+                                cursor='not-allowed'
+                                onClick={ () => {
+                                    toast( {
+                                        title: 'Erro!',
+                                        description: 'Responda toda a avaliação antes e finalizar.',
+                                        status: 'error',
+                                        position: 'bottom-right',
+                                        isClosable: true
+                                    } );
+                                } }
+                            >
+                                Finalizar avaliação
+                            </Button>
+                        ) }
+                        
+                    </div>
+                ) }
             </div>
 
             {/* Modal answer text */}
@@ -494,6 +519,111 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                 </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            {/* Modal finish resume */}
+            <Modal isOpen={ isOpenModalResume } onClose={ onCloseModalResume } closeOnOverlayClick={ false }>
+                <ModalOverlay />
+
+                <ModalContent>
+                    <ModalHeader>
+                        { sendRatingStatus != 'sended' ? (
+                            <Text>Resumo da avaliação</Text>
+                        ) : (
+                            <Text textAlign='center' color={ colors.baseDark } className='flex flex-align-center flex-justify-center flex-gap-5'>
+                                Avaliação enviada!
+                                <MdOutlineCheckCircleOutline color={ colors.success } size='30px'/>
+                            </Text>
+                        ) }
+                        
+                    </ModalHeader>
+
+                    <ModalBody>
+                        { sendRatingStatus != 'sended' ? (
+                            <Text fontSize='.8em' paddingBottom='10px'>
+                                Antes de confirmar verifique se suas avaliações estão corretas, não será possível editar após a confirmação!
+                            </Text>
+                        ) : (
+                            <Text fontSize='.8em' paddingBottom='10px' textAlign='center'>
+                                Muito obrigado por realizar a avaliação, sua colaboração é muito importante para o crescimento e melhorias da iHUB!
+                            </Text>
+                        ) }
+                        
+                        <div className={ `${styles[ 'between-users-rating__rating_resumes' ]} custom-purple-scrollbar` }>
+
+                            { Object.keys( expectedAnswers ).map( ( rating_user_id ) => (
+                                <div className={ styles[ 'rating-resume-item' ] }>
+                                    <div className={ styles[ 'rating-resume-item__title' ] }>
+                                        <p>{ expectedAnswers[ rating_user_id ].rated_name }</p>
+                                    </div>
+
+                                    { Object.keys( expectedAnswers[ rating_user_id ].questions ).map( ( question_id ) => {
+                                        if( question_id != 'pfo' && question_id != 'pfa' ) {
+                                            return (
+                                                <div className={ `${styles[ 'rating-resume-item__list' ]} flex flex-justify-between` }>
+                                                    <p>{ expectedAnswers[ rating_user_id ].questions[ question_id ].question_alias }</p>
+                                                    <span></span>
+                                                    <p>{ expectedAnswers[ rating_user_id ].questions[ question_id ].answer }</p>
+                                                </div>
+                                            );
+                                        }
+                                    } ) }
+
+                                    <div className={ `${styles[ 'rating-resume-item__title_text' ]}` }>
+                                        <p>Pontos fortes</p>
+                                        <p>{ expectedAnswers[ rating_user_id ].questions.pfo.answer }</p>
+                                    </div>
+
+                                    <div className={ `${styles[ 'rating-resume-item__title_text' ]}` }>
+                                        <p>Pontos fracos</p>
+                                        <p>{ expectedAnswers[ rating_user_id ].questions.pfa.answer }</p>
+                                    </div>
+                                </div>
+                            ) ) }
+                        </div>
+
+                        <div className='flex flex-justify-end flex-align-end flex-gap-10 m-t-20'>
+                            { sendRatingStatus == 'waiting' && (
+                                <Text 
+                                cursor='pointer'
+                                transition='all .2s linear'
+                                _hover={ {
+                                    color: colors.danger
+                                } }
+                                onClick={ closeRatingResume }
+                                >
+                                    Cancelar
+                                </Text>
+                            ) }
+                                
+                            { sendRatingStatus == 'waiting' ? (
+                                <Button 
+                                    backgroundColor={ colors.highlightColor } 
+                                    color={ colors.baseLight } 
+                                    _hover={ {
+                                        backgroundColor: colors.highlightColorMore
+                                    } }
+                                    onClick={ sendRating }
+                                >
+                                    Confirmar
+                                </Button>
+                            ) : sendRatingStatus == 'sending' ?? (
+                                <Button 
+                                    backgroundColor={ colors.highlightColor } 
+                                    color={ colors.baseLight } 
+                                    _hover={ {
+                                        backgroundColor: colors.highlightColorMore
+                                    } }
+                                    isLoading={ true }
+                                    loadingText='Enviando avaliação'
+                                >
+                                    Enviando
+                                </Button>
+                            ) }
+                            
+                        </div>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
         </div>
     );
 }

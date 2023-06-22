@@ -550,16 +550,16 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                         
                         <div className={ `${styles[ 'between-users-rating__rating_resumes' ]} custom-purple-scrollbar` }>
 
-                            { Object.keys( expectedAnswers ).map( ( rating_user_id ) => (
-                                <div className={ styles[ 'rating-resume-item' ] }>
+                            { Object.keys( expectedAnswers ).map( ( rating_user_id, indice ) => (
+                                <div className={ styles[ 'rating-resume-item' ] } key={ indice }>
                                     <div className={ styles[ 'rating-resume-item__title' ] }>
                                         <p>{ expectedAnswers[ rating_user_id ].rated_name }</p>
                                     </div>
 
-                                    { Object.keys( expectedAnswers[ rating_user_id ].questions ).map( ( question_id ) => {
+                                    { Object.keys( expectedAnswers[ rating_user_id ].questions ).map( ( question_id, indice ) => {
                                         if( question_id != 'pfo' && question_id != 'pfa' ) {
                                             return (
-                                                <div className={ `${styles[ 'rating-resume-item__list' ]} flex flex-justify-between` }>
+                                                <div className={ `${styles[ 'rating-resume-item__list' ]} flex flex-justify-between` } key={ indice }>
                                                     <p>{ expectedAnswers[ rating_user_id ].questions[ question_id ].question_alias }</p>
                                                     <span></span>
                                                     <p>{ expectedAnswers[ rating_user_id ].questions[ question_id ].answer }</p>

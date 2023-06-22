@@ -394,7 +394,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                     </tbody>
                 </table>
 
-                { sendRatingStatus != 'sended' ?? (
+                { sendRatingStatus != 'sended' && (
                     <div className={`${styles['between-users-rating__finish_container']} flex flex-justify-end m-t-20`}>
                         { ratingFinished ? (
                             <Button 

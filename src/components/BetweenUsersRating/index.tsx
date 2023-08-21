@@ -31,9 +31,11 @@ import {
     Tooltip,
     useToast,
     Text,
-    Spinner
+    Spinner,
+    Stack
   } from '@chakra-ui/react';
 import { MdClose, MdCheckCircle, MdOutlineCheckCircleOutline } from 'react-icons/md';
+import { capitalizeFirstLetter } from '@/utils/general';
 
 interface BetweenUsersRatingProps {
     rating_user_code: string
@@ -429,7 +431,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                                                         <Button 
                                                             colorScheme={'red'} 
                                                             size='sm' 
-                                                            fontSize={24} 
+                                                            fontSize={16}
                                                             onClick={ () => openCurrentRemoveUserRated( tr.id ) 
                                                         }>
                                                             <MdClose />
@@ -437,7 +439,17 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                                                     </Tooltip>
                                                 )}
     
-                                                {body.item == 'name' && ( body.value )}
+                                                {body.item == 'name' && ( 
+                                                    <Tooltip hasArrow label={
+                                                        <Stack>
+                                                            <Text>Departamento: {body.department}</Text>
+                                                            <Text>Posição: {capitalizeFirstLetter( body.position )}</Text>
+                                                            <Text>Unidade: {body.unit}</Text>
+                                                        </Stack>
+                                                    } placement='bottom'>
+                                                        {body.value}
+                                                    </Tooltip> 
+                                                )}
     
                                                 {body.item == 'text' && ( body.value )}
     

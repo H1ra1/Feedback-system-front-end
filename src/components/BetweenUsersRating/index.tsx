@@ -229,8 +229,23 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
         onOpenDialog();
     }
 
-    function removeCurrentUserRated( ratingUserId: number ) {
+    async function removeCurrentUserRated( ratingUserId: number ) {
         const EXPECTED_ANSWERS: any  = expectedAnswers;
+        const RESPONSE               = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/rating/user/code/${props.rating_user_code}/cancel/${ratingUserId}/`, {
+            method: 'POST'
+        } );
+
+        if( ! RESPONSE.ok ) {
+            toast( {
+                status: 'error',
+                title: 'Erro!',
+                description: 'Erro ao remover um usuário da avaliação, por favor tente novamente mais tarde ou contate alguém da equipe.',
+                position: 'bottom-right',
+                isClosable: true
+            } );
+
+            throw new Error( RESPONSE.statusText );
+        }
 
         EXPECTED_ANSWERS[ ratingUserId ].cancel = true;
 
@@ -309,23 +324,25 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
         const RATING_USER_ROWS_OBJECT = [];
 
         for( const RATING_USER_ROW_ID in answers ) {
-            const RATING_USER_ROW_OBJECT: any = {
-                rating_user_row_id: answers[ RATING_USER_ROW_ID ].rating_user_row_id,
-                questions:          []
-            }
-
-            for ( const QUESTION_ID in answers[ RATING_USER_ROW_ID ].questions ) {
-                const QUESTION_OBJECT = {
-                    question_id:        answers[ RATING_USER_ROW_ID ].questions[ QUESTION_ID ].id,
-                    question_group_id:  answers[ RATING_USER_ROW_ID ].questions[ QUESTION_ID ].question_group_id,
-                    answer:             answers[ RATING_USER_ROW_ID ].questions[ QUESTION_ID ].answer,
-                    answer_type:        answers[ RATING_USER_ROW_ID ].questions[ QUESTION_ID ].answer_type
+            if( answers[ RATING_USER_ROW_ID ].cancel != true ) {
+                const RATING_USER_ROW_OBJECT: any = {
+                    rating_user_row_id: answers[ RATING_USER_ROW_ID ].rating_user_row_id,
+                    questions:          []
                 }
-
-                RATING_USER_ROW_OBJECT.questions.push( QUESTION_OBJECT );
+    
+                for ( const QUESTION_ID in answers[ RATING_USER_ROW_ID ].questions ) {
+                    const QUESTION_OBJECT = {
+                        question_id:        answers[ RATING_USER_ROW_ID ].questions[ QUESTION_ID ].id,
+                        question_group_id:  answers[ RATING_USER_ROW_ID ].questions[ QUESTION_ID ].question_group_id,
+                        answer:             answers[ RATING_USER_ROW_ID ].questions[ QUESTION_ID ].answer,
+                        answer_type:        answers[ RATING_USER_ROW_ID ].questions[ QUESTION_ID ].answer_type
+                    }
+    
+                    RATING_USER_ROW_OBJECT.questions.push( QUESTION_OBJECT );
+                }
+    
+                RATING_USER_ROWS_OBJECT.push( RATING_USER_ROW_OBJECT );
             }
-
-            RATING_USER_ROWS_OBJECT.push( RATING_USER_ROW_OBJECT );
         }
 
         return RATING_USER_ROWS_OBJECT;
@@ -355,10 +372,6 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
 
             throw new Error( RESPONSE.statusText );
         }
-    
-        const RESPONDE_PARSED = await RESPONSE.json();
-
-        console.log( RESPONDE_PARSED );
 
         setSendRatingStatus( 'sended' );
 

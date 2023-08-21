@@ -104,14 +104,16 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                 id: user_to_be_rated.id,
                 items: [
                     {
-                        item: 'remove'
+                        item:           'remove',
+                        self_rating:    user_to_be_rated.rated_user_id == object.user_id
                     },
                     {
-                        item: 'name',
-                        value: user_to_be_rated.rated_name,
-                        department: user_to_be_rated.department,
-                        unit: user_to_be_rated.unit,
-                        position: user_to_be_rated.position
+                        item:           'name',
+                        value:          user_to_be_rated.rated_name,
+                        department:     user_to_be_rated.department,
+                        unit:           user_to_be_rated.unit,
+                        position:       user_to_be_rated.position,
+                        self_rating:    user_to_be_rated.rated_user_id == object.user_id
                     }
                 ]
             };
@@ -121,12 +123,12 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                     if( question.question_to_list.length == 0 || question.question_to_list.includes( user_to_be_rated.position ) ) {
                         ITEMS.items.push( {
                             id: `${user_to_be_rated.id}-${question.id}`,
-                            question_id: question.id,
-                            item: 'radio'
+                            question_id:    question.id,
+                            item:           'radio'
                         } );
                     } else {
                         ITEMS.items.push( {
-                            item: 'text',
+                            item:  'text',
                             value: '~'
                         } );
                     }
@@ -427,16 +429,18 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                                         { tr.items.map( ( body: any, index: number ) => (
                                             <td key={index}>
                                                 {body.item == 'remove' && ( 
-                                                    <Tooltip hasArrow label='Desconsiderar avaliação' placement='right'>
-                                                        <Button 
-                                                            colorScheme={'red'} 
-                                                            size='sm' 
-                                                            fontSize={16}
-                                                            onClick={ () => openCurrentRemoveUserRated( tr.id ) 
-                                                        }>
-                                                            <MdClose />
-                                                        </Button>
-                                                    </Tooltip>
+                                                    ! body.self_rating ? (
+                                                        <Tooltip hasArrow label='Desconsiderar avaliação' placement='right'>
+                                                            <Button 
+                                                                colorScheme={'red'} 
+                                                                size='sm' 
+                                                                fontSize={16}
+                                                                onClick={ () => openCurrentRemoveUserRated( tr.id ) 
+                                                            }>
+                                                                <MdClose />
+                                                            </Button>
+                                                        </Tooltip>
+                                                    ) : '#'
                                                 )}
     
                                                 {body.item == 'name' && ( 

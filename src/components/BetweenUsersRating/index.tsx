@@ -394,7 +394,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
             const RESPONDE_PARSED   = await RESPONSE.json();
             
             if( ! RESPONSE.ok ) {
-                setResponseStatus( RESPONDE_PARSED.data.status );
+                setResponseStatus( RESPONDE_PARSED.data.status != undefined ? RESPONDE_PARSED.data.status : 'fail' );
             } else {
                 mountTableHeader( RESPONDE_PARSED.data );
                 mountTableBody( RESPONDE_PARSED.data );
@@ -407,7 +407,7 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
         getRatingRows();
     }, [ props.rating_user_code ] );
 
-    if( responseStatus != 'canc' && responseStatus != 'expi' && responseStatus != 'done' ) {
+    if( responseStatus != 'canc' && responseStatus != 'expi' && responseStatus != 'done' && responseStatus != 'fail' ) {
         if( ! responseStatusLoading ) {
             return (
                 <div className={`${styles[ 'between-users-rating' ]} flex flex-justify-center`}>
@@ -730,7 +730,6 @@ function BetweenUsersRating( props: BetweenUsersRatingProps ) {
                 </div>
             )
         }
-        
     } else {
         return (
             <div className={`${styles[ 'between-users-rating__status_block' ]} flex flex-justify-center flex-align-center`}>

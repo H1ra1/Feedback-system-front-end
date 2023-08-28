@@ -23,6 +23,7 @@ import FeederLoading from '../../loadings/FeederLoading';
 
 interface UsersAnalysisProps {
     group_id: number
+    rating_user: boolean
 }
 
 interface UsersTableBody {
@@ -44,12 +45,18 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
     useEffect( () => {
         async function getUsersAnalysis() {
             setLoading( true );
-            const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-group/average/360/${props.group_id}/` );
+            let response;
+
+            if(  ! props.rating_user ) {
+                response = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-group/average/360/${props.group_id}/` );
+            } else {
+                response = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/rating/user/analysis/per-questions-notes/${props.group_id}/` );
+            }
         
-            if( ! RESPONSE.ok )
-                throw new Error( RESPONSE.statusText );
+            if( ! response.ok )
+                throw new Error( response.statusText );
         
-            const RESPONDE_PARSED = await RESPONSE.json();
+            const RESPONDE_PARSED = await response.json();
 
             const ITEMS_USERS_TABLE:UsersTableBody[] = [];
             const userFromGroup_DATA: any[] = [];
@@ -57,7 +64,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                 userFromGroup_DATA.push( {
                     name: user_evaluated.user_evaluated_name,
                     note_average: user_evaluated.note_average,
-                    note_per_questions: user_evaluated.evaluations_notes_per_questions[0],
+                    note_per_questions: props.rating_user ? user_evaluated.evaluations_notes_per_questions : user_evaluated.evaluations_notes_per_questions[0],
                     evaluations_received: user_evaluated.evaluations_done,
                     text_notes: user_evaluated.text_notes
                 } );
@@ -211,11 +218,21 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                             </div>
                             
                             <div className={ `${styles['users-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` }>
-                                { userSelectedTextNotes.map( ( ( note: string, index: number ) => (
-                                    <div className={ `${styles['users-analysis-text-note']}` } key={ index }>
-                                        <p>{ note }</p> 
-                                    </div>
-                                ) ) ) }
+                                { props.rating_user ? (
+                                    userSelectedTextNotes.map( ( ( note: any, index: number ) => (
+                                        <div className={ `${styles['users-analysis-text-note']}` } key={ index }>
+                                            <p><strong>Pontos fortes: </strong>{ note.pfo }</p>
+                                            <p><strong>Pontos fracos: </strong>{ note.pfa }</p>
+                                        </div>
+                                    ) ) )
+                                ) : (
+                                    userSelectedTextNotes.map( ( ( note: string, index: number ) => (
+                                        <div className={ `${styles['users-analysis-text-note']}` } key={ index }>
+                                            <p>{ note }</p> 
+                                        </div>
+                                    ) ) )
+                                ) }
+                                
                             </div>
                             
                         </div>

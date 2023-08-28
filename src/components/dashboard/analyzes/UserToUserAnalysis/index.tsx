@@ -6,6 +6,7 @@ import BetweenUsersAnalysis from '../BetweenUsersAnalysis';
 
 interface UserToUserAnalysisProps {
     group_id: number
+    rating_user: boolean
 }
 
 function UserToUserAnalysis( props: UserToUserAnalysisProps ) {
@@ -29,7 +30,7 @@ function UserToUserAnalysis( props: UserToUserAnalysisProps ) {
             tab_id: 'tab-users-analysis',
             tab_title: 'Usuários',
             tab_subtitle: 'Estatísticas do grupo por usuários',
-            tab_content: <UsersAnalysis group_id={ props.group_id }/>
+            tab_content: <UsersAnalysis group_id={ props.group_id } rating_user={ props.rating_user } />
         },
         {
             tab_id: 'tab-questions-analysis',

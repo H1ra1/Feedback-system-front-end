@@ -19,6 +19,7 @@ interface ModalAnalyticsSettings {
     icon?: JSX.Element
     type: 'user_to_user' | 'area'
     question_group_id: number
+    rating_user: boolean
 }
 
 interface Group {
@@ -32,6 +33,7 @@ interface Group {
     period_final: string
     user_to_user: boolean
     users_to_answer: []
+    rating_user: boolean
 }
 
 function AssessmentsGroupsTable() {
@@ -68,12 +70,13 @@ function AssessmentsGroupsTable() {
     }, [ session ] );
     
 
-    function openAnalyticsModal( group_id: number, group_name: string, user_to_user: boolean ) {
+    function openAnalyticsModal( group_id: number, group_name: string, user_to_user: boolean, rating_user: boolean ) {
         setMODAL_TO_OPEN( {
             title: `Grupo: ${group_name}`,
             icon: <MdAnalytics />,
             type: user_to_user ? 'user_to_user' : 'area',
-            question_group_id: group_id
+            question_group_id: group_id,
+            rating_user: rating_user
         } )
 
         setOPEN_MODAL( true );
@@ -233,7 +236,7 @@ function AssessmentsGroupsTable() {
                                         icon={<MdAnalytics />} 
                                         bgColor={colors.highlightColor} 
                                         tooltip="Abrir análises"
-                                        onClick={ () => openAnalyticsModal( group.id, group.name, group.user_to_user ) }
+                                        onClick={ () => openAnalyticsModal( group.id, group.name, group.user_to_user, group.rating_user ) }
                                     />
                                 </div>
                             </td>
@@ -248,7 +251,7 @@ function AssessmentsGroupsTable() {
                 title={ MODAL_TO_OPEN?.title }
                 icon={ MODAL_TO_OPEN?.icon }
             >
-                { ( MODAL_TO_OPEN != null && MODAL_TO_OPEN.type == 'user_to_user' ) && <UserToUserAnalysis group_id={ MODAL_TO_OPEN.question_group_id }/> }
+                { ( MODAL_TO_OPEN != null && MODAL_TO_OPEN.type == 'user_to_user' ) && <UserToUserAnalysis group_id={ MODAL_TO_OPEN.question_group_id } rating_user={ MODAL_TO_OPEN.rating_user }/> }
                 { ( MODAL_TO_OPEN != null && MODAL_TO_OPEN.type == 'area' ) && <GroupAnalysis group_id={ MODAL_TO_OPEN.question_group_id }/> }
             </SimpleModal>
         </>

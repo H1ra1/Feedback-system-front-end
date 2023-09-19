@@ -35,6 +35,7 @@ interface UsersTableBody {
 function UsersAnalysis( props: UsersAnalysisProps ) {
     const [ userSeleted, setUserSelected ] = useState< string >( 'Selecione um usuário' );
     const [ userSelectedNoteAverage, setUserSelectedNoteAverage ] = useState< string >( '~' );
+    const [ userSelectedNoteAverageWeighted, setUserSelectedNoteAverageWeighted ] = useState< string >( '~' );
     const [ userEvaluationsReceived, setUserEvaluationsReceived ] = useState< string >( '~' );
     const [ questionsChartsData, setQuestionsChartsData ] = useState< any >( [] );
     const [ userFromGroup, setUserFromGroup ] = useState< any[] >( [] );
@@ -64,6 +65,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                 userFromGroup_DATA.push( {
                     name: user_evaluated.user_evaluated_name,
                     note_average: user_evaluated.note_average,
+                    note_average_weighted: user_evaluated.note_average_weighted,
                     note_per_questions: props.rating_user ? user_evaluated.evaluations_notes_per_questions : user_evaluated.evaluations_notes_per_questions[0],
                     evaluations_received: user_evaluated.evaluations_done,
                     text_notes: user_evaluated.text_notes
@@ -101,14 +103,18 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
         const SELECTED_QUESTIONS_CHART_DATA:any[] = [];
 
         userFromGroup[ user_index ].note_per_questions.forEach( ( question: any ) => {
-            SELECTED_QUESTIONS_CHART_DATA.push( {
-                question: question.question_alias,
-                points: question.question_note_average
-            } );
+            console.log( question.question_note_average );
+            if( question.question_note_average != "" && question.question_note_average != 0 ) {
+                SELECTED_QUESTIONS_CHART_DATA.push( {
+                    question: question.question_alias,
+                    points: question.question_note_average
+                } );
+            }
         } );
 
         setUserSelected( SELECTED_USERNAME );
         setUserSelectedNoteAverage( userFromGroup[ user_index ].note_average );
+        setUserSelectedNoteAverageWeighted( userFromGroup[ user_index ].note_average_weighted );
         setUserEvaluationsReceived( userFromGroup[ user_index ].evaluations_received );
         setQuestionsChartsData( SELECTED_QUESTIONS_CHART_DATA );
         setUserSelectedTextNotes( userFromGroup[ user_index ].text_notes );
@@ -162,8 +168,13 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                             <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
                                 <p>Avalaições recebidas: { userEvaluationsReceived }</p>
                             </div>
+                            
                             <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
                                 <p>Nota média: { userSelectedNoteAverage }</p>
+                            </div>
+
+                            <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
+                                <p>Nota média ponderada: { userSelectedNoteAverageWeighted }</p>
                             </div>
                         </div>
         

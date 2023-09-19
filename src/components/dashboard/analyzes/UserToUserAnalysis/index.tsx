@@ -42,7 +42,7 @@ function UserToUserAnalysis( props: UserToUserAnalysisProps ) {
             tab_id: 'tab-comparative-analysis',
             tab_title: 'Comparativo',
             tab_subtitle: 'Estatísticas do grupo comparativas entre os usuários',
-            tab_content: <BetweenUsersAnalysis group_id={ props.group_id }/>
+            tab_content: <BetweenUsersAnalysis group_id={ props.group_id } rating_user={ props.rating_user } />
         }
     ];
 

@@ -16,6 +16,7 @@ import FeederLoading from "../../loadings/FeederLoading";
 
 interface QuestionsAnalysisProps {
     group_id: number
+    rating_user: boolean
 }
 
 function BetweenUsersAnalysis( props: QuestionsAnalysisProps ) {
@@ -25,12 +26,19 @@ function BetweenUsersAnalysis( props: QuestionsAnalysisProps ) {
     useEffect( () => {
         async function getUsersAverageComparative() {
             setLoading( true );
-            const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-group/average/360/comparative/${props.group_id}/` );
+
+            let response;
+
+            if( ! props.rating_user ) {
+                response = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-group/average/360/comparative/${props.group_id}/` );
+            } else {
+                response = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/rating/user/analysis/per-questions-notes/${props.group_id}/` );
+            }
         
-            if( ! RESPONSE.ok )
-                throw new Error( RESPONSE.statusText );
+            if( ! response.ok )
+                throw new Error( response.statusText );
         
-            const RESPONDE_PARSED = await RESPONSE.json();
+            const RESPONDE_PARSED = await response.json();
             const USERS_GROUP_DATA: any[] = [];
             RESPONDE_PARSED.data.forEach( ( user: any ) => {
                 USERS_GROUP_DATA.push( {

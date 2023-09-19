@@ -166,7 +166,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                         <div className={`${styles['users-analysis-select-user-infos']} flex flex-align-center flex-justify-between`}>
                             <h3 className={`${styles['users-analysis-select-user-infos__user_name']}`}>{ userSeleted }</h3>
                             <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
-                                <p>Avalaições recebidas: { userEvaluationsReceived }</p>
+                                <p>Avaliações recebidas: { userEvaluationsReceived }</p>
                             </div>
                             
                             <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>

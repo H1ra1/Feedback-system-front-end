@@ -17,6 +17,7 @@ import FeederLoading from '../../loadings/FeederLoading';
 
 interface QuestionsAnalysisProps {
     group_id: number
+    rating_user: boolean
 }
 
 interface TinyTableBody {
@@ -35,12 +36,18 @@ function QuestionsAnalysis( props: QuestionsAnalysisProps ) {
     useEffect( () => {
         async function getUsersAveragePerQuestions() {
             setLoading( true );
-            const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-group/average/per-questions/${props.group_id}/` );
+            let response;
+
+            if( ! props.rating_user ) {
+                response = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/questions-group/average/per-questions/${props.group_id}/` );
+            } else {
+                response = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/rating/user/analysis/questions-notes/${props.group_id}/` );
+            }
         
-            if( ! RESPONSE.ok )
-                throw new Error( RESPONSE.statusText );
+            if( ! response.ok )
+                throw new Error( response.statusText );
         
-            const RESPONDE_PARSED = await RESPONSE.json();
+            const RESPONDE_PARSED = await response.json();
 
             const ITEMS_QUESTIONS_TABLE:TinyTableBody[] = [];
             const QUESTIONS_GROUP_DATA: any[] = [];

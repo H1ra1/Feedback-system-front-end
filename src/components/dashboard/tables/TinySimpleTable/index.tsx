@@ -20,11 +20,12 @@ interface TinySimpleTableProps {
     footer?: string
     table_name?: string
     body_row_click_handler?: Function
+    grid?: boolean
 }
 
 function TinySimpleTable( props: TinySimpleTableProps ) {
     return (
-        <div className={`${styles['tiny-simple-table']} default-shadow`}>
+        <div className={`${styles['tiny-simple-table']} default-shadow ${props.grid ?? 'grid-template'}`}>
             <div className={`${styles['tiny-simple-table__head']}`}>
                 <div className={`${styles['tiny-simple-table-row']} flex flex-align-center flex-justify-between`}>
                     { props.head && props.head.map( ( head_item, head_index ) => (

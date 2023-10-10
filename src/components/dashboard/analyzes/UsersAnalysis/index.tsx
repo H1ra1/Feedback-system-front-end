@@ -76,7 +76,8 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                     row_pre_id: 'user',
                     items: [
                         ( <p key={0}>{ user_evaluated.user_evaluated_name }</p> ),
-                        ( <p key={1}> { user_evaluated.note_average } </p> )
+                        ( <p key={1}>{ user_evaluated.evaluations_done }</p> ),
+                        ( <p key={2}> { user_evaluated.note_average } </p> )
                     ]
                 } );
             } );
@@ -92,6 +93,9 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
     const USERS_TABLE_HEAD = [
         {
             title: 'Usuários'
+        },
+        {
+            title: 'Recebidas'
         },
         {
             title: 'Média'
@@ -159,6 +163,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                             body={usersTableBody} 
                             body_row_click_handler={ usersListClickHandler } 
                             table_name='users-analysis-user-filter'
+                            grid={true}
                         />
                     </div>
         

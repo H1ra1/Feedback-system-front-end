@@ -217,7 +217,7 @@ function AssessmentsGroupsTable() {
 
                                         if( indice <= 3 )
                                             return (
-                                                <Tippy content={ `${user.first_name} ${user.last_name}` }>
+                                                <Tippy content={ `${user.first_name} ${user.last_name}` } key={ indice }>
                                                     <div className={`${styles['assessment-groups-table-user-icon']} flex flex-align-center flex-justify-center`}>
                                                         <span>{ user.abbreviation }</span>
                                                     </div>

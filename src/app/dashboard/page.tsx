@@ -60,7 +60,7 @@ async function getTAverageQuestionsFromGroup( question_group_id: number ) {
 }
 
 async function Dashboard() {
-    const SESSION                      = await getServerSession( authOptions );
+    const SESSION                       = await getServerSession( authOptions );
     const TOP_AREAS_BY_NOTE             = SESSION.user?.data.master ? await getTopAreasBy( 'note' ) : {};
     const TOP_AREAS_BY_QUANTITY         = SESSION.user?.data.master ? await getTopAreasBy( 'quantity' ) : {};
     const TOP_USERS_BY_NOTE             = SESSION.user?.data.master ? await getTopUsersBy( 'note' ) : {};

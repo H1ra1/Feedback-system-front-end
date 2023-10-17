@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styles from './styles.module.scss';
 import TinySimpleTable from '../../tables/TinySimpleTable';
 import colors from '@/styles/colors.module.scss';
@@ -20,6 +20,10 @@ import {
     LabelList
 } from 'recharts';
 import FeederLoading from '../../loadings/FeederLoading';
+import ButtonActionTiny from '../../buttons/ButtonActionTiny';
+import { AiOutlineFilePdf } from 'react-icons/ai';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface UsersAnalysisProps {
     group_id: number
@@ -42,6 +46,10 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
     const [ usersTableBody, setUsersTableBody ] = useState< UsersTableBody[] >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ userSelectedTextNotes, setUserSelectedTextNotes ] = useState( [] );
+    const [ downloadPdfLoading, setDownloadPdfLoading ] = useState< boolean >( false );
+    const CONTAINER_HOLDER_REF = useRef< HTMLDivElement >( null );
+    const CONTAINER_TEXT_NOTES_REF = useRef< HTMLDivElement >( null );
+    const CONTAINER_LIST_USERS_REF = useRef< HTMLDivElement >( null );
 
     useEffect( () => {
         async function getUsersAnalysis() {
@@ -153,11 +161,53 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
         );
     }
 
+    async function createPdf() {
+        setDownloadPdfLoading( true );
+
+        const PDF = new jsPDF("portrait", "pt", "a4");
+
+        if( CONTAINER_HOLDER_REF.current ) {
+            CONTAINER_HOLDER_REF.current.style.justifyContent = 'center';
+        }
+
+        if( CONTAINER_TEXT_NOTES_REF.current ) {
+            CONTAINER_TEXT_NOTES_REF.current.style.maxHeight = 'none';
+        }
+
+        if( CONTAINER_LIST_USERS_REF.current ) {
+            CONTAINER_LIST_USERS_REF.current.style.display = 'none';
+        }
+
+        // GROUP INFO
+        const CONTAINER_HOLDER_REF_ELEMENT = await html2canvas( CONTAINER_HOLDER_REF.current ? CONTAINER_HOLDER_REF.current : new HTMLDivElement );
+        const CONTAINER_HOLDER_REF_IMAGE = CONTAINER_HOLDER_REF_ELEMENT.toDataURL("image/png");
+        const CONTAINER_HOLDER_REF_PROPS = PDF.getImageProperties( CONTAINER_HOLDER_REF_IMAGE );
+        const CONTAINER_HOLDER_REF_WIDTH = PDF.internal.pageSize.getWidth();
+        const CONTAINER_HOLDER_REF_HEIGHT = (CONTAINER_HOLDER_REF_PROPS.height * CONTAINER_HOLDER_REF_WIDTH) / CONTAINER_HOLDER_REF_PROPS.width;
+        PDF.addImage( CONTAINER_HOLDER_REF_IMAGE, "PNG", 5, 50, CONTAINER_HOLDER_REF_WIDTH, CONTAINER_HOLDER_REF_HEIGHT );
+        
+        PDF.save( `Avaliações - teste.pdf`, { returnPromise: true } ).then( () => {
+            if( CONTAINER_HOLDER_REF.current ) {
+                CONTAINER_HOLDER_REF.current.style.justifyContent = 'unse';
+            }
+    
+            if( CONTAINER_TEXT_NOTES_REF.current ) {
+                CONTAINER_TEXT_NOTES_REF.current.style.maxHeight = '300px';
+            }
+    
+            if( CONTAINER_LIST_USERS_REF.current ) {
+                CONTAINER_LIST_USERS_REF.current.style.display = 'flex';
+            }
+            
+            setDownloadPdfLoading( false );
+        } ); 
+    }
+
     return (
         <>
             { loading ? <FeederLoading /> :
-                <div className={`${styles['users-analysis']} flex flex-gap-20`}>
-                    <div className={`${styles['users-analysis__side_holder']} col-xl col-xl-3`}>
+                <div className={`${styles['users-analysis']} flex flex-gap-20`} ref={ CONTAINER_HOLDER_REF }>
+                    <div className={`${styles['users-analysis__side_holder']} col-xl col-xl-3`} ref={ CONTAINER_LIST_USERS_REF }>
                         <TinySimpleTable 
                             head={USERS_TABLE_HEAD} 
                             body={usersTableBody} 
@@ -181,6 +231,14 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                             <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
                                 <p>Nota média ponderada: { userSelectedNoteAverageWeighted }</p>
                             </div>
+
+                            <ButtonActionTiny 
+                                icon={<AiOutlineFilePdf />} 
+                                bgColor={colors.highlightColor} 
+                                tooltip="Baixar como PDF"
+                                onClick={ () => createPdf() }
+                                loading={ downloadPdfLoading }
+                            />
                         </div>
         
                         <div className={`${styles['users-analysis-chart-holder']} flex flex-column flex-justify-center flex-align-center flex-gap-20 m-t-20`}>
@@ -233,7 +291,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                                 <p>Pontos fortes e fracos</p>
                             </div>
                             
-                            <div className={ `${styles['users-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` }>
+                            <div className={ `${styles['users-analysis-text-notes__scroll_box']} custom-purple-scrollbar default-shadow` } ref={ CONTAINER_TEXT_NOTES_REF }>
                                 { props.rating_user ? (
                                     userSelectedTextNotes.map( ( ( note: any, index: number ) => (
                                         <div className={ `${styles['users-analysis-text-note']}` } key={ index }>
@@ -250,7 +308,6 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                                 ) }
                                 
                             </div>
-                            
                         </div>
                     </div>
                 </div>

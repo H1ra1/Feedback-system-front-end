@@ -188,7 +188,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
         
         PDF.save( `Avaliações 360 - ${ userSeleted }.pdf`, { returnPromise: true } ).then( () => {
             if( CONTAINER_HOLDER_REF.current ) {
-                CONTAINER_HOLDER_REF.current.style.justifyContent = 'unse';
+                CONTAINER_HOLDER_REF.current.style.justifyContent = 'unset';
             }
     
             if( CONTAINER_TEXT_NOTES_REF.current ) {

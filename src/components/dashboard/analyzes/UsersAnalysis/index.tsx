@@ -37,7 +37,7 @@ interface UsersTableBody {
 }
 
 function UsersAnalysis( props: UsersAnalysisProps ) {
-    const [ userSeleted, setUserSelected ] = useState< string >( 'Selecione um usuário' );
+    const [ userSeleted, setUserSelected ] = useState< string | boolean >( false );
     const [ userSelectedNoteAverage, setUserSelectedNoteAverage ] = useState< string >( '~' );
     const [ userSelectedNoteAverageWeighted, setUserSelectedNoteAverageWeighted ] = useState< string >( '~' );
     const [ userEvaluationsReceived, setUserEvaluationsReceived ] = useState< string >( '~' );
@@ -186,7 +186,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
         const CONTAINER_HOLDER_REF_HEIGHT = (CONTAINER_HOLDER_REF_PROPS.height * CONTAINER_HOLDER_REF_WIDTH) / CONTAINER_HOLDER_REF_PROPS.width;
         PDF.addImage( CONTAINER_HOLDER_REF_IMAGE, "PNG", 5, 50, CONTAINER_HOLDER_REF_WIDTH, CONTAINER_HOLDER_REF_HEIGHT );
         
-        PDF.save( `Avaliações - teste.pdf`, { returnPromise: true } ).then( () => {
+        PDF.save( `Avaliações 360 - ${ userSeleted }.pdf`, { returnPromise: true } ).then( () => {
             if( CONTAINER_HOLDER_REF.current ) {
                 CONTAINER_HOLDER_REF.current.style.justifyContent = 'unse';
             }
@@ -219,7 +219,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
         
                     <div className={`${styles['users-analysis__content_holder']} col-xl col-xl-9 custom-purple-scrollbar`}>
                         <div className={`${styles['users-analysis-select-user-infos']} flex flex-align-center flex-justify-between`}>
-                            <h3 className={`${styles['users-analysis-select-user-infos__user_name']}`}>{ userSeleted }</h3>
+                            <h3 className={`${styles['users-analysis-select-user-infos__user_name']}`}>{ userSeleted == false ? 'Selecione um usuário' : userSeleted }</h3>
                             <div className={`${styles['users-analysis-select-user-infos__user_average_note']}`}>
                                 <p>Avaliações recebidas: { userEvaluationsReceived }</p>
                             </div>
@@ -232,13 +232,15 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                                 <p>Nota média ponderada: { userSelectedNoteAverageWeighted }</p>
                             </div>
 
-                            <ButtonActionTiny 
-                                icon={<AiOutlineFilePdf />} 
-                                bgColor={colors.highlightColor} 
-                                tooltip="Baixar como PDF"
-                                onClick={ () => createPdf() }
-                                loading={ downloadPdfLoading }
-                            />
+                            { userSeleted && (
+                                <ButtonActionTiny 
+                                    icon={<AiOutlineFilePdf />} 
+                                    bgColor={colors.highlightColor} 
+                                    tooltip="Baixar como PDF"
+                                    onClick={ () => createPdf() }
+                                    loading={ downloadPdfLoading }
+                                /> 
+                            ) }
                         </div>
         
                         <div className={`${styles['users-analysis-chart-holder']} flex flex-column flex-justify-center flex-align-center flex-gap-20 m-t-20`}>

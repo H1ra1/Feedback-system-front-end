@@ -24,16 +24,11 @@ import ButtonActionTiny from '../../buttons/ButtonActionTiny';
 import { AiOutlineFilePdf } from 'react-icons/ai';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import SimpleTable from '../../tables/SimpleTable';
 
 interface UsersAnalysisProps {
     group_id: number
     rating_user: boolean
-}
-
-interface UsersTableBody {
-    row_type: string
-    row_pre_id: string
-    items: any[]
 }
 
 function UsersAnalysis( props: UsersAnalysisProps ) {
@@ -43,7 +38,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
     const [ userEvaluationsReceived, setUserEvaluationsReceived ] = useState< string >( '~' );
     const [ questionsChartsData, setQuestionsChartsData ] = useState< any >( [] );
     const [ userFromGroup, setUserFromGroup ] = useState< any[] >( [] );
-    const [ usersTableBody, setUsersTableBody ] = useState< UsersTableBody[] >( [] );
+    const [ usersTableBody, setUsersTableBody ] = useState< any >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ userSelectedTextNotes, setUserSelectedTextNotes ] = useState( [] );
     const [ downloadPdfLoading, setDownloadPdfLoading ] = useState< boolean >( false );
@@ -67,10 +62,12 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
         
             const RESPONDE_PARSED = await response.json();
 
-            const ITEMS_USERS_TABLE:UsersTableBody[] = [];
+            const ITEMS_USERS_TABLE: any = [];
             const userFromGroup_DATA: any[] = [];
+            
             RESPONDE_PARSED.data.forEach( ( user_evaluated: any ) => {
                 userFromGroup_DATA.push( {
+                    id: user_evaluated.user_evaluated_id,
                     name: user_evaluated.user_evaluated_name,
                     note_average: user_evaluated.note_average,
                     note_average_weighted: user_evaluated.note_average_weighted,
@@ -80,14 +77,24 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
                 } );
 
                 ITEMS_USERS_TABLE.push( {
-                    row_type: 'select',
-                    row_pre_id: 'user',
+                    id:   user_evaluated.user_evaluated_id,
                     items: [
-                        ( <p key={0}>{ user_evaluated.user_evaluated_name }</p> ),
-                        ( <p key={1}>{ user_evaluated.evaluations_done }</p> ),
-                        ( <p key={2}> { user_evaluated.note_average } </p> )
+                        {
+                            column_size: '60%',
+                            item: user_evaluated.user_evaluated_name
+                        },
+                        {
+                            column_size: '20%',
+                            item: user_evaluated.evaluations_done
+                        },
+                        {
+                            column_size: '20%',
+                            item: user_evaluated.note_average
+                        }
                     ]
                 } );
+
+
             } );
 
             setUserFromGroup( userFromGroup_DATA );
@@ -100,22 +107,37 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
 
     const USERS_TABLE_HEAD = [
         {
-            title: 'Usuários'
+            order: true,
+            item: 'Usuários',
+            column_size: '50%'
         },
         {
-            title: 'Recebidas'
+            order: true,
+            item: 'Avaliações recebidas',
+            column_size: '30%'
         },
         {
-            title: 'Média'
+            order: true,
+            item: 'Média',
+            column_size: '20%'
         }
     ];
 
-    function usersListClickHandler( e: MouseEvent, user_index: number ) {
-        const SELECTED_USERNAME = userFromGroup[ user_index ].name;
+    function usersListClickHandler( e: MouseEvent, user_id: number ) {
+        let SELECTED_USER;
+        let SELECTED_USERNAME;
+
+        for ( const USER of userFromGroup ) {
+            if( USER.id == user_id ) {
+                SELECTED_USER       = USER;
+                SELECTED_USERNAME   = USER.name;
+                break;
+            }
+        }
+
         const SELECTED_QUESTIONS_CHART_DATA:any[] = [];
 
-        userFromGroup[ user_index ].note_per_questions.forEach( ( question: any ) => {
-            console.log( question.question_note_average );
+        SELECTED_USER.note_per_questions.forEach( ( question: any ) => {
             if( question.question_note_average != "" && question.question_note_average != 0 ) {
                 SELECTED_QUESTIONS_CHART_DATA.push( {
                     question: question.question_alias,
@@ -125,11 +147,11 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
         } );
 
         setUserSelected( SELECTED_USERNAME );
-        setUserSelectedNoteAverage( userFromGroup[ user_index ].note_average );
-        setUserSelectedNoteAverageWeighted( userFromGroup[ user_index ].note_average_weighted );
-        setUserEvaluationsReceived( userFromGroup[ user_index ].evaluations_received );
+        setUserSelectedNoteAverage( SELECTED_USER.note_average );
+        setUserSelectedNoteAverageWeighted( SELECTED_USER.note_average_weighted );
+        setUserEvaluationsReceived( SELECTED_USER.evaluations_received );
         setQuestionsChartsData( SELECTED_QUESTIONS_CHART_DATA );
-        setUserSelectedTextNotes( userFromGroup[ user_index ].text_notes );
+        setUserSelectedTextNotes( SELECTED_USER.text_notes );
     }
 
     function customTooltip( { active, payload, label }: any ) {
@@ -208,13 +230,7 @@ function UsersAnalysis( props: UsersAnalysisProps ) {
             { loading ? <FeederLoading /> :
                 <div className={`${styles['users-analysis']} flex flex-gap-20`} ref={ CONTAINER_HOLDER_REF }>
                     <div className={`${styles['users-analysis__side_holder']} col-xl col-xl-3`} ref={ CONTAINER_LIST_USERS_REF }>
-                        <TinySimpleTable 
-                            head={USERS_TABLE_HEAD} 
-                            body={usersTableBody} 
-                            body_row_click_handler={ usersListClickHandler } 
-                            table_name='users-analysis-user-filter'
-                            grid={true}
-                        />
+                        <SimpleTable thead={ USERS_TABLE_HEAD } tbody={ usersTableBody } flex={ true } select={ true } select_click_handler={ usersListClickHandler }/>
                     </div>
         
                     <div className={`${styles['users-analysis__content_holder']} col-xl col-xl-9 custom-purple-scrollbar`}>

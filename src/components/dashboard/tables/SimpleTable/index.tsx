@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
+import CheckboxSimple from '../../inputs/CheckboxSimple';
 import styles from './styles.module.scss';
 
 interface SimpleTableProps {
@@ -9,6 +10,8 @@ interface SimpleTableProps {
     tbody: TBodyRow[]
     flex?: boolean
     footer?: string
+    select?: boolean
+    select_click_handler?: Function
 }
 
 interface THead {
@@ -114,14 +117,36 @@ function SimpleTable( props: SimpleTableProps ) {
                     { tbodyItems.map( ( row, row_index ) => (
                         <tr key={ row.id } className={ props.flex ? 'flex flex-align-center' : '' }>
                             { row.items.map( ( item, item_index ) => (
-                                <td 
-                                    key={ item_index } 
-                                    style={ {
-                                        width: item.column_size ?? '300px'
-                                    } }
-                                >
-                                    { item.item }
-                                </td>
+                                props.select && item_index == 0 
+                                ? 
+                                    <td 
+                                        key={ item_index } 
+                                        style={ {
+                                            width: item.column_size ?? '300px'
+                                        } }
+                                    >
+                                        <label 
+                                            htmlFor={`check-${row.id}`}
+                                            onChange={ ( e ) =>  props.select_click_handler && props.select_click_handler( e , row.id ) }
+                                            className={ `flex flex-align-center` }
+                                        >
+                                            <CheckboxSimple 
+                                                id={`check-${row.id}`} 
+                                                name={'tiny-simple-table-select-row'} 
+                                                type='radio'
+                                            />
+                                            { item.item }
+                                        </label>
+                                    </td>
+                                : 
+                                    <td 
+                                        key={ item_index } 
+                                        style={ {
+                                            width: item.column_size ?? '300px'
+                                        } }
+                                    >
+                                        { item.item }
+                                    </td>
                             ) ) }
                         </tr>
                     ) ) }

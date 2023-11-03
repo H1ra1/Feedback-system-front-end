@@ -134,7 +134,7 @@ function GroupAnalysisByQuestions( props: QuestionsAnalysisProps ) {
                     question_alias: area.alias,
                     question: area.question,
                     points: area.note_average,
-                    total_average: RESPONDE_PARSED.data.total_average
+                    total_average: area.average_note
                 } );
             } );
 

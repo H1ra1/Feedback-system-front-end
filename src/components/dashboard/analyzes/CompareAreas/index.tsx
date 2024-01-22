@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import SortFullTable from '@/components/dashboard/tables/SortFullTable';
 import FeederLoading from '../../loadings/FeederLoading';
+import styles from './styles.module.scss';
 
 function CompareAreas() {
     const [ tableHeader, setTableHeader ] = useState( [] );
@@ -13,7 +14,7 @@ function CompareAreas() {
         async function getAreasCompare() {
             setLoading( true );
 
-            const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/areas-compare-per-questions/` );
+            const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/areas-compare-per-questions/1T23/` );
         
             if( ! RESPONSE.ok )
                 throw new Error( RESPONSE.statusText );
@@ -51,14 +52,49 @@ function CompareAreas() {
         getAreasCompare();
     }, [] );
 
-    function filterByTag( tag: string ) {
-        console.log( tag );
+    async function filterByTag( tag: string ) {
+        setLoading( true );
+
+        const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/analysis/areas-compare-per-questions/${tag}/` );
+    
+        if( ! RESPONSE.ok )
+            throw new Error( RESPONSE.statusText );
+    
+        const RESPONDE_PARSED = await RESPONSE.json();
+
+        if( RESPONDE_PARSED.data ) {
+            const BODY = RESPONDE_PARSED.data.body.map( ( body: any ) => {
+                const OBJ: any = {
+                    items: []
+                }
+                body.forEach( ( value: any ) => {
+                    OBJ.items.push( {
+                        item: value
+                    } );
+                } )
+
+                return OBJ;
+            } );
+
+            setTableBody( BODY );
+            setLoading( false );
+        }
     }
 
-    if( loading )
-        return <FeederLoading />;
+    return ( 
+        <>
+            <div className={`${styles[ 'filters-holder' ]}`}>
+                <select name="filter-tag" id="filter-tag" onChange={ ( event ) => filterByTag( event.target.value ) }>
+                    <option value="1T23">1T23</option>
+                    <option value="2T23">2T23</option>
+                    <option value="3T23">3T23</option>
+                    <option value="4T23">4T23</option>
+                </select>
+            </div>
 
-    return <SortFullTable thead={ tableHeader } tbody={ tableBody } footer={ true } filter={ filterByTag } />;
+            { loading ? <FeederLoading /> : <SortFullTable thead={ tableHeader } tbody={ tableBody } footer={ true } /> }
+        </>
+    );
 }
 
 export default CompareAreas;

@@ -127,7 +127,7 @@ async function Dashboard() {
             
             { SESSION.user?.data.master ? (
             <section className='flex m-t-20 flex-gap-20'>
-                <SimpleHolder sizeClasses='col-xl col-xl-12' icon={<RiUserStarFill />} mainTitle='Áreas' subTitle='Comparações entre áreas'>
+                <SimpleHolder sizeClasses='col-xl col-xl-12' icon={<RiUserStarFill />} bodyStyle={ { height: 'calc( 100% - 120px )' } } mainTitle='Áreas' subTitle='Comparações entre áreas'>
                     <CompareAreas />
                 </SimpleHolder>
             </section>

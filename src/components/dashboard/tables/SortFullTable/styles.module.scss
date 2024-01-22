@@ -75,3 +75,16 @@
         }
     }
 }
+
+.filters-holder {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0;
+
+    select {
+        padding: 10px 5px;
+        border-radius: 5px;
+        width: 250px;
+    }
+}

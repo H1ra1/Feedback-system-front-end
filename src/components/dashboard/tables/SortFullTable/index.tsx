@@ -8,6 +8,7 @@ interface SortFullTableProps {
     thead: THead[]
     tbody: TBodyRow[]
     footer?: boolean
+    filter?: Function
 }
 
 interface THead {
@@ -85,51 +86,68 @@ function SortFullTable( props: SortFullTableProps ) {
         }, 50 );
     }
 
-    return (
-        <div className={`${styles[ 'sort-full-table-holder' ]} custom-purple-scrollbar`}>
-            <table className={`${styles[ 'sort-full-table' ]}`}>
-                <thead>
-                    <tr>
-                        { props.thead && props.thead.map( ( thead, indice ) => (
-                            <th key={ `thead-${indice}` } onClick={ () => thead.order ? sortTable( indice ) : false }>
-                                <div className={`${styles['sort-full-table-header-holder']} flex flex-align-center ${ thead.order && styles['--order' ] }`}>
-                                    <p>{ thead.item }</p>
-                                    { thead.order && 
-                                        <div 
-                                            className={`${styles['sort-full-table-order-holder']} flex flex-column`}
-                                        >
-                                            <IoMdArrowDropup />
-                                            <IoMdArrowDropdown />
-                                        </div>
-                                    }
-                                </div>
-                            </th>
-                        ) ) }
-                    </tr>
-                </thead>
+    function filterChange() {
+        if( props.filter != undefined )
+            props.filter( 'ok' );
+    }
 
-                <tbody>
-                    { tbodyItems && tbodyItems.map( ( t_row, indice ) => {
-                        if( indice + 1 >= tbodyItems.length && props.footer )
+    return (
+        <>
+            { props.filter && ( 
+                <div className={`${styles[ 'filters-holder' ]}`}>
+                    <select name="filter-tag" id="filter-tag" onChange={ filterChange }>
+                        <option value="2T23">2T23</option>
+                        <option value="3T23">3T23</option>
+                        <option value="4T23">4T23</option>
+                    </select>
+                </div>
+            ) }
+
+            <div className={`${styles[ 'sort-full-table-holder' ]} custom-purple-scrollbar`}>
+                <table className={`${styles[ 'sort-full-table' ]}`}>
+                    <thead>
+                        <tr>
+                            { props.thead && props.thead.map( ( thead, indice ) => (
+                                <th key={ `thead-${indice}` } onClick={ () => thead.order ? sortTable( indice ) : false }>
+                                    <div className={`${styles['sort-full-table-header-holder']} flex flex-align-center ${ thead.order && styles['--order' ] }`}>
+                                        <p>{ thead.item }</p>
+                                        { thead.order && 
+                                            <div 
+                                                className={`${styles['sort-full-table-order-holder']} flex flex-column`}
+                                            >
+                                                <IoMdArrowDropup />
+                                                <IoMdArrowDropdown />
+                                            </div>
+                                        }
+                                    </div>
+                                </th>
+                            ) ) }
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        { tbodyItems && tbodyItems.map( ( t_row, indice ) => {
+                            if( indice + 1 >= tbodyItems.length && props.footer )
+                                return (
+                                    <tr key={ `trow-${indice}` } className={ `${styles[ 'sort-full-table-footer' ]}` }>
+                                        { t_row.items && t_row.items.map( ( row_item, indice ) => (
+                                            <td key={ `row-item-${indice}` }>{ row_item.item }</td>
+                                        ) ) }
+                                    </tr>
+                                );
+
                             return (
-                                <tr key={ `trow-${indice}` } className={ `${styles[ 'sort-full-table-footer' ]}` }>
+                                <tr key={ `trow-${indice}` }>
                                     { t_row.items && t_row.items.map( ( row_item, indice ) => (
                                         <td key={ `row-item-${indice}` }>{ row_item.item }</td>
                                     ) ) }
                                 </tr>
                             );
-
-                        return (
-                            <tr key={ `trow-${indice}` }>
-                                { t_row.items && t_row.items.map( ( row_item, indice ) => (
-                                    <td key={ `row-item-${indice}` }>{ row_item.item }</td>
-                                ) ) }
-                            </tr>
-                        );
-                    } ) }
-                </tbody>
-            </table>
-        </div>
+                        } ) }
+                    </tbody>
+                </table>
+            </div>
+        </>
     );
 }
 

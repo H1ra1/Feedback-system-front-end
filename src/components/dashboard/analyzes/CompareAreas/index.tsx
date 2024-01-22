@@ -51,10 +51,14 @@ function CompareAreas() {
         getAreasCompare();
     }, [] );
 
+    function filterByTag( tag: string ) {
+        console.log( tag );
+    }
+
     if( loading )
         return <FeederLoading />;
 
-    return <SortFullTable thead={ tableHeader } tbody={ tableBody } footer={ true } />;
+    return <SortFullTable thead={ tableHeader } tbody={ tableBody } footer={ true } filter={ filterByTag } />;
 }
 
 export default CompareAreas;

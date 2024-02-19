@@ -7,6 +7,7 @@ import AuthProvider from '@/providers/AuthProvider';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { redirect } from 'next/navigation';
+import { Providers } from '@/app/providers';
 
 const ROBOTO = Roboto({
     weight: [ '100', '300', '400', '500', '700', '900' ],
@@ -36,7 +37,9 @@ export default async function RootLayout({
                         <main className='default-dashboard-container__main-content-holder'>
                             <Header />
                             <div className='default-dashboard-container__components-holder'>
-                                {children}
+                                <Providers>
+                                    {children}
+                                </Providers>
                             </div>
                         </main>
                     </div>

@@ -14,10 +14,12 @@ import {
 } from '@chakra-ui/react';
 import { MdDelete, MdEdit, MdOutlineSync } from 'react-icons/md';
 import { FaUserCheck } from 'react-icons/fa6';
+import UserEditModal from '@/components/dashboard/users/UserEditModal';
 
 function UsersListControl() {
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ usersList, setUsersList ] = useState< any >( [] );
+    const [ modalOpen, setModalOpen ] = useState< boolean >( false );
 
     useEffect( () => {
         async function getUsers() {
@@ -37,50 +39,57 @@ function UsersListControl() {
     }, [] );
 
     return (
-        <TableContainer width='100%'>
-            <Table variant='striped' colorScheme='gray'>
-                <Thead>
-                    <Tr>
-                        <Th>#FEEDBACK ID</Th>
-                        <Th>Nome</Th>
-                        <Th>E-mail</Th>
-                        <Th>Departamento</Th>
-                        <Th>Unidade</Th>
-                        <Th>Ações</Th>
-                    </Tr>
-                </Thead>
-
-                <Tbody>
-                    { usersList.map( ( userElement: any ) => (
+        <>
+            <TableContainer width='100%'>
+                <Table variant='striped' colorScheme='gray'>
+                    <Thead>
                         <Tr>
-                            <Td>{ userElement.feedback_id }</Td>
-                            <Td>{ userElement.name }</Td>
-                            <Td>{ userElement.email }</Td>
-                            <Td>{ userElement.department }</Td>
-                            <Td>{ userElement.unit }</Td>
-                            <Td className='flex flex-gap-10'>
-                                <ButtonActionTiny 
-                                    icon={ userElement.sync ? <FaUserCheck /> : <MdOutlineSync />} 
-                                    bgColor={ userElement.sync ? colors.success : '#ccc' } 
-                                    tooltip={ userElement.sync ? 'Usuário sincronizado' : 'Sincronizar usuário' } 
-                                />
-                                <ButtonActionTiny 
-                                    icon={<MdEdit />} 
-                                    bgColor={colors.info} 
-                                    tooltip="Editar usuário"
-                                />
-                                <ButtonActionTiny 
-                                    icon={<MdDelete />} 
-                                    bgColor={colors.danger} 
-                                    tooltip="Excluir usuário"
-                                />
-                            </Td>
+                            <Th>#FEEDBACK ID</Th>
+                            <Th>Nome</Th>
+                            <Th>E-mail</Th>
+                            <Th>Departamento</Th>
+                            <Th>Unidade</Th>
+                            <Th>Ações</Th>
                         </Tr>
-                    ) ) }
-                    
-                </Tbody>
-            </Table>
-        </TableContainer>
+                    </Thead>
+
+                    <Tbody>
+                        { usersList.map( ( userElement: any, index: number ) => (
+                            <Tr key={ index }>
+                                <Td>{ userElement.feedback_id }</Td>
+                                <Td>{ userElement.name }</Td>
+                                <Td>{ userElement.email }</Td>
+                                <Td>{ userElement.department }</Td>
+                                <Td>{ userElement.unit }</Td>
+                                <Td className='flex flex-gap-10'>
+                                    <ButtonActionTiny 
+                                        icon={ userElement.sync ? <FaUserCheck /> : <MdOutlineSync />} 
+                                        bgColor={ userElement.sync ? colors.success : '#ccc' } 
+                                        tooltip={ userElement.sync ? 'Usuário sincronizado' : 'Sincronizar usuário' } 
+                                    />
+                                    <ButtonActionTiny 
+                                        icon={<MdEdit />} 
+                                        bgColor={colors.info} 
+                                        tooltip="Editar usuário"
+                                        onClick={ () => { 
+                                            setModalOpen( true );
+                                        } }
+                                    />
+                                    <ButtonActionTiny 
+                                        icon={<MdDelete />} 
+                                        bgColor={colors.danger} 
+                                        tooltip="Excluir usuário"
+                                    />
+                                </Td>
+                            </Tr>
+                        ) ) }
+                        
+                    </Tbody>
+                </Table>
+            </TableContainer>
+
+            <UserEditModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalOpen( false ); } } openModal={ modalOpen }/>
+        </>
     )
 }
 

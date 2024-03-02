@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation';
 
 function Sidebar() {
     const PATH_NAME = usePathname();
-    console.log( PATH_NAME );
+    
     return (
         <div className={`${styles["main-sidebar"]} default-shadow flex flex-column flex-align-center`}>
             <div className={styles['main-sidebar__logo']}>

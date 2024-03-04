@@ -67,6 +67,7 @@ function UsersListControl() {
                             <Th>Nome</Th>
                             <Th>E-mail</Th>
                             <Th>Departamento</Th>
+                            <Th>Equipe</Th>
                             <Th>Unidade</Th>
                             <Th>Posição</Th>
                             <Th>Ações</Th>
@@ -80,6 +81,7 @@ function UsersListControl() {
                                 <Td>{ userElement.name }</Td>
                                 <Td>{ userElement.email }</Td>
                                 <Td>{ userElement.department?.name }</Td>
+                                <Td>~</Td>
                                 <Td>{ userElement.unit?.name }</Td>
                                 <Td>{ positionsDict( userElement.position ) }</Td>
                                 <Td className='flex flex-gap-10'>

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import ButtonActionTiny from '@/components/dashboard/buttons/ButtonActionTiny';
 import colors from '@/styles/colors.module.scss';
+import { positionsDict } from '@/utils/general';
 import {
     Table,
     Thead,
@@ -14,12 +15,28 @@ import {
 } from '@chakra-ui/react';
 import { MdDelete, MdEdit, MdOutlineSync } from 'react-icons/md';
 import { FaUserCheck } from 'react-icons/fa6';
-import UserEditModal from '@/components/dashboard/users/UserEditModal';
+import UserEditModal, { iUserToEdit } from '@/components/dashboard/users/UserEditModal';
+import { textTransform } from 'html2canvas/dist/types/css/property-descriptors/text-transform';
 
 function UsersListControl() {
-    const [ loading, setLoading ] = useState< boolean >( true );
-    const [ usersList, setUsersList ] = useState< any >( [] );
-    const [ modalOpen, setModalOpen ] = useState< boolean >( false );
+    const [ loading, setLoading ]                       = useState< boolean >( true );
+    const [ usersList, setUsersList ]                   = useState< any >( [] );
+    const [ modalEditUserOpen, setModalEditUserOpen ]   = useState< boolean >( false );
+    const [ userToEdit, setUserToEdit ]                 = useState< iUserToEdit >();
+
+    function editUser( user: any ) {
+        setUserToEdit( {
+            id          : user.ID,
+            feedbackID  : user.feedback_id,
+            firstName   : user.first_name,
+            lastName    : user.last_name,
+            email       : user.email,
+            department  : user.department,
+            unit        : user.unit,
+            position    : user.position
+        } )
+        setModalEditUserOpen( true );
+    }
 
     useEffect( () => {
         async function getUsers() {
@@ -31,8 +48,8 @@ function UsersListControl() {
             const RESPONDE_PARSED = await RESPONSE.json();
 
             setUsersList( RESPONDE_PARSED.data );
-            setLoading( false );
             console.log( RESPONDE_PARSED.data );
+            setLoading( false );
         }
 
         getUsers();
@@ -49,6 +66,7 @@ function UsersListControl() {
                             <Th>E-mail</Th>
                             <Th>Departamento</Th>
                             <Th>Unidade</Th>
+                            <Th>Posição</Th>
                             <Th>Ações</Th>
                         </Tr>
                     </Thead>
@@ -59,8 +77,9 @@ function UsersListControl() {
                                 <Td>{ userElement.feedback_id }</Td>
                                 <Td>{ userElement.name }</Td>
                                 <Td>{ userElement.email }</Td>
-                                <Td>{ userElement.department }</Td>
-                                <Td>{ userElement.unit }</Td>
+                                <Td>{ userElement.department?.name }</Td>
+                                <Td>{ userElement.unit?.name }</Td>
+                                <Td>{ positionsDict( userElement.position ) }</Td>
                                 <Td className='flex flex-gap-10'>
                                     <ButtonActionTiny 
                                         icon={ userElement.sync ? <FaUserCheck /> : <MdOutlineSync />} 
@@ -71,13 +90,11 @@ function UsersListControl() {
                                         icon={<MdEdit />} 
                                         bgColor={colors.info} 
                                         tooltip="Editar usuário"
-                                        onClick={ () => { 
-                                            setModalOpen( true );
-                                        } }
+                                        onClick={ () => editUser( userElement ) }
                                     />
                                     <ButtonActionTiny 
                                         icon={<MdDelete />} 
-                                        bgColor={colors.danger} 
+                                        bgColor='#ccc' 
                                         tooltip="Excluir usuário"
                                     />
                                 </Td>
@@ -88,7 +105,7 @@ function UsersListControl() {
                 </Table>
             </TableContainer>
 
-            <UserEditModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalOpen( false ); } } openModal={ modalOpen }/>
+            <UserEditModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalEditUserOpen( false ); } } openModal={ modalEditUserOpen } userToEdit={ userToEdit } />
         </>
     )
 }

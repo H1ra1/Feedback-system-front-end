@@ -7,3 +7,13 @@ export function generateRandomColor() {
 export function capitalizeFirstLetter( string: string ) {
     return string.charAt( 0 ).toUpperCase() + string.slice( 1 );
 }
+
+export function positionsDict( position: string ): string {
+    const POSITIONS: any = {
+        leader: 'Líder',
+        associate: 'Associado',
+        partner: 'Sócio'
+    }
+
+    return POSITIONS[ position ] != undefined ? POSITIONS[ position ] :  '~';
+}

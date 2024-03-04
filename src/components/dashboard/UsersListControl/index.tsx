@@ -12,11 +12,14 @@ import {
     Th,
     Td,
     TableContainer,
+    Stack,
+    Skeleton
 } from '@chakra-ui/react';
 import { MdDelete, MdEdit, MdOutlineSync } from 'react-icons/md';
 import { FaUserCheck } from 'react-icons/fa6';
 import UserEditModal, { iUserToEdit } from '@/components/dashboard/users/UserEditModal';
 import { textTransform } from 'html2canvas/dist/types/css/property-descriptors/text-transform';
+import SpinLoading from '../loadings/SpinLoading';
 
 function UsersListControl() {
     const [ loading, setLoading ]                       = useState< boolean >( true );
@@ -48,14 +51,13 @@ function UsersListControl() {
             const RESPONDE_PARSED = await RESPONSE.json();
 
             setUsersList( RESPONDE_PARSED.data );
-            console.log( RESPONDE_PARSED.data );
             setLoading( false );
         }
 
         getUsers();
     }, [] );
 
-    return (
+    return ! loading ? (
         <>
             <TableContainer width='100%'>
                 <Table variant='striped' colorScheme='gray'>
@@ -107,7 +109,11 @@ function UsersListControl() {
 
             <UserEditModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalEditUserOpen( false ); } } openModal={ modalEditUserOpen } userToEdit={ userToEdit } />
         </>
-    )
+    ) : <Stack width='100%'>
+            <Skeleton height='20px' />
+            <Skeleton height='20px' />
+            <Skeleton height='20px' />
+        </Stack>
 }
 
 export default UsersListControl;

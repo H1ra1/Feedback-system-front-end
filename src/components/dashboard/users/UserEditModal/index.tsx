@@ -182,7 +182,7 @@ function UserEditModal( props: iUserEditModalProps ) {
                                             <FormLabel>Departamento</FormLabel>
                                             <Select { ...field }>
                                                 { departments.map( ( department ) => (
-                                                    <option value={ department.id }>{ department.departament }</option>
+                                                    <option key={ department.id } value={ department.id }>{ department.departament }</option>
                                                 ) ) }
                                             </Select>
                                         </FormControl>
@@ -195,7 +195,7 @@ function UserEditModal( props: iUserEditModalProps ) {
                                             <FormLabel>Unidade</FormLabel>
                                             <Select { ...field }>
                                                 { units.map( ( unit ) => (
-                                                    <option value={ unit.id }>{ unit.name }</option>
+                                                    <option key={ unit.id } value={ unit.id }>{ unit.name }</option>
                                                 ) ) }
                                             </Select>
                                         </FormControl>

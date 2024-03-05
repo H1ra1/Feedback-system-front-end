@@ -60,14 +60,11 @@ function UsersListControl() {
     return ! loading ? (
         <>
             <TableContainer width='100%'>
-                <Table variant='striped' colorScheme='gray'>
+                <Table variant='striped' colorScheme='gray' overflow='scroll' size='md'>
                     <Thead>
                         <Tr>
-                            <Th>#FEEDBACK ID</Th>
                             <Th>Nome</Th>
-                            <Th>E-mail</Th>
                             <Th>Departamento</Th>
-                            <Th>Equipe</Th>
                             <Th>Unidade</Th>
                             <Th>Posição</Th>
                             <Th>Ações</Th>
@@ -77,11 +74,8 @@ function UsersListControl() {
                     <Tbody>
                         { usersList.map( ( userElement: any, index: number ) => (
                             <Tr key={ index }>
-                                <Td>{ userElement.feedback_id }</Td>
                                 <Td>{ userElement.name }</Td>
-                                <Td>{ userElement.email }</Td>
                                 <Td>{ userElement.department?.name }</Td>
-                                <Td>~</Td>
                                 <Td>{ userElement.unit?.name }</Td>
                                 <Td>{ positionsDict( userElement.position ) }</Td>
                                 <Td className='flex flex-gap-10'>

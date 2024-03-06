@@ -13,7 +13,9 @@ import {
     Td,
     TableContainer,
     Stack,
-    Skeleton
+    Skeleton,
+    Box,
+    Input
 } from '@chakra-ui/react';
 import { MdDelete, MdEdit, MdOutlineSync } from 'react-icons/md';
 import { FaUserCheck } from 'react-icons/fa6';
@@ -24,6 +26,7 @@ import SpinLoading from '../loadings/SpinLoading';
 function UsersListControl() {
     const [ loading, setLoading ]                       = useState< boolean >( true );
     const [ usersList, setUsersList ]                   = useState< any >( [] );
+    const [ filteredUsers, setFilteredUsers ]           = useState< iUserToEdit >();
     const [ modalEditUserOpen, setModalEditUserOpen ]   = useState< boolean >( false );
     const [ userToEdit, setUserToEdit ]                 = useState< iUserToEdit >();
 
@@ -33,12 +36,21 @@ function UsersListControl() {
             feedbackID  : user.feedback_id,
             firstName   : user.first_name,
             lastName    : user.last_name,
+            name        : user.name,
             email       : user.email,
             department  : user.department,
             unit        : user.unit,
             position    : user.position
         } )
         setModalEditUserOpen( true );
+    }
+
+    function filterUsers( event: React.ChangeEvent<HTMLInputElement> ) {
+        console.log( event.target.value  );
+        const filterUserList = usersList.filter( ( user: iUserToEdit ) => user.name.toLowerCase().includes( event.target.value.toLowerCase() ) );
+
+        setFilteredUsers( filterUserList );
+        console.log( filterUserList );
     }
 
     useEffect( () => {
@@ -51,6 +63,7 @@ function UsersListControl() {
             const RESPONDE_PARSED = await RESPONSE.json();
 
             setUsersList( RESPONDE_PARSED.data );
+            setFilteredUsers( RESPONDE_PARSED.data );
             setLoading( false );
         }
 
@@ -59,6 +72,8 @@ function UsersListControl() {
 
     return ! loading ? (
         <>
+            <Box width='100%'>
+            <Input className='m-b-10' type="text" placeholder='Pesquisar usuário por nome' onChange={ filterUsers } />
             <TableContainer width='100%'>
                 <Table variant='striped' colorScheme='gray' overflow='scroll' size='md'>
                     <Thead>
@@ -72,7 +87,7 @@ function UsersListControl() {
                     </Thead>
 
                     <Tbody>
-                        { usersList.map( ( userElement: any, index: number ) => (
+                        { Array.isArray( filteredUsers ) && filteredUsers.length > 0 ? ( filteredUsers.map( ( userElement: any, index: number ) => (
                             <Tr key={ index }>
                                 <Td>{ userElement.name }</Td>
                                 <Td>{ userElement.department?.name }</Td>
@@ -97,13 +112,13 @@ function UsersListControl() {
                                     />
                                 </Td>
                             </Tr>
-                        ) ) }
-                        
+                        ) ) ) : 'Nenhum usuário encontrado' }
                     </Tbody>
                 </Table>
             </TableContainer>
 
             <UserEditModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalEditUserOpen( false ); } } openModal={ modalEditUserOpen } userToEdit={ userToEdit } />
+            </Box>
         </>
     ) : <Stack width='100%'>
             <Skeleton height='20px' />

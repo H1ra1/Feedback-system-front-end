@@ -29,6 +29,7 @@ export interface iUserToEdit {
     feedbackID ?: number;
     firstName   : string;
     lastName    : string;
+    name        : string;
     email       : string;
     department ?: {
         id      : number;

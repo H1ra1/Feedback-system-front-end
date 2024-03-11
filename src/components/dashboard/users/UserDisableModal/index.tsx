@@ -11,7 +11,7 @@ import {
     Button
 } from "@chakra-ui/react";
 
-export interface iUserToDisabled {
+export interface iUserToDisable {
     feedbackID  : number;
     vipID       : number;
     name        : string;
@@ -20,23 +20,43 @@ export interface iUserToDisabled {
 interface iUserDisabledModalProps {
     isModalOpen     : ( isOpen: any ) => void;
     openModal       : boolean;
-    userToDisabled ?: iUserToDisabled
+    userToDisable  ?: iUserToDisable
 }
 
-function UserDisabledModal( props: iUserDisabledModalProps ) {
+function UserDisableModal( props: iUserDisabledModalProps ) {
     const { isOpen, onOpen, onClose }           = useDisclosure();
-    const [ userToDisabled, setUserToDisabled ] = useState< iUserToDisabled >();
+    const [ userToDisable, setUserToDisable ]   = useState< iUserToDisable >();
     const [ loading, setLoading ]               = useState< boolean >( false );
 
-    function disabledUser( action: string ) {
+    async function disabledUser( action: string ) {
+        setLoading( true );
 
+        const userToDisableObject = {
+            ...userToDisable,
+            action
+        }
+
+        const RESPONSE = await fetch( `${process.env.NEXT_PUBLIC_API_BASE}/users/${userToDisableObject?.feedbackID}/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify( userToDisableObject )
+        } );
+    
+        if( ! RESPONSE.ok )
+            throw new Error( RESPONSE.statusText );
+    
+        const RESPONDE_PARSED = await RESPONSE.json();
+
+        console.log( RESPONDE_PARSED )
     }
 
     useEffect( () => {
         props.isModalOpen( isOpen );
 
         if( props.openModal ) {
-            setUserToDisabled( props.userToDisabled );
+            setUserToDisable( props.userToDisable );
 
             onOpen();
         }
@@ -46,7 +66,7 @@ function UserDisabledModal( props: iUserDisabledModalProps ) {
         <Modal isOpen={isOpen} onClose={ onClose } size='xl'>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Desativar usuário - { userToDisabled?.name }</ModalHeader>
+                <ModalHeader>Desativar usuário - { userToDisable?.name }</ModalHeader>
                 <ModalCloseButton />
 
                 <ModalBody>
@@ -63,4 +83,4 @@ function UserDisabledModal( props: iUserDisabledModalProps ) {
     )
 }
 
-export default UserDisabledModal;
+export default UserDisableModal;

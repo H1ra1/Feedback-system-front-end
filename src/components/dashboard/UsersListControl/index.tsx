@@ -20,7 +20,7 @@ import {
 import { MdDelete, MdEdit, MdOutlineSync } from 'react-icons/md';
 import { FaUserCheck } from 'react-icons/fa6';
 import UserEditModal, { iUserToEdit } from '@/components/dashboard/users/UserEditModal';
-import UserDisabledModal, { iUserToDisabled } from '@/components/dashboard/users/UserDisabledModal';
+import UserDisableModal, { iUserToDisable } from '@/components/dashboard/users/UserDisableModal';
 
 function UsersListControl() {
     const [ loading, setLoading ]                       = useState< boolean >( true );
@@ -28,8 +28,8 @@ function UsersListControl() {
     const [ filteredUsers, setFilteredUsers ]           = useState< iUserToEdit >();
     const [ modalEditUserOpen, setModalEditUserOpen ]   = useState< boolean >( false );
     const [ userToEdit, setUserToEdit ]                 = useState< iUserToEdit >();
-    const [ modalDisabledUser, setModalDisabledUser ]   = useState< boolean >( false );
-    const [ usertToDisabled, setUsertToDisabled ]       = useState< iUserToDisabled >();
+    const [ modalDisabledUser, setModalDisableUser ]    = useState< boolean >( false );
+    const [ usertToDisable, setUsertToDisable ]         = useState< iUserToDisable >();
 
     function editUser( user: any ) {
         setUserToEdit( {
@@ -49,14 +49,14 @@ function UsersListControl() {
         setModalEditUserOpen( true );
     }
 
-    function disabledUser( user: any ) {
-        setUsertToDisabled( {
+    function disableUser( user: any ) {
+        setUsertToDisable( {
             vipID       : user.vip_id,
             feedbackID  : user.feedback_id,
             name        : user.name
         } );
 
-        setModalDisabledUser( true );
+        setModalDisableUser( true );
     }
 
     function filterUsers( event: React.ChangeEvent<HTMLInputElement> ) {
@@ -121,7 +121,7 @@ function UsersListControl() {
                                             icon={<MdDelete />} 
                                             bgColor={ colors.danger } 
                                             tooltip="Desativar usuário"
-                                            onClick={ () => disabledUser( userElement ) }
+                                            onClick={ () => disableUser( userElement ) }
                                         />
                                     </Td>
                                 </Tr>
@@ -131,7 +131,7 @@ function UsersListControl() {
                 </TableContainer>
 
                 <UserEditModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalEditUserOpen( false ); } } openModal={ modalEditUserOpen } userToEdit={ userToEdit } />
-                <UserDisabledModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalDisabledUser( false ); } } openModal={ modalDisabledUser } userToDisabled={ usertToDisabled } />
+                <UserDisableModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalDisableUser( false ); } } openModal={ modalDisabledUser } userToDisable={ usertToDisable } />
             </Box>
         </>
     ) : <Stack width='100%'>

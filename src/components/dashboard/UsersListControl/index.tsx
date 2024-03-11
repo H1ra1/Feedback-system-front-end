@@ -20,6 +20,7 @@ import {
 import { MdDelete, MdEdit, MdOutlineSync } from 'react-icons/md';
 import { FaUserCheck } from 'react-icons/fa6';
 import UserEditModal, { iUserToEdit } from '@/components/dashboard/users/UserEditModal';
+import UserDisabledModal, { iUserToDisabled } from '@/components/dashboard/users/UserDisabledModal';
 
 function UsersListControl() {
     const [ loading, setLoading ]                       = useState< boolean >( true );
@@ -27,6 +28,8 @@ function UsersListControl() {
     const [ filteredUsers, setFilteredUsers ]           = useState< iUserToEdit >();
     const [ modalEditUserOpen, setModalEditUserOpen ]   = useState< boolean >( false );
     const [ userToEdit, setUserToEdit ]                 = useState< iUserToEdit >();
+    const [ modalDisabledUser, setModalDisabledUser ]   = useState< boolean >( false );
+    const [ usertToDisabled, setUsertToDisabled ]       = useState< iUserToDisabled >();
 
     function editUser( user: any ) {
         setUserToEdit( {
@@ -42,8 +45,18 @@ function UsersListControl() {
             position    : user.position,
             role        : user.role
         } );
-        
+
         setModalEditUserOpen( true );
+    }
+
+    function disabledUser( user: any ) {
+        setUsertToDisabled( {
+            vipID       : user.vip_id,
+            feedbackID  : user.feedback_id,
+            name        : user.name
+        } );
+
+        setModalDisabledUser( true );
     }
 
     function filterUsers( event: React.ChangeEvent<HTMLInputElement> ) {
@@ -72,51 +85,53 @@ function UsersListControl() {
     return ! loading ? (
         <>
             <Box width='100%'>
-            <Input className='m-b-10' type="text" placeholder='Pesquisar usuário por nome' onChange={ filterUsers } />
-            <TableContainer width='100%'>
-                <Table variant='striped' colorScheme='gray' overflow='scroll' size='md'>
-                    <Thead>
-                        <Tr>
-                            <Th>Nome</Th>
-                            <Th>Departamento</Th>
-                            <Th>Unidade</Th>
-                            <Th>Posição</Th>
-                            <Th>Ações</Th>
-                        </Tr>
-                    </Thead>
-
-                    <Tbody>
-                        { Array.isArray( filteredUsers ) && filteredUsers.length > 0 ? ( filteredUsers.map( ( userElement: any, index: number ) => (
-                            <Tr key={ index }>
-                                <Td>{ userElement.name }</Td>
-                                <Td>{ userElement.department?.name }</Td>
-                                <Td>{ userElement.unit?.name }</Td>
-                                <Td>{ positionsDict( userElement.position ) }</Td>
-                                <Td className='flex flex-gap-10'>
-                                    <ButtonActionTiny 
-                                        icon={ userElement.sync ? <FaUserCheck /> : <MdOutlineSync />} 
-                                        bgColor={ userElement.sync ? colors.success : '#ccc' } 
-                                        tooltip={ userElement.sync ? 'Usuário sincronizado' : 'Sincronizar usuário' } 
-                                    />
-                                    <ButtonActionTiny 
-                                        icon={<MdEdit />} 
-                                        bgColor={colors.info} 
-                                        tooltip="Editar usuário"
-                                        onClick={ () => editUser( userElement ) }
-                                    />
-                                    <ButtonActionTiny 
-                                        icon={<MdDelete />} 
-                                        bgColor='#ccc' 
-                                        tooltip="Excluir usuário"
-                                    />
-                                </Td>
+                <Input className='m-b-10' type="text" placeholder='Pesquisar usuário por nome' onChange={ filterUsers } />
+                <TableContainer width='100%'>
+                    <Table variant='striped' colorScheme='gray' overflow='scroll' size='md'>
+                        <Thead>
+                            <Tr>
+                                <Th>Nome</Th>
+                                <Th>Departamento</Th>
+                                <Th>Unidade</Th>
+                                <Th>Posição</Th>
+                                <Th>Ações</Th>
                             </Tr>
-                        ) ) ) : 'Nenhum usuário encontrado' }
-                    </Tbody>
-                </Table>
-            </TableContainer>
+                        </Thead>
 
-            <UserEditModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalEditUserOpen( false ); } } openModal={ modalEditUserOpen } userToEdit={ userToEdit } />
+                        <Tbody>
+                            { Array.isArray( filteredUsers ) && filteredUsers.length > 0 ? ( filteredUsers.map( ( userElement: any, index: number ) => (
+                                <Tr key={ index }>
+                                    <Td>{ userElement.name }</Td>
+                                    <Td>{ userElement.department?.name }</Td>
+                                    <Td>{ userElement.unit?.name }</Td>
+                                    <Td>{ positionsDict( userElement.position ) }</Td>
+                                    <Td className='flex flex-gap-10'>
+                                        <ButtonActionTiny 
+                                            icon={ userElement.sync ? <FaUserCheck /> : <MdOutlineSync />} 
+                                            bgColor={ userElement.sync ? colors.success : '#ccc' } 
+                                            tooltip={ userElement.sync ? 'Usuário sincronizado' : 'Sincronizar usuário' } 
+                                        />
+                                        <ButtonActionTiny 
+                                            icon={<MdEdit />} 
+                                            bgColor={ colors.info } 
+                                            tooltip="Editar usuário"
+                                            onClick={ () => editUser( userElement ) }
+                                        />
+                                        <ButtonActionTiny 
+                                            icon={<MdDelete />} 
+                                            bgColor={ colors.danger } 
+                                            tooltip="Desativar usuário"
+                                            onClick={ () => disabledUser( userElement ) }
+                                        />
+                                    </Td>
+                                </Tr>
+                            ) ) ) : 'Nenhum usuário encontrado' }
+                        </Tbody>
+                    </Table>
+                </TableContainer>
+
+                <UserEditModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalEditUserOpen( false ); } } openModal={ modalEditUserOpen } userToEdit={ userToEdit } />
+                <UserDisabledModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalDisabledUser( false ); } } openModal={ modalDisabledUser } userToDisabled={ usertToDisabled } />
             </Box>
         </>
     ) : <Stack width='100%'>

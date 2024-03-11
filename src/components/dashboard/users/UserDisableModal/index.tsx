@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import colors from '@/styles/colors.module.scss';
 import { 
     Modal, 
     ModalOverlay, 
@@ -8,7 +9,9 @@ import {
     useDisclosure, 
     ModalBody,
     Box,
-    Button
+    Button,
+    CircularProgress,
+    ColorModeScript
 } from "@chakra-ui/react";
 
 export interface iUserToDisable {
@@ -46,10 +49,9 @@ function UserDisableModal( props: iUserDisabledModalProps ) {
     
         if( ! RESPONSE.ok )
             throw new Error( RESPONSE.statusText );
-    
-        const RESPONDE_PARSED = await RESPONSE.json();
 
-        console.log( RESPONDE_PARSED )
+        setLoading( false );
+        onClose();
     }
 
     useEffect( () => {
@@ -75,7 +77,9 @@ function UserDisableModal( props: iUserDisabledModalProps ) {
                             <Button colorScheme='orange' onClick={ () => disabledUser( 'client' ) }>Tornar cliente</Button>
                             <Button colorScheme='red' onClick={ () => disabledUser( 'block' ) }>Bloquear</Button>
                         </Box>
-                    ) : 'Carregando...' }
+                    ) : <Box width='100%' display='flex' justifyContent='center'>
+                            <CircularProgress isIndeterminate color={ colors.highlightColor } />
+                        </Box> }
                     
                 </ModalBody>
             </ModalContent>

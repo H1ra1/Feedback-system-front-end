@@ -42,6 +42,7 @@ export interface iUserToEdit {
     }
     position         : string;
     role            ?: string;
+    lastLogin       ?: string;
 }
 
 interface iUserEditModalProps {

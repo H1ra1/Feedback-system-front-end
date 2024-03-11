@@ -15,7 +15,8 @@ import {
     Stack,
     Skeleton,
     Box,
-    Input
+    Input,
+    Tooltip
 } from '@chakra-ui/react';
 import { MdDelete, MdEdit, MdOutlineSync } from 'react-icons/md';
 import { FaUserCheck } from 'react-icons/fa6';
@@ -87,13 +88,14 @@ function UsersListControl() {
             <Box width='100%'>
                 <Input className='m-b-10' type="text" placeholder='Pesquisar usuário por nome' onChange={ filterUsers } />
                 <TableContainer width='100%'>
-                    <Table variant='striped' colorScheme='gray' overflow='scroll' size='md'>
+                    <Table variant='striped' colorScheme='gray' overflow='scroll' size='md' layout='fixed'>
                         <Thead>
                             <Tr>
                                 <Th>Nome</Th>
                                 <Th>Departamento</Th>
                                 <Th>Unidade</Th>
                                 <Th>Posição</Th>
+                                <Th>Ultimo acesso</Th>
                                 <Th>Ações</Th>
                             </Tr>
                         </Thead>
@@ -105,6 +107,7 @@ function UsersListControl() {
                                     <Td>{ userElement.department?.name }</Td>
                                     <Td>{ userElement.unit?.name }</Td>
                                     <Td>{ positionsDict( userElement.position ) }</Td>
+                                    <Td overflow='hidden' textOverflow='ellipsis'><Tooltip label={ userElement?.last_login } placement='top'>{ userElement?.last_login }</Tooltip></Td>
                                     <Td className='flex flex-gap-10'>
                                         <ButtonActionTiny 
                                             icon={ userElement.sync ? <FaUserCheck /> : <MdOutlineSync />} 

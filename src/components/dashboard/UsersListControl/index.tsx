@@ -20,8 +20,6 @@ import {
 import { MdDelete, MdEdit, MdOutlineSync } from 'react-icons/md';
 import { FaUserCheck } from 'react-icons/fa6';
 import UserEditModal, { iUserToEdit } from '@/components/dashboard/users/UserEditModal';
-import { textTransform } from 'html2canvas/dist/types/css/property-descriptors/text-transform';
-import SpinLoading from '../loadings/SpinLoading';
 
 function UsersListControl() {
     const [ loading, setLoading ]                       = useState< boolean >( true );
@@ -32,25 +30,26 @@ function UsersListControl() {
 
     function editUser( user: any ) {
         setUserToEdit( {
-            id          : user.ID,
+            vipID       : user.vip_id,
             feedbackID  : user.feedback_id,
+            advisorCode : user.advisor_code,
             firstName   : user.first_name,
             lastName    : user.last_name,
             name        : user.name,
             email       : user.email,
             department  : user.department,
             unit        : user.unit,
-            position    : user.position
-        } )
+            position    : user.position,
+            role        : user.role
+        } );
+        
         setModalEditUserOpen( true );
     }
 
     function filterUsers( event: React.ChangeEvent<HTMLInputElement> ) {
-        console.log( event.target.value  );
         const filterUserList = usersList.filter( ( user: iUserToEdit ) => user.name.toLowerCase().includes( event.target.value.toLowerCase() ) );
 
         setFilteredUsers( filterUserList );
-        console.log( filterUserList );
     }
 
     useEffect( () => {

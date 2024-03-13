@@ -157,7 +157,7 @@ function UsersListControl() {
                                     <Th onClick={ _ => sortUsers( 'department' ) } style={ { cursor: 'pointer' } }><span className='flex flex-align-center flex-gap-5'>Departamento <FaSort /></span></Th>
                                     <Th onClick={ _ => sortUsers( 'unit' ) } style={ { cursor: 'pointer' } }><span className='flex flex-align-center flex-gap-5'>Unidade <FaSort /></span></Th>
                                     <Th onClick={ _ => sortUsers( 'position' ) } style={ { cursor: 'pointer' } }><span className='flex flex-align-center flex-gap-5'>Posição <FaSort /></span></Th>
-                                    <Th onClick={ _ => sortUsers( 'acesso' ) } style={ { cursor: 'pointer' } }><span className='flex flex-align-center flex-gap-5'>Ultimo acesso <FaSort /></span></Th>
+                                    <Th onClick={ _ => sortUsers( 'last_login' ) } style={ { cursor: 'pointer' } }><span className='flex flex-align-center flex-gap-5'>Ultimo acesso <FaSort /></span></Th>
                                     <Th>Ações</Th>
                                 </Tr>
                             </Thead>

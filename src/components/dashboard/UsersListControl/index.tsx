@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import ButtonActionTiny from '@/components/dashboard/buttons/ButtonActionTiny';
 import colors from '@/styles/colors.module.scss';
-import { positionsDict } from '@/utils/general';
+import { positionsDict, toTimestamp } from '@/utils/general';
 import {
     Table,
     Thead,
@@ -83,14 +83,24 @@ function UsersListControl() {
                     aFormatted = a[ key ] == undefined ? '~' : a[ key ][ 'name' ];
                     bFormatted = b[ key ] == undefined ? '~' : b[ key ][ 'name' ];
                 }
+
+                if( key == 'last_login' ) {
+                    aFormatted = toTimestamp( a[ key ] );
+                    bFormatted = toTimestamp( b[ key ] );
+                }
                 
                 aFormatted = aFormatted == undefined ? '~' : aFormatted;
                 bFormatted = bFormatted == undefined ? '~' : bFormatted;
 
-                if( aFormatted.toLowerCase() < bFormatted.toLowerCase() )
+                if( key != 'last_login' ) {
+                    aFormatted = aFormatted.toLowerCase();
+                    bFormatted = bFormatted.toLowerCase();
+                }
+
+                if( aFormatted < bFormatted )
                     return -1;
         
-                if( aFormatted.toLowerCase() > bFormatted.toLowerCase() )
+                if( aFormatted > bFormatted )
                     return 1;
     
                 return 0;
@@ -106,14 +116,24 @@ function UsersListControl() {
                     aFormatted = a[ key ] == undefined ? '~' : a[ key ][ 'name' ];
                     bFormatted = b[ key ] == undefined ? '~' : b[ key ][ 'name' ];
                 }
+
+                if( key == 'last_login' ) {
+                    aFormatted = toTimestamp( a[ key ] );
+                    bFormatted = toTimestamp( b[ key ] );
+                }
                 
                 aFormatted = aFormatted == undefined ? '~' : aFormatted;
                 bFormatted = bFormatted == undefined ? '~' : bFormatted;
 
-                if( aFormatted.toLowerCase() > bFormatted.toLowerCase() )
+                if( key != 'last_login' ) {
+                    aFormatted = aFormatted.toLowerCase();
+                    bFormatted = bFormatted.toLowerCase();
+                }
+
+                if( aFormatted > bFormatted )
                     return -1;
         
-                if( aFormatted.toLowerCase() < bFormatted.toLowerCase() )
+                if( aFormatted < bFormatted )
                     return 1;
     
                 return 0;

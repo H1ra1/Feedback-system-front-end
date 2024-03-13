@@ -17,3 +17,17 @@ export function positionsDict( position: string ): string {
 
     return POSITIONS[ position ] != undefined ? POSITIONS[ position ] :  '~';
 }
+
+export function toTimestamp( strDate: string ) {
+    let formattedDateTime   = strDate.replace( /\s+/g, '' ).trim().split( '-' );
+
+    if( formattedDateTime.length < 2 )
+        return 0;
+
+    let dateArray           = formattedDateTime[ 0 ].split( '/' );
+    let dateTimeArray       = formattedDateTime[ 1 ].split( ':' );
+
+    const dateTime = new Date( `${dateArray[ 2 ]}/${dateArray[ 1 ]}/${dateArray[ 0 ]} ${dateTimeArray[ 0 ]}:${dateTimeArray[ 1 ]}:${dateTimeArray[ 2 ]}` ).getTime();
+    
+    return dateTime / 1000;
+  }

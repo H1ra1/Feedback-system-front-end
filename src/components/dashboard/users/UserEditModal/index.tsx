@@ -192,7 +192,7 @@ function UserEditModal( props: iUserEditModalProps ) {
                                     <Field name='role' type='select' placeholder='Função'>
                                         {({ field, form } : any ) => (
                                             <FormControl flexGrow={1} w='auto'>
-                                                <FormLabel>Posição</FormLabel>
+                                                <FormLabel>Função</FormLabel>
                                                 <Select { ...field }>
                                                     <option value="assessor">Assessor</option>
                                                     <option value="administrator">Administrador</option>

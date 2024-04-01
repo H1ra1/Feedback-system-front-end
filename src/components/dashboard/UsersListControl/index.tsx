@@ -16,22 +16,25 @@ import {
     Skeleton,
     Box,
     Input,
-    Tooltip
+    Tooltip,
+    Button
 } from '@chakra-ui/react';
 import { MdDelete, MdEdit, MdOutlineSync } from 'react-icons/md';
 import { FaSort, FaUserCheck } from 'react-icons/fa6';
 import UserEditModal, { iUserToEdit } from '@/components/dashboard/users/UserEditModal';
 import UserDisableModal, { iUserToDisable } from '@/components/dashboard/users/UserDisableModal';
+import UserCreateModal from '../users/UserCreateModal';
 
 function UsersListControl() {
-    const [ loading, setLoading ]                       = useState< boolean >( true );
-    const [ usersList, setUsersList ]                   = useState< any >( [] );
-    const [ filteredUsers, setFilteredUsers ]           = useState< iUserToEdit | Array< any > >();
-    const [ modalEditUserOpen, setModalEditUserOpen ]   = useState< boolean >( false );
-    const [ userToEdit, setUserToEdit ]                 = useState< iUserToEdit >();
-    const [ modalDisabledUser, setModalDisableUser ]    = useState< boolean >( false );
-    const [ usertToDisable, setUsertToDisable ]         = useState< iUserToDisable >();
-    const [ tableOrder, setTableOrder ]                 = useState< any >( {} );
+    const [ loading, setLoading ]                           = useState< boolean >( true );
+    const [ usersList, setUsersList ]                       = useState< any >( [] );
+    const [ filteredUsers, setFilteredUsers ]               = useState< iUserToEdit | Array< any > >();
+    const [ modalEditUserOpen, setModalEditUserOpen ]       = useState< boolean >( false );
+    const [ modalCreateUserOpen, setModalCreateUserOpen ]   = useState< boolean >( false );
+    const [ userToEdit, setUserToEdit ]                     = useState< iUserToEdit >();
+    const [ modalDisabledUser, setModalDisableUser ]        = useState< boolean >( false );
+    const [ usertToDisable, setUsertToDisable ]             = useState< iUserToDisable >();
+    const [ tableOrder, setTableOrder ]                     = useState< any >( {} );
 
     function editUser( user: any ) {
         setUserToEdit( {
@@ -167,7 +170,17 @@ function UsersListControl() {
     return ! loading ? (
         <>
             <Box width='100%'>
-                <Input className='m-b-10' type="text" placeholder='Pesquisar usuário por nome' onChange={ filterUsers } />
+                <Box display='flex' gap={ 10 }>
+                    <Input className='m-b-10' type="text" placeholder='Pesquisar usuário por nome' onChange={ filterUsers } />
+                    <Button 
+                        backgroundColor={ colors.highlightColor } 
+                        _hover={ { backgroundColor: colors.highlightColorMore } }
+                        color='#FFF'
+                        onClick={ _ => setModalCreateUserOpen( true ) }
+                    >
+                        Adicionar usuário
+                    </Button>
+                </Box>
                 { Array.isArray( filteredUsers ) && filteredUsers.length > 0 ? ( 
                     <TableContainer width='100%'>
                         <Table variant='striped' colorScheme='gray' overflow='scroll' size='md' layout='fixed'>
@@ -216,6 +229,7 @@ function UsersListControl() {
                 ) : 'Nenhum usuário encontrado' }
 
                 <UserEditModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalEditUserOpen( false ); } } openModal={ modalEditUserOpen } userToEdit={ userToEdit } />
+                <UserCreateModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalCreateUserOpen( false ); } } openModal={ modalCreateUserOpen } />
                 <UserDisableModal isModalOpen={ ( isOpen ) => { if( ! isOpen ) setModalDisableUser( false ); } } openModal={ modalDisabledUser } userToDisable={ usertToDisable } />
             </Box>
         </>

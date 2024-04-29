@@ -4,11 +4,15 @@ import colors from '@/styles/colors.module.scss';
 import { useEffect, useState } from "react";
 import { Area, Bar, CartesianGrid, ComposedChart, LabelList, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-function AreaNoteHistory() {
+interface AreaNoteHistoryProps {
+  questionGroupID: number;
+}
+
+function AreaNoteHistory({ questionGroupID }: AreaNoteHistoryProps) {
   const [data, setData] = useState();
 
   const getAreaNoteHistory = async () => {
-    const RESPONSE = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/analysis/area-note-history/74/`);
+    const RESPONSE = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/analysis/area-note-history/${questionGroupID}/`);
 
     if (!RESPONSE.ok)
       throw new Error(RESPONSE.statusText);
@@ -56,7 +60,7 @@ function AreaNoteHistory() {
         <ComposedChart
           data={data}
           margin={{
-            top: 5,
+            top: 60,
             right: 30,
             left: 0,
             bottom: 5,

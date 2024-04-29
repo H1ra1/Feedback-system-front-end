@@ -340,7 +340,7 @@ function GroupAnalysisByQuestions(props: QuestionsAnalysisProps) {
                             </ComposedChart>
                         </ResponsiveContainer>
 
-                        <AreaNoteHistory />
+                        <AreaNoteHistory questionGroupID={props.group_id} />
 
                         <ResponsiveContainer width="100%" aspect={3 / 1}>
                             <PieChart>

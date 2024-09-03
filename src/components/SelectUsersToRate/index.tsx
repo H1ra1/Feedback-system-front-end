@@ -1,38 +1,32 @@
 'use client';
 
-import { useState } from "react";
+import colors from "@/styles/colors.module.scss";
+import { Button } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { HiOutlineArrowsRightLeft } from "react-icons/hi2";
 import { IoMdAddCircleOutline, IoMdRemoveCircleOutline } from "react-icons/io";
 
 type RatingUser = {
+  id: string;
   name: string;
 }
 
-export default function SelectUsersToRate() {
-  const [usersToAdd, setUsersToAdd] = useState<RatingUser[]>([
-    {
-      name: 'Henrique Lira'
-    },
-    {
-      name: 'Paulo Roberto Bassalobe Da Cunha'
-    },
-    {
-      name: 'Lucas Carrieri Sharau'
-    },
-    {
-      name: 'Luis Felipe Fernandes Dos Santos'
-    },
-    {
-      name: 'Humberto Alves De Oliveira'
-    },
-    {
-      name: 'Leticia Puttini'
-    },
-  ]);
+type SelectUsersToRateProps = {
+  ratingUserCode: string;
+  next: (next: boolean) => void;
+}
+
+export default function SelectUsersToRate({ ratingUserCode, next }: SelectUsersToRateProps) {
+  const [usersToAdd, setUsersToAdd] = useState<RatingUser[]>([]);
   const [usersSelected, setUsersSelected] = useState<RatingUser[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   function addUser(user: RatingUser, indexUser: number) {
+    const selectionLimit = usersSelected.length > 10 ? usersSelected.length : 10;
+    if (usersSelected.length >= selectionLimit)
+      return;
+
     setUsersToAdd((prev) => {
       const removeUser = prev.filter((user, index) => index != indexUser);
 
@@ -57,6 +51,59 @@ export default function SelectUsersToRate() {
       user
     ]);
   }
+
+  async function getUsers() {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rating/user/code/${ratingUserCode}/users/`);
+
+    setIsLoading(false);
+
+    if (!response.ok)
+      return false;
+
+    const result = await response.json();
+    const sortedAvailable = result.data.available.toSorted((a: { feedback_user_id: string, name: string }, b: { feedback_user_id: string, name: string }) => {
+      if (a.name < b.name) {
+        return -1;
+      } else if (a.name > b.name) {
+        return 1;
+      }
+
+      return 0;
+    });
+
+    setUsersToAdd(sortedAvailable.map((user: { feedback_user_id: string, name: string }) => ({
+      id: user.feedback_user_id,
+      name: user.name
+    })));
+
+    setUsersSelected(result.data.selected.map((user: { feedback_user_id: string, name: string }) => ({
+      id: user.feedback_user_id,
+      name: user.name
+    })));
+  }
+
+  async function updateUsers() {
+    setIsLoading(true);
+
+    const usersToRateId = usersSelected.map((user) => user.id);
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rating/user/code/${ratingUserCode}/users/define/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(usersToRateId)
+    });
+
+    if (!response.ok)
+      return false;
+
+    next(true);
+  }
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   return (
     <div className="w-screen h-screen bg-gradient-to-br from-slate-50 to-indigo-200 flex items-center justify-center">
@@ -114,7 +161,19 @@ export default function SelectUsersToRate() {
         </div>
 
         <div className="p-4 pt-0">
-          <button className="px-4 py-2 border rounded-md ml-auto block transition-colors bg-purple-600 text-slate-50 hover:bg-purple-800">Avançar</button>
+          <Button
+            size='md'
+            backgroundColor={colors.highlightColor}
+            className="ml-auto flex"
+            color={colors.baseLight}
+            _hover={{
+              backgroundColor: colors.highlightColorMore
+            }}
+            onClick={updateUsers}
+            isLoading={isLoading}
+          >
+            Avançar
+          </Button>
         </div>
       </div>
     </div>

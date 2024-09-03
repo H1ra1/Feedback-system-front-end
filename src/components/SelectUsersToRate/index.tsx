@@ -1,7 +1,7 @@
 'use client';
 
 import colors from "@/styles/colors.module.scss";
-import { Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { HiOutlineArrowsRightLeft } from "react-icons/hi2";
@@ -21,6 +21,7 @@ export default function SelectUsersToRate({ ratingUserCode, next }: SelectUsersT
   const [usersToAdd, setUsersToAdd] = useState<RatingUser[]>([]);
   const [usersSelected, setUsersSelected] = useState<RatingUser[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const toast = useToast();
 
   function addUser(user: RatingUser, indexUser: number) {
     const selectionLimit = usersSelected.length > 10 ? usersSelected.length : 10;
@@ -85,7 +86,21 @@ export default function SelectUsersToRate({ ratingUserCode, next }: SelectUsersT
   async function updateUsers() {
     setIsLoading(true);
 
+
     const usersToRateId = usersSelected.map((user) => user.id);
+
+    if (usersToRateId.length < 5) {
+      toast({
+        status: 'error',
+        title: 'Erro!',
+        description: 'Selecione no mínimo 5 usuários.',
+        position: 'bottom-right',
+        isClosable: true
+      });
+
+      setIsLoading(false);
+      return false;
+    }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/rating/user/code/${ratingUserCode}/users/define/`, {
       method: 'POST',
@@ -95,8 +110,17 @@ export default function SelectUsersToRate({ ratingUserCode, next }: SelectUsersT
       body: JSON.stringify(usersToRateId)
     });
 
-    if (!response.ok)
+    if (!response.ok) {
+      toast({
+        status: 'error',
+        title: 'Erro!',
+        description: 'Erro ao definir usuários, atualize a página ou tente em uma janela anônima.',
+        position: 'bottom-right',
+        isClosable: true
+      });
+
       return false;
+    }
 
     next(true);
   }
